@@ -58,25 +58,42 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('My Field Name', $label);
     }
 
-    public function testAddField()
+    public function testChainableAddField()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addField('name');
-        $builder->addField('name_two');
+        $builder->addField('name')
+                ->addField('name_two');
 
         $expectedConfig = [
             'fields' => [
                 [
-                    'key' => 'name',
-                    'name' => 'field_name',
+                    'key' => 'field_name',
+                    'name' => 'name',
                     'label' => 'Name',
                 ],
                 [
-                    'key' => 'name_two',
-                    'name' => 'field_name_two',
+                    'key' => 'field_name_two',
+                    'name' => 'name_two',
                     'label' => 'Name Two',
                 ],
             ],            
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }    
+
+    public function testAddText()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addText('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'text',
+                ],
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
@@ -90,7 +107,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig =  [
             'fields' => [
                 [
-                    'key' => 'name',
+                    'name' => 'name',
                     'type' => 'textarea',
                 ],
             ],
@@ -107,7 +124,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig =  [
             'fields' => [
                 [
-                    'key' => 'name',
+                    'name' => 'name',
                     'type' => 'wysiwyg',
                 ],
             ],
@@ -116,4 +133,72 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddNumber()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addNumber('name', ['min' => '1']);
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'number',
+                    'min' => '1',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddEmail()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addEmail('email');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'email',
+                    'type' => 'email',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }    
+
+    public function testAddUrl()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addUrl('location');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'location',
+                    'type' => 'url',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddPassword()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addPassword('password');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'password',
+                    'type' => 'password',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }
