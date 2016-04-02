@@ -1,0 +1,20 @@
+{
+    "name": "stoutlogic/understory-fields",
+    "description": "A WordPress custom field API for Understory",
+    "require-dev": {
+        "phpunit/phpunit": "5.0.*"
+    },
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Steve Pfisterer",
+            "email": "steve@stoutlogic.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Understory\\Fields\\Tests\\": "tests/",
+            "Understory\\Fields\\": "src/"
+        }
+    }
+}
