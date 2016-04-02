@@ -50,6 +50,20 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testGroupConfigOverride()
+    {
+        $builder = new FieldsBuilder('my_fields', ['style' => 'seamlees']);
+        $builder->configure('my_fields', ['title' => 'My New Field Group']);
+
+        $expectedConfig = [
+            'key' => 'group_my_fields',
+            'title' => 'My New Field Group',
+            'style' => 'seamlees',
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testCreateLabel()
     {
         $builder = new FieldsBuilder('fields');
@@ -109,23 +123,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     'name' => 'name',
                     'type' => 'textarea',
-                ],
-            ],
-        ];
-
-        $this->assertArraySubset($expectedConfig, $builder->build());
-    }
-
-    public function testAddWysiwyg()
-    {
-        $builder = new FieldsBuilder('fields');
-        $builder->addWysiwyg('name');
-
-        $expectedConfig =  [
-            'fields' => [
-                [
-                    'name' => 'name',
-                    'type' => 'wysiwyg',
                 ],
             ],
         ];
@@ -195,6 +192,91 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     'name' => 'password',
                     'type' => 'password',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddWysiwyg()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addWysiwyg('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'wysiwyg',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddOembed()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addOembed('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'oembed',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddImage()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addImage('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'image',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddFile()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addFile('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'file',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddGallery()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addGallery('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'gallery',
                 ],
             ],
         ];

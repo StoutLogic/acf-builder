@@ -12,6 +12,21 @@ class FieldsBuilder
        $this->configure($name, $groupConfig);
     }
 
+    public function configure($name, $groupConfig = [])
+    {
+        $config = array_merge(
+            $this->config, 
+            [
+                'key' => 'group_'.$name,
+                'title' => $this->createLabel($name),
+            ], 
+            $groupConfig
+        );
+
+        $this->config = $config;
+        return $this;
+    }
+
     public function build()
     {
         return array_merge($this->config, [
@@ -47,11 +62,6 @@ class FieldsBuilder
         return $this->addFieldType($name, 'textarea', $args);
     }
 
-    public function addWysiwyg($name, $args = [])
-    {
-        return $this->addFieldType($name, 'wysiwyg', $args);
-    }
-
     public function addNumber($name, $args = [])
     {
         return $this->addFieldType($name, 'number', $args);
@@ -72,16 +82,29 @@ class FieldsBuilder
         return $this->addFieldType($name, 'password', $args);
     }
 
-    protected function configure($name, $groupConfig = [])
+    public function addWysiwyg($name, $args = [])
     {
-        $config = array_merge([
-            'key' => 'group_'.$name,
-            'title' => $this->createLabel($name),
-        ], $groupConfig);
+        return $this->addFieldType($name, 'wysiwyg', $args);
+    }
 
-        $this->config = $config;
+    public function addOembed($name, $args = [])
+    {
+        return $this->addFieldType($name, 'oembed', $args);
+    }
 
-        return $this;
+    public function addImage($name, $args = [])
+    {
+        return $this->addFieldType($name, 'image', $args);
+    }
+
+    public function addFile($name, $args = [])
+    {
+        return $this->addFieldType($name, 'file', $args);
+    }
+
+    public function addGallery($name, $args = [])
+    {
+        return $this->addFieldType($name, 'gallery', $args);
     }
 
     protected function createLabel($name)
