@@ -283,4 +283,100 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testAddTrueFalse()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addTrueFalse('name');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'true_false',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+
+    public function testAddSelect()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addSelect('colors', ['choices' => ['yellow' => 'Yellow']])
+                    ->addChoice('red', 'Rojo')
+                    ->addChoice('blue')
+                    ->addChoice('green')
+                    ->setDefault('yellow');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'colors',
+                    'type' => 'select',
+                    'choices' => [
+                        'yellow' => 'Yellow',
+                        'red' => 'Rojo',
+                        'blue' => 'blue',
+                        'green' => 'green',
+                    ],
+                    'default_value' => 'yellow',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddRadio()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addRadio('colors')
+                    ->addChoice('red')
+                    ->addChoice('blue')
+                    ->addChoice('green');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'colors',
+                    'type' => 'radio',
+                    'choices' => [
+                        'red' => 'red',
+                        'blue' => 'blue',
+                        'green' => 'green',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddCheckbox()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addCheckbox('colors')
+                    ->addChoice('red')
+                    ->addChoice('blue')
+                    ->addChoice('green');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'colors',
+                    'type' => 'checkbox',
+                    'choices' => [
+                        'red' => 'red',
+                        'blue' => 'blue',
+                        'green' => 'green',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }

@@ -36,11 +36,13 @@ class FieldsBuilder
 
     public function addField($name, $args = [])
     {
-        $this->fields[] = array_merge([
+        $field = array_merge([
             'key' => 'field_'.$name,
             'name' => $name,
             'label' => $this->createLabel($name),
         ], $args);
+
+        $this->pushField($field);
 
         return $this;
     }
@@ -105,6 +107,63 @@ class FieldsBuilder
     public function addGallery($name, $args = [])
     {
         return $this->addFieldType($name, 'gallery', $args);
+    }
+
+    public function addTrueFalse($name, $args = [])
+    {
+        return $this->addFieldType($name, 'true_false', $args);
+    }
+
+    public function addSelect($name, $args = [])
+    {
+        return $this->addFieldType($name, 'select', $args);
+    }
+
+    public function addRadio($name, $args = [])
+    {
+        return $this->addFieldType($name, 'radio', $args);
+    }
+
+    public function addCheckbox($name, $args = [])
+    {
+        return $this->addFieldType($name, 'checkbox', $args);
+    }
+
+    public function addChoice($choice, $label = null)
+    {
+        $field = $this->popLastField();
+
+        array_key_exists('choices', $field) ?: $field['choices'] = [];
+        $label ?: $label = $choice;
+
+        $field['choices'][$choice] = $label;
+        $this->pushField($field);
+
+        return $this;
+    }
+
+    public function setDefault($value)
+    {
+        return $this->setConfig('default_value', $value);
+    }
+
+    public function setConfig($key, $value)
+    {
+        $field = $this->popLastField();
+        $field['default_value'] = $value;
+        $this->pushField($field);
+
+        return $this;
+    }
+
+    protected function popLastField()
+    {
+        return array_pop($this->fields);
+    }
+
+    protected function pushField($field)
+    {
+        $this->fields[] = $field;
     }
 
     protected function createLabel($name)
