@@ -599,4 +599,23 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testAddMessage()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addMessage('Warning', 'This is my message');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'key' => 'field_warning_message',
+                    'name' => 'warning_message',
+                    'label' => 'Warning',
+                    'message' => 'This is my message',
+                ],
+            ],            
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }

@@ -167,8 +167,6 @@ class FieldsBuilder
     {
         $name = $this->generateName($label).'_tab';
         $args = array_merge([
-            'key' => 'field_'.$name,
-            'name' => $name,
             'label' => $label,
         ], $args);
 
@@ -178,6 +176,17 @@ class FieldsBuilder
     public function endpoint($value = 1)
     {
         return $this->setConfig('endpoint', $value);
+    }
+
+    public function addMessage($label, $message, $args = [])
+    {
+        $name = $this->generateName($label).'_message';
+        $args = array_merge([
+            'label' => $label,
+            'message' => $message,
+        ], $args);
+
+        return $this->addFieldType($name, 'message', $args);
     }
 
     public function addChoice($choice, $label = null)
