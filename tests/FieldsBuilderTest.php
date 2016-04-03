@@ -64,14 +64,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-    public function testCreateLabel()
-    {
-        $builder = new FieldsBuilder('fields');
-        $label = TestUtils::callMethod($builder, 'createLabel', ['my_field_name']);
-
-        $this->assertEquals('My Field Name', $label);
-    }
-
     public function testChainableAddField()
     {
         $builder = new FieldsBuilder('fields');
@@ -505,28 +497,28 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ->addField('name_two')->required(true)
                 ->addField('name_three')
                 ->addField('name_four')->required(false)
-                ->addField('name_five', ['required' => '1']);
+                ->addField('name_five', ['required' => 1]);
 
         $expectedConfig = [
             'fields' => [
                 [
                     'name' => 'name',
-                    'required' => '1',
+                    'required' => 1,
                 ],
                 [
                     'name' => 'name_two',
-                    'required' => '1',
+                    'required' => 1,
                 ],
                 [
                     'name' => 'name_three',
                 ],
                 [
                     'name' => 'name_four',
-                    'required' => '0',
+                    'required' => 0,
                 ],
                 [
                     'name' => 'name_five',
-                    'required' => '1',
+                    'required' => 1,
                 ],
             ],            
         ];
@@ -566,6 +558,41 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     'name' => 'name',
                     'default_value' => 'John Smith',
+                ],
+            ],            
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddTab()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addTab('Content')
+                    ->addText('name')
+                ->addTab('Background Color')->endpoint()
+                    ->addColorPicker('background_color');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'key' => 'field_content_tab',
+                    'name' => 'content_tab',
+                    'label' => 'Content',
+                    'type' => 'tab',
+                ],
+                [
+                    'name' => 'name',
+                ],
+                [
+                    'key' => 'field_background_color_tab',
+                    'name' => 'background_color_tab',
+                    'label' => 'Background Color',
+                    'type' => 'tab',
+                    'endpoint' => 1,
+                ],
+                [
+                    'name' => 'background_color',
                 ],
             ],            
         ];

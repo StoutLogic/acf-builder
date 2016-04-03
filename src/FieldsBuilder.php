@@ -14,16 +14,15 @@ class FieldsBuilder
 
     public function setGroupConfig($name, $groupConfig = [])
     {
-        $config = array_merge(
+        $this->config = array_merge(
             $this->config, 
             [
                 'key' => 'group_'.$name,
-                'title' => $this->createLabel($name),
+                'title' => $this->generateLabel($name),
             ], 
             $groupConfig
         );
 
-        $this->config = $config;
         return $this;
     }
 
@@ -39,7 +38,7 @@ class FieldsBuilder
         $field = array_merge([
             'key' => 'field_'.$name,
             'name' => $name,
-            'label' => $this->createLabel($name),
+            'label' => $this->generateLabel($name),
         ], $args);
 
         $this->pushField($field);
@@ -164,6 +163,23 @@ class FieldsBuilder
         return $this->addFieldType($name, 'color_picker', $args);
     }
 
+    public function addTab($label, $args = [])
+    {
+        $name = $this->generateName($label).'_tab';
+        $args = array_merge([
+            'key' => 'field_'.$name,
+            'name' => $name,
+            'label' => $label,
+        ], $args);
+
+        return $this->addFieldType($name, 'tab', $args);
+    }
+
+    public function endpoint($value = 1)
+    {
+        return $this->setConfig('endpoint', $value);
+    }
+
     public function addChoice($choice, $label = null)
     {
         $field = $this->popLastField();
@@ -184,7 +200,7 @@ class FieldsBuilder
 
     public function required($value = true)
     {
-        return $this->setConfig('required', $value ? '1' : '0');
+        return $this->setConfig('required', $value ? 1 : 0);
     }
 
     public function instructions($value)
@@ -211,8 +227,13 @@ class FieldsBuilder
         $this->fields[] = $field;
     }
 
-    protected function createLabel($name)
+    protected function generateLabel($name)
     {
         return ucwords(str_replace("_", " ", $name));
+    }
+
+    protected function generateName($name)
+    {
+        return strtolower(str_replace(" ", "_", $name));
     }
 }
