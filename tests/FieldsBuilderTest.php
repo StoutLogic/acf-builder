@@ -297,8 +297,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addSelect('colors', ['choices' => ['yellow' => 'Yellow']])
-                    ->addChoice('red', 'Rojo')
-                    ->addChoice('blue')
+                    ->addChoices(['red' => 'Rojo'], 'blue')
                     ->addChoice('green');
 
         $expectedConfig =  [
@@ -315,7 +314,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
+        
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -612,6 +611,64 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'warning_message',
                     'label' => 'Warning',
                     'message' => 'This is my message',
+                ],
+            ],            
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testConditionalLogic()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addRadio('color')
+                    ->addChoices('red', 'blue', 'green', 'other')
+                ->addRadio('number', ['key' => 'field_num'])
+                    ->addChoices('one', 'two', 'three', 'other')
+                ->addText('other_value')
+                    ->condition('color', '==', 'other')
+                        ->and('color', '!=', 'red')
+                    ->or('number', '==', 'other')
+                        ->and('number', '!=', 'two');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'key' => 'field_color',
+                    'name' => 'color',
+                ],
+                [
+                    'key' => 'field_num',
+                    'name' => 'number',
+                ],
+                [
+                    'name' => 'other_value',
+                    'conditional_logic' => [
+                        [
+                            [
+                                'field' => 'field_color',
+                                'operator'  =>  '==',
+                                'value' => 'other',
+                            ],
+                            [
+                                'field' => 'field_color',
+                                'operator'  =>  '!=',
+                                'value' => 'red',
+                            ]
+                        ],
+                        [
+                            [
+                                'field' => 'field_num',
+                                'operator'  =>  '==',
+                                'value' => 'other',
+                            ],
+                            [
+                                'field' => 'field_num',
+                                'operator'  =>  '!=',
+                                'value' => 'two',
+                            ]
+                        ]
+                    ],
                 ],
             ],            
         ];

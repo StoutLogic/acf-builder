@@ -202,6 +202,86 @@ class FieldsBuilder
         return $this;
     }
 
+    public function addChoices()
+    {
+        foreach (func_get_args() as $choice) {
+            if (is_array($choice)) {
+                $values = each($choice);
+                $this->addChoice($values['key'], $values['value']);
+            } else {
+                $this->addChoice($choice);
+            }
+        }
+
+        return $this;
+    }
+
+    public function condition($name, $operator, $value)
+    {
+        $field = $this->popLastField();
+
+        if (!array_key_exists('conditional_logic', $field)) {
+            $field['conditional_logic'] = [[]];
+        }
+
+        $orCondition = array_pop($field['conditional_logic']);
+        $andCondition = $this->createCondition($name, $operator, $value);
+        $orCondition[] = $andCondition;
+        $field['conditional_logic'][] = $orCondition;
+
+        $this->pushField($field);
+
+        return $this;
+    }
+
+    public function and($name, $operator, $value)
+    {
+        return $this->condition($name, $operator, $value);
+    }
+
+    public function or($name, $operator, $value)
+    {
+        $field = $this->popLastField();
+
+        if (!array_key_exists('conditional_logic', $field)) {
+            $field['conditional_logic'] = [];
+        }
+
+        $andCondition = $this->createCondition($name, $operator, $value);
+        $orCondition = [$andCondition];
+        $field['conditional_logic'][] = $orCondition;
+
+        $this->pushField($field);
+
+        return $this;      
+    }
+
+    protected function createCondition($name, $operator, $value)
+    {
+        $key = 'field_'.$name;
+        $field = $this->getFieldByName($name);
+
+        if ($field) {
+            $key = $field['key'];
+        }
+
+        return [
+            'field' => $key,
+            'operator'  =>  $operator,
+            'value' => $value,
+        ];
+    }
+
+    protected function getFieldByName($name) {
+        foreach ($this->fields as $field) {
+            if ($field['name'] === $name) {
+                return $field;
+            }
+        }
+
+        return false;
+    }
+
     public function default($value)
     {
         return $this->setConfig('default_value', $value);
