@@ -53,7 +53,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testGroupConfigOverride()
     {
         $builder = new FieldsBuilder('my_fields', ['style' => 'seamlees']);
-        $builder->configure('my_fields', ['title' => 'My New Field Group']);
+        $builder->setGroupConfig('my_fields', ['title' => 'My New Field Group']);
 
         $expectedConfig = [
             'key' => 'group_my_fields',
@@ -301,7 +301,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-
     public function testAddSelect()
     {
         $builder = new FieldsBuilder('fields');
@@ -373,6 +372,93 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                         'blue' => 'blue',
                         'green' => 'green',
                     ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddPostObject()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addPostObject('related_page')
+                    ->setConfig('post_type', 'page');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'related_page',
+                    'type' => 'post_object',
+                    'post_type' => 'page',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddPostList()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addPostLink('related_page');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'related_page',
+                    'type' => 'post_link',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddRelationship()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addRelationship('related_page');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'related_page',
+                    'type' => 'relationship',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddTaxonomy()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addTaxonomy('category');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'category',
+                    'type' => 'taxonomy',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddUser()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addUser('member');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'member',
+                    'type' => 'user',
                 ],
             ],
         ];

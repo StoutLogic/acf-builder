@@ -9,10 +9,10 @@ class FieldsBuilder
 
     public function __construct($name, $groupConfig = [])
     {
-       $this->configure($name, $groupConfig);
+       $this->setGroupConfig($name, $groupConfig);
     }
 
-    public function configure($name, $groupConfig = [])
+    public function setGroupConfig($name, $groupConfig = [])
     {
         $config = array_merge(
             $this->config, 
@@ -129,6 +129,31 @@ class FieldsBuilder
         return $this->addFieldType($name, 'checkbox', $args);
     }
 
+    public function addPostObject($name, $args = [])
+    {
+        return $this->addFieldType($name, 'post_object', $args);
+    }
+
+    public function addPostLink($name, $args = [])
+    {
+        return $this->addFieldType($name, 'post_link', $args);
+    }
+
+    public function addRelationship($name, $args = [])
+    {
+        return $this->addFieldType($name, 'relationship', $args);
+    }
+
+    public function addTaxonomy($name, $args = [])
+    {
+        return $this->addFieldType($name, 'taxonomy', $args);
+    }
+
+    public function addUser($name, $args = [])
+    {
+        return $this->addFieldType($name, 'user', $args);
+    }
+
     public function addChoice($choice, $label = null)
     {
         $field = $this->popLastField();
@@ -150,7 +175,7 @@ class FieldsBuilder
     public function setConfig($key, $value)
     {
         $field = $this->popLastField();
-        $field['default_value'] = $value;
+        $field[$key] = $value;
         $this->pushField($field);
 
         return $this;
