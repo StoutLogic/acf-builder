@@ -307,8 +307,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->addSelect('colors', ['choices' => ['yellow' => 'Yellow']])
                     ->addChoice('red', 'Rojo')
                     ->addChoice('blue')
-                    ->addChoice('green')
-                    ->setDefault('yellow');
+                    ->addChoice('green');
 
         $expectedConfig =  [
             'fields' => [
@@ -321,7 +320,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                         'blue' => 'blue',
                         'green' => 'green',
                     ],
-                    'default_value' => 'yellow',
                 ],
             ],
         ];
@@ -461,6 +459,115 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'type' => 'user',
                 ],
             ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddDatePicker()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addDatePicker('start_date');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'start_date',
+                    'type' => 'date_picker',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddColorPicker()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addColorPicker('background_color');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'background_color',
+                    'type' => 'color_picker',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testRequired()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addField('name')->required()
+                ->addField('name_two')->required(true)
+                ->addField('name_three')
+                ->addField('name_four')->required(false)
+                ->addField('name_five', ['required' => '1']);
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'required' => '1',
+                ],
+                [
+                    'name' => 'name_two',
+                    'required' => '1',
+                ],
+                [
+                    'name' => 'name_three',
+                ],
+                [
+                    'name' => 'name_four',
+                    'required' => '0',
+                ],
+                [
+                    'name' => 'name_five',
+                    'required' => '1',
+                ],
+            ],            
+        ];
+
+        $config = $builder->build();
+
+        $this->assertArraySubset($expectedConfig, $config);
+        $this->assertArrayNotHasKey('required', $config['fields'][2]);
+    }
+
+    public function testInstructions()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addField('name')
+                    ->instructions('Last Name, First Name');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'instructions' => 'Last Name, First Name',
+                ],
+            ],            
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testDefault()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addField('name')
+                    ->default('John Smith');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'default_value' => 'John Smith',
+                ],
+            ],            
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());

@@ -154,6 +154,16 @@ class FieldsBuilder
         return $this->addFieldType($name, 'user', $args);
     }
 
+    public function addDatePicker($name, $args = [])
+    {
+        return $this->addFieldType($name, 'date_picker', $args);
+    }
+
+    public function addColorPicker($name, $args = [])
+    {
+        return $this->addFieldType($name, 'color_picker', $args);
+    }
+
     public function addChoice($choice, $label = null)
     {
         $field = $this->popLastField();
@@ -167,9 +177,19 @@ class FieldsBuilder
         return $this;
     }
 
-    public function setDefault($value)
+    public function default($value)
     {
         return $this->setConfig('default_value', $value);
+    }
+
+    public function required($value = true)
+    {
+        return $this->setConfig('required', $value ? '1' : '0');
+    }
+
+    public function instructions($value)
+    {
+        return $this->setConfig('instructions', $value);
     }
 
     public function setConfig($key, $value)
