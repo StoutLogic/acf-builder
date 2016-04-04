@@ -626,10 +626,14 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ->addRadio('number', ['key' => 'field_num'])
                     ->addChoices('one', 'two', 'three', 'other')
                 ->addText('other_value')
-                    ->condition('color', '==', 'other')
-                        ->and('color', '!=', 'red')
-                    ->or('number', '==', 'other')
-                        ->and('number', '!=', 'two');
+                    ->conditional('color', '==', 'other')
+                        ->and('day', '!=', 'tue')
+                        ->or('number', '==', 'other')
+                        ->and('number', '!=', 'two')
+                ->addRadio('day', ['key' => 'field_day_of_week'])
+                    ->addChoices('mon', 'tue', 'wed', 'thu', 'other')
+                ->addText('other_day')
+                    ->conditional('day', '==', 'other');
 
         $expectedConfig = [
             'fields' => [
@@ -651,9 +655,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                                 'value' => 'other',
                             ],
                             [
-                                'field' => 'field_color',
+                                'field' => 'field_day_of_week',
                                 'operator'  =>  '!=',
-                                'value' => 'red',
+                                'value' => 'tue',
                             ]
                         ],
                         [
@@ -670,9 +674,55 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                         ]
                     ],
                 ],
+                [
+                    'name' => 'day',
+                ],
+                [
+                    'name' => 'other_day',
+                    'conditional_logic' => [
+                        [
+                            [
+                                'field' => 'field_day_of_week',
+                                'operator'  =>  '==',
+                                'value' => 'other',
+                            ],
+                        ]
+                    ],
+                ],
             ],            
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testRepeater()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addText('title')
+                ->addRepeater('slides')
+                    ->addText('title')
+                    ->addWysiwyg('content');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'slides',
+                    'type' => 'repeater',
+                    'sub_fields' => [
+                        [
+                            'name' => 'title',
+                        ],
+                        [
+                            'name' => 'content',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        // $this->assertArraySubset($expectedConfig, $builder->build());
     }
 }

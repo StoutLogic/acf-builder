@@ -2,10 +2,10 @@
 
 namespace Understory\Fields;
 
-class FieldsBuilder
+class FieldsBuilder extends Builder
 {
-    private $config = [];
-    private $fields = [];
+    protected $config = [];
+    protected $fields = [];
 
     public function __construct($name, $groupConfig = [])
     {
@@ -26,11 +26,54 @@ class FieldsBuilder
         return $this;
     }
 
+    /**
+     * Build the final config array. Build any other builders that may exist 
+     * in the config.
+     * @return array    final field config
+     */
     public function build()
-    {
+    {   
+        $fields = $this->fields;
+
+        array_walk_recursive($fields, function(&$value, $key) {
+            switch ($key) {
+                case 'conditional_logic':
+                    $value = $this->buildConditional($value);
+
+                    break;
+            }
+        });
+
         return array_merge($this->config, [
-            'fields' => $this->fields,        
+            'fields' => $fields,        
         ]);
+    }
+
+    /**
+     * Build the ConditionalBuilder and replace field values with the 
+     * field's respective key
+     * @param  ConditionalBuilder $conditional
+     * @return array                          Built config array
+     */
+    protected function buildConditional(ConditionalBuilder $conditional)
+    {
+        $config = $conditional->build();
+
+        // Replace field name with the field's key, default: field_$name
+        array_walk_recursive($config, function(&$value, $key) {
+            switch ($key) {
+                case 'field':
+                    if ($field = $this->getFieldByName($value)) {
+                        $value = $field['key'];
+                    } else {
+                        $value = 'field_'.$value;
+                    }
+                    break;
+            }
+        });
+
+
+        return $config;
     }
 
     public function addField($name, $args = [])
@@ -216,63 +259,29 @@ class FieldsBuilder
         return $this;
     }
 
-    public function condition($name, $operator, $value)
+    public function conditional($name, $operator, $value)
     {
         $field = $this->popLastField();
+        $conditionalBuilder = new ConditionalBuilder($name, $operator, $value);
+        $conditionalBuilder->setParentContext($this);
 
-        if (!array_key_exists('conditional_logic', $field)) {
-            $field['conditional_logic'] = [[]];
-        }
-
-        $orCondition = array_pop($field['conditional_logic']);
-        $andCondition = $this->createCondition($name, $operator, $value);
-        $orCondition[] = $andCondition;
-        $field['conditional_logic'][] = $orCondition;
-
+        $field['conditional_logic'] = $conditionalBuilder;
         $this->pushField($field);
 
+        return $conditionalBuilder;
+    }
+
+    public function addRepeater($name, $args = [])
+    {
+        // $repeaterBuilder = new RepeaterBuilder($name, $args);
+        // $this->pushField($repeaterBuilder);
+        // return $repeaterBuilder;
+        // 
         return $this;
     }
 
-    public function and($name, $operator, $value)
+    protected function getFieldByName($name) 
     {
-        return $this->condition($name, $operator, $value);
-    }
-
-    public function or($name, $operator, $value)
-    {
-        $field = $this->popLastField();
-
-        if (!array_key_exists('conditional_logic', $field)) {
-            $field['conditional_logic'] = [];
-        }
-
-        $andCondition = $this->createCondition($name, $operator, $value);
-        $orCondition = [$andCondition];
-        $field['conditional_logic'][] = $orCondition;
-
-        $this->pushField($field);
-
-        return $this;      
-    }
-
-    protected function createCondition($name, $operator, $value)
-    {
-        $key = 'field_'.$name;
-        $field = $this->getFieldByName($name);
-
-        if ($field) {
-            $key = $field['key'];
-        }
-
-        return [
-            'field' => $key,
-            'operator'  =>  $operator,
-            'value' => $value,
-        ];
-    }
-
-    protected function getFieldByName($name) {
         foreach ($this->fields as $field) {
             if ($field['name'] === $name) {
                 return $field;
