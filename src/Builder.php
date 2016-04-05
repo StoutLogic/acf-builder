@@ -13,6 +13,11 @@ abstract class Builder
         $this->parentContext = $builder;
     }
 
+    public function getParentContext()
+    {
+        return $this->parentContext;
+    }
+
     public function __call($method, $args) {
         if (isset($this->parentContext)) {
             return call_user_func_array([$this->parentContext, $method], $args);

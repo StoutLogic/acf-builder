@@ -36,10 +36,13 @@ class FieldsBuilder extends Builder
         $fields = $this->fields;
 
         array_walk_recursive($fields, function(&$value, $key) {
+            if (is_a($value, Builder::class)) {
+                $value = $value->build();
+            }
+
             switch ($key) {
                 case 'conditional_logic':
-                    $value = $this->buildConditional($value);
-
+                    $value = $this->parseConditionalConfig($value);
                     break;
             }
         });
@@ -50,15 +53,12 @@ class FieldsBuilder extends Builder
     }
 
     /**
-     * Build the ConditionalBuilder and replace field values with the 
-     * field's respective key
-     * @param  ConditionalBuilder $conditional
-     * @return array                          Built config array
+     * Replace field values with the field's respective key
+     * @param  array $config
+     * @return array
      */
-    protected function buildConditional(ConditionalBuilder $conditional)
+    protected function parseConditionalConfig($config)
     {
-        $config = $conditional->build();
-
         // Replace field name with the field's key, default: field_$name
         array_walk_recursive($config, function(&$value, $key) {
             switch ($key) {
@@ -71,7 +71,6 @@ class FieldsBuilder extends Builder
                     break;
             }
         });
-
 
         return $config;
     }
@@ -232,6 +231,15 @@ class FieldsBuilder extends Builder
         return $this->addFieldType($name, 'message', $args);
     }
 
+    public function addRepeater($name, $args = [])
+    {
+        $repeaterBuilder = new RepeaterBuilder($name, $args);
+        $repeaterBuilder->setParentContext($this);
+        $this->pushField($repeaterBuilder);
+
+        return $repeaterBuilder;
+    }
+
     public function addChoice($choice, $label = null)
     {
         $field = $this->popLastField();
@@ -269,15 +277,6 @@ class FieldsBuilder extends Builder
         $this->pushField($field);
 
         return $conditionalBuilder;
-    }
-
-    public function addRepeater($name, $args = [])
-    {
-        // $repeaterBuilder = new RepeaterBuilder($name, $args);
-        // $this->pushField($repeaterBuilder);
-        // return $repeaterBuilder;
-        // 
-        return $this;
     }
 
     protected function getFieldByName($name) 

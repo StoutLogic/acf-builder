@@ -723,6 +723,91 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        // $this->assertArraySubset($expectedConfig, $builder->build());
+        $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testRepeaterWithEndRepeater()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addText('title')
+                ->addRepeater('slides')
+                    ->addText('title')
+                    ->addWysiwyg('content')
+                    ->endRepeater()
+                ->addWysiwyg('content');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'slides',
+                    'type' => 'repeater',
+                    'sub_fields' => [
+                        [
+                            'name' => 'title',
+                        ],
+                        [
+                            'name' => 'content',
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'content',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testMultiLevelRepeater()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addText('title')
+                ->addRepeater('slides')
+                    ->addText('title')
+                    ->addRepeater('logos')
+                        ->addImage('logo')
+                        ->endRepeater()
+                    ->addWysiwyg('content')
+                    ->endRepeater()
+                ->addWysiwyg('content');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'slides',
+                    'type' => 'repeater',
+                    'sub_fields' => [
+                        [
+                            'name' => 'title',
+                        ],
+                        [
+                            'name' => 'logos',
+                            'type' => 'repeater',
+                            'sub_fields' => [
+                                [
+                                    'name' => 'logo',
+                                ],
+                            ],
+                        ],
+                        [
+                            'name' => 'content',
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'content',
+                ],
+            ],
+        ];
+        
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
 }
