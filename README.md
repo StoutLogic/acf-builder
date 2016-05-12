@@ -75,6 +75,7 @@ $background
     ->addTab('Background')
     ->addImage('background_image')
     ->addTrueFalse('fixed')
+        ->instructions('Check to add a parallax effect where the background image doesn't move when scrolling')
     ->addColorPicker('background_color');
            
 $banner = new FieldBuilder('banner');
