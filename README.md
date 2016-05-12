@@ -99,3 +99,20 @@ $section
 ```
 
 Here a `background` field group is created, and then used in two other field groups, including twice in the `section` field group. This can really DRY up your code and keep your admin UI consistent. If you wanted to add a light/dark field for the text color field based on the background used, it would just need to be added in one spot and used everywhere.
+
+## Install
+Use composer to install:
+```
+composer install stoutlogic/acf-builder
+```
+
+## Tests
+To run the tests you can manually run
+```
+vendor/bin/phpunit
+```
+or you can use the built in gulp task to run it on file change
+```
+npm install
+gulp
+```
