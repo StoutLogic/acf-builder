@@ -6,11 +6,12 @@ Quickly create, register, and reuse ACF configurations, and keep them in your so
 ### Simple Example
 ```php
 $banner = new StoutLogic\AcfBuilder\FieldsBuilder('banner');
-$banner->addText('title')
-       ->addWysiwyg('content')
-       ->addImage('background_image')
-       ->setLocation('post_type', '==', 'page')
-         ->or('post_type', '==', 'post');
+$banner
+    ->addText('title')
+    ->addWysiwyg('content')
+    ->addImage('background_image')
+    ->setLocation('post_type', '==', 'page')
+        ->or('post_type', '==', 'post');
        
 add_action('acf/init', function() {
    acf_add_local_field_group($banner->build());
@@ -60,3 +61,38 @@ add_action('acf/init', function() {
   ]
 ]
 ```
+
+As you can see it saves you a lot of typing and is less error-prone. But brevity and correctness isn't the only benefit, you can reuse field configurations in multiple places. For example, a group of fields used for backgrounds.
+
+```php
+
+use StoutLogic\AcfBuilder\FieldBuilder;
+
+$background = new FieldBuilder('background');
+$background
+    ->addTab('Background')
+    ->addImage('background_image')
+    ->addTrueFalse('fixed')
+    ->addColorPicker('background_color');
+           
+$banner = new FieldBuilder('banner');
+$banner
+    ->addTab('Content')
+    ->addText('title')
+    ->addWysiwyg('content')
+    ->addFields($background);
+           
+$section = new FieldBuilder('section');
+$columms
+    ->addTab('Content')
+    ->addText('section_title')
+    ->addRepeater('columns', ['min' => 1])
+        ->addTab('Content')
+        ->addText('title')
+        ->addWysiwyg('content')
+        ->addFields($background)
+        ->endRepeater()
+    ->addFields($background);
+```
+
+Here a `background` field group is created, and then used in two other field groups, including twice in the `section` field group. This can really DRY up your code. If you wanted to add a light/dark field for the text color field based on the background used, it would just need to be added in one spot and used everywhere.
