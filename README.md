@@ -21,44 +21,44 @@ add_action('acf/init', function() {
 `$banner->build();` will return:
 ```php
 [
-  'key' => 'group_banner',
-  'title' => 'Banner',
-  'fields' => [
-    [
-      'key' => 'field_title',
-      'name' => 'title',
-      'label' => 'Title',
-      'type' => 'text'
+    'key' => 'group_banner',
+    'title' => 'Banner',
+    'fields' => [
+        [
+            'key' => 'field_title',
+            'name' => 'title',
+            'label' => 'Title',
+            'type' => 'text'
+        ],
+        [
+            'key' => 'field_content',
+            'name' => 'content',
+            'label' => 'Content',
+            'type' => 'wysiwyg'
+        ],
+        [
+            'key' => 'field_background_image',
+            'name' => 'background_image',
+            'label' => 'Background Image',
+            'type' => 'image'
+        ],
     ],
-    [
-      'key' => 'field_content',
-      'name' => 'content',
-      'label' => 'Content',
-      'type' => 'wysiwyg'
-    ],
-    [
-      'key' => 'field_background_image',
-      'name' => 'background_image',
-      'label' => 'Background Image',
-      'type' => 'image'
-    ],
-  ],
-  'location' => [
-    [
-      [
-        'param' => 'post_type',
-        'operatore' => '==',
-        'value' => 'page'
-      ]
-    ],
-    [
-      [
-        'param' => 'post_type',
-        'operatore' => '==',
-        'value' => 'post'
-      ]
+    'location' => [
+        [
+            [
+                'param' => 'post_type',
+                'operator' => '==',
+                'value' => 'page'
+            ]
+        ],
+        [
+            [
+                'param' => 'post_type',
+                'operator' => '==',
+                'value' => 'post'
+            ]
+        ]
     ]
-  ]
 ]
 ```
 
