@@ -284,6 +284,15 @@ class FieldsBuilder extends Builder
         return $repeaterBuilder;
     }
 
+    public function addFlexibleContent($name, $args = [])
+    {
+        $flexibleContentBuilder = new FlexibleContentBuilder($name, $args);
+        $flexibleContentBuilder->setParentContext($this);
+        $this->pushField($flexibleContentBuilder);
+
+        return $flexibleContentBuilder;
+    }
+
     public function addChoice($choice, $label = null)
     {
         $field = $this->popLastField();

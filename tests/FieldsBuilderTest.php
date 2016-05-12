@@ -907,4 +907,67 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testFlexibleCOntent()
+    {
+        $builder = new FieldsBuilder('page_content');
+        $builder->addFlexibleContent('sections')
+                    ->addLayout('banner')
+                        ->addText('title')
+                        ->addWysiwyg('content')
+                    ->addLayout('content_columns')
+                        ->addRepeater('columns', ['min' => 1, 'max' => 2])
+                            ->addWysiwyg('content');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'key' => 'field_sections',
+                    'name' => 'sections',
+                    'label' => 'Sections',
+                    'type' => 'flexible_content',
+                    'button' => 'Add Section',
+                    'layouts' => [
+                        [
+                            'key' => 'group_banner',
+                            'name' => 'banner',
+                            'label' => 'Banner',
+                            'display' => 'block',
+                            'sub_fields' => [
+                                [
+                                    'name' => 'title',
+                                    'type' => 'text',
+                                ],
+                                [
+                                    'name' => 'content',
+                                    'type' => 'wysiwyg',
+                                ]
+                            ]
+                        ],
+                        [
+                            'key' => 'group_content_columns',
+                            'name' => 'content_columns',
+                            'label' => 'Content Columns',
+                            'display' => 'block',
+                            'sub_fields' => [
+                                [
+                                    'name' => 'columns',
+                                    'type' => 'repeater',
+                                    'min' => 1,
+                                    'max' => 2,
+                                    'sub_fields' => [
+                                        [
+                                            'name' => 'content',
+                                            'type' => 'wysiwyg',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }

@@ -70,6 +70,11 @@ class FlexibleContentBuilder extends Builder
         return $layout;
     }
 
+    public function endFlexibleContent()
+    {
+        return $this->getParentContext();
+    }
+
     protected function pushLayout($layout)
     {
         $this->layouts[] = $layout;
