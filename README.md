@@ -62,7 +62,9 @@ add_action('acf/init', function() {
 ]
 ```
 
-As you can see it saves you a lot of typing and is less error-prone. But brevity and correctness isn't the only benefit, you can reuse field configurations in multiple places. For example, a group of fields used for backgrounds.
+As you can see it saves you a lot of typing and is less error-prone. But brevity and correctness isn't the only benefit, you can reuse field configurations in multiple places. For example, a group of fields used for backgrounds:
+
+### Reuse Example
 
 ```php
 
@@ -95,4 +97,4 @@ $section
     ->addFields($background);
 ```
 
-Here a `background` field group is created, and then used in two other field groups, including twice in the `section` field group. This can really DRY up your code. If you wanted to add a light/dark field for the text color field based on the background used, it would just need to be added in one spot and used everywhere.
+Here a `background` field group is created, and then used in two other field groups, including twice in the `section` field group. This can really DRY up your code and keep your admin UI consistent. If you wanted to add a light/dark field for the text color field based on the background used, it would just need to be added in one spot and used everywhere.
