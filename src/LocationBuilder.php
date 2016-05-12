@@ -1,6 +1,6 @@
 <?php
 
-namespace Understory\Fields;
+namespace StoutLogic\AcfBuilder;
 
 class LocationBuilder extends ConditionalBuilder
 {

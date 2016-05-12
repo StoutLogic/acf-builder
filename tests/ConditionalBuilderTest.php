@@ -1,8 +1,8 @@
 <?php
 
-namespace Understory\Fields\Tests;
+namespace StoutLogic\AcfBuilder\Tests;
 
-use Understory\Fields\ConditionalBuilder;
+use StoutLogic\AcfBuilder\ConditionalBuilder;
 
 class ConditionalBuilderTest extends \PHPUnit_Framework_TestCase
 {

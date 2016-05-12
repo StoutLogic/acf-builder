@@ -1,8 +1,8 @@
 <?php
 
-namespace Understory\Fields\Tests;
+namespace StoutLogic\AcfBuilder\Tests;
 
-use Understory\Fields\RepeaterBuilder;
+use StoutLogic\AcfBuilder\RepeaterBuilder;
 
 class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +31,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testEndRepeater()
     {
-        $fieldsBuilder = $this->getMockBuilder('Understory\Fields\FieldsBuilder')
+        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 

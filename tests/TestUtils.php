@@ -1,6 +1,6 @@
 <?php
 
-namespace Understory\Fields\Tests;
+namespace StoutLogic\AcfBuilder\Tests;
 
 class TestUtils
 {

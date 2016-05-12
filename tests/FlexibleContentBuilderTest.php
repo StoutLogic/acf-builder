@@ -1,8 +1,8 @@
 <?php
 
-namespace Understory\Fields\Tests;
+namespace StoutLogic\AcfBuilder\Tests;
 
-use Understory\Fields\FlexibleContentBuilder;
+use StoutLogic\AcfBuilder\FlexibleContentBuilder;
 
 class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -68,7 +68,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
 
     function testAddingFieldsBuilderAsLayout()
     {
-        $banner = $this->getMockBuilder('Understory\Fields\FieldsBuilder')
+        $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
                         ->setConstructorArgs(['parent'])
                         ->getMock();
 

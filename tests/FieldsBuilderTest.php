@@ -1,21 +1,21 @@
 <?php
 
-namespace Understory\Fields\Tests;
+namespace StoutLogic\AcfBuilder\Tests;
 
-use Understory\Fields\FieldsBuilder;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('Understory\Fields\FieldsBuilder'));
+        $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldsBuilder'));
     }
 
     public function testInstantiation()
     {
         $builder = new FieldsBuilder('fields');
 
-        $this->assertTrue(is_a($builder, 'Understory\Fields\FieldsBuilder'));
+        $this->assertTrue(is_a($builder, 'StoutLogic\AcfBuilder\FieldsBuilder'));
     }
 
     public function testBuildReturnsArray()
@@ -811,7 +811,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
     function testAddAnotherBuildersFields()
     {
-        $banner = $this->getMockBuilder('Understory\Fields\FieldsBuilder')
+        $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
                         ->setConstructorArgs(['parent'])
                         ->getMock();
 

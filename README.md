@@ -5,7 +5,7 @@ Quickly create, register, and reuse ACF configurations, and keep them in your so
 
 ### Simple Example
 ```php
-$banner = new FieldsBuilder('banner');
+$banner = new StoutLogic\AcfBuilder\FieldsBuilder('banner');
 $banner->addText('title')
        ->addWysiwyg('content')
        ->addImage('background_image')

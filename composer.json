@@ -13,8 +13,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Understory\\Fields\\Tests\\": "tests/",
-            "Understory\\Fields\\": "src/"
+            "StoutLogic\\AcfBuilder\\Tests\\": "tests/",
+            "StoutLogic\\AcfBuilder\\": "src/"
         }
     }
 }

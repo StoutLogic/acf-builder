@@ -1,8 +1,8 @@
 <?php
 
-namespace Understory\Fields\Tests;
+namespace StoutLogic\AcfBuilder\Tests;
 
-use Understory\Fields\LocationBuilder;
+use StoutLogic\AcfBuilder\LocationBuilder;
 
 class LocationBuilderTest extends \PHPUnit_Framework_TestCase
 {
