@@ -13,7 +13,7 @@ $banner->addText('title')
          ->or('post_type', '==', 'post');
        
 add_action('acf/init', function() {
- acf_add_local_field_group($banner->build());
+   acf_add_local_field_group($banner->build());
 });
 ```
 
