@@ -6,24 +6,27 @@ class FieldsBuilder extends Builder
 {
     protected $config = [];
     protected $fields = [];
+    protected $name;
 
     public function __construct($name, $groupConfig = [])
     {
-       $this->setGroupConfig($name, $groupConfig);
+        $this->name = $name;
+        $this->setGroupConfig('key', 'group_'.$name);
+        $this->setGroupConfig('title', $this->generateLabel($name));
+
+        $this->config = array_merge($this->config, $groupConfig);
     }
 
-    public function setGroupConfig($name, $groupConfig = [])
+    public function setGroupConfig($key, $value)
     {
-        $this->config = array_merge(
-            $this->config, 
-            [
-                'key' => 'group_'.$name,
-                'title' => $this->generateLabel($name),
-            ], 
-            $groupConfig
-        );
+        $this->config[$key] = $value;
 
         return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -35,14 +38,14 @@ class FieldsBuilder extends Builder
     {   
         $fields = $this->fields;
 
+        $fields = $this->buildFields($fields);
+
         array_walk_recursive($fields, function(&$value, $key) {
-            if (is_a($value, Builder::class)) {
-                $value = $value->build();
-            }
 
             switch ($key) {
                 case 'conditional_logic':
-                    $value = $this->parseConditionalConfig($value);
+                    $value = $value->build();
+                    $value = $this->transformConditionalConfig($value);
                     break;
             }
         });
@@ -52,12 +55,28 @@ class FieldsBuilder extends Builder
         ]);
     }
 
+    private function buildFields($fields)
+    {
+        $builtFields = [];
+
+        foreach($fields as $i => $field) {
+            if (is_subclass_of($field, Builder::class)) {
+                $builtFields[] = $field->build();
+            }   
+            else {
+                $builtFields[] = $field;
+            }
+        }
+
+        return $builtFields;
+    }
+
     /**
      * Replace field values with the field's respective key
      * @param  array $config
      * @return array
      */
-    protected function parseConditionalConfig($config)
+    protected function transformConditionalConfig($config)
     {
         // Replace field name with the field's key, default: field_$name
         array_walk_recursive($config, function(&$value, $key) {
@@ -73,6 +92,24 @@ class FieldsBuilder extends Builder
         });
 
         return $config;
+    }
+
+    /**
+     * Add multiple fields either via an array or from another builder 
+     * @param mixed $fields array of fields or a FieldBuilder
+     */
+    public function addFields($fields)
+    {
+        if (is_subclass_of($fields, FieldsBuilder::class)) {
+            foreach ($fields->getFields() as $field) {
+                $this->pushField($field);
+            }
+        }        
+        else {
+            $this->pushField($fields);
+        }
+
+        return $this;
     }
 
     public function addField($name, $args = [])
@@ -277,6 +314,11 @@ class FieldsBuilder extends Builder
         $this->pushField($field);
 
         return $conditionalBuilder;
+    }
+
+    public function getFields()
+    {
+        return $this->fields;
     }
 
     protected function getFieldByName($name) 

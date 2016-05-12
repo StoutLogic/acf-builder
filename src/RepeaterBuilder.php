@@ -4,6 +4,8 @@ namespace Understory\Fields;
 
 class RepeaterBuilder extends FieldsBuilder
 {
+   
+
     public function __construct($name, $args = [])
     {
         $this->config = array_merge(
@@ -22,7 +24,6 @@ class RepeaterBuilder extends FieldsBuilder
         $config = parent::build();
         $config['sub_fields'] = $config['fields'];
         unset($config['fields']);
-
         return $config;
     }
 

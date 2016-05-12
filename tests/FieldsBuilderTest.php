@@ -53,7 +53,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testGroupConfigOverride()
     {
         $builder = new FieldsBuilder('my_fields', ['style' => 'seamlees']);
-        $builder->setGroupConfig('my_fields', ['title' => 'My New Field Group']);
+        $builder->setGroupConfig('title', 'My New Field Group');
 
         $expectedConfig = [
             'key' => 'group_my_fields',
@@ -722,7 +722,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -810,4 +809,46 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    function testAddAnotherBuildersFields()
+    {
+        $banner = $this->getMockBuilder('Understory\Fields\FieldsBuilder')
+                        ->setConstructorArgs(['parent'])
+                        ->getMock();
+
+        $banner->expects($this->any())->method('getFields')->willReturn([
+                [
+                    'name' => 'title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ]
+            ]);
+
+        $builder = new FieldsBuilder('content');
+        $builder->addTextarea('summary')
+                ->addFields($banner);
+
+        $expectedConfig = [
+            'key' => 'group_content',
+            'title' => 'Content',
+            'fields' => [
+                [
+                    'name' => 'summary',
+                    'type' => 'textarea',
+                ],
+                [
+                    'name' => 'title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ]
+            ]
+        ];
+        print_r($builder->build());
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }

@@ -35,12 +35,12 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 
-        $builder = new RepeaterBuilder('slides');
-        $builder->setParentContext($fieldsBuilder);
+        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder->setParentContext($fieldsBuilder);
 
         $fieldsBuilder->expects($this->once())->method('addText');
 
-        $builder->addText('title')
+        $repeaterBuilder->addText('title')
                 ->addWysiwyg('content')
                 ->endRepeater()
                 ->addText('parent_title');
