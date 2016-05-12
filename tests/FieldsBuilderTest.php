@@ -848,7 +848,63 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        print_r($builder->build());
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testLocation()
+    {
+        $builder = new FieldsBuilder('banner');
+        $builder->addText('title')
+                ->addWysiwyg('content')
+                ->setLocation('post_type', '==', 'page')
+                    ->or('post_type', '==', 'post')
+                    ->and('post_id', '!=', '10')
+                ->addText('subtitle');
+
+        $builder->getLocation()->or('post_type', '==', 'team_member');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'content',
+                ],
+                [
+                    'name' => 'subtitle',
+                ],
+            ],
+            'location' => [
+                [
+                    [
+                        'param' => 'post_type',
+                        'operator'  =>  '==',
+                        'value' => 'page',
+                    ],
+                ],
+                [
+                    [
+                        'param' => 'post_type',
+                        'operator'  =>  '==',
+                        'value' => 'post',
+                    ],
+                    [
+                        'param' => 'post_id',
+                        'operator'  =>  '!=',
+                        'value' => '10',
+                    ],
+                ],
+                [
+                    [
+                        'param' => 'post_type',
+                        'operator'  =>  '==',
+                        'value' => 'team_member',
+                    ],
+                ],
+            ],
+        ];
+        
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 }

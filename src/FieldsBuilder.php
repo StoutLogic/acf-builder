@@ -6,6 +6,7 @@ class FieldsBuilder extends Builder
 {
     protected $config = [];
     protected $fields = [];
+    protected $location = [];
     protected $name;
 
     public function __construct($name, $groupConfig = [])
@@ -36,7 +37,7 @@ class FieldsBuilder extends Builder
      */
     public function build()
     {   
-        $fields = $this->fields;
+        $fields = $this->getFields();
 
         $fields = $this->buildFields($fields);
 
@@ -50,8 +51,14 @@ class FieldsBuilder extends Builder
             }
         });
 
+        $location = $this->getLocation();
+        if (is_subclass_of($location, Builder::class)) {
+            $location = $location->build();
+        }
+
         return array_merge($this->config, [
-            'fields' => $fields,        
+            'fields' => $fields,   
+            'location' => $location,     
         ]);
     }
 
@@ -354,6 +361,19 @@ class FieldsBuilder extends Builder
         $this->pushField($field);
 
         return $this;
+    }
+
+    public function setLocation($param, $operator, $value)
+    {
+        $this->location = new LocationBuilder($param, $operator, $value);
+        $this->location->setParentContext($this);
+
+        return $this->location;
+    }
+
+    public function getLocation()
+    {
+        return $this->location;
     }
 
     protected function popLastField()

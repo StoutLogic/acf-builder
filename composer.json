@@ -1,6 +1,6 @@
 {
     "name": "stoutlogic/understory-fields",
-    "description": "A WordPress custom field API for Understory",
+    "description": "An Advanced Custom Field Configuration Builder",
     "require-dev": {
         "phpunit/phpunit": "5.0.*"
     },
