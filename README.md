@@ -83,7 +83,7 @@ $banner
     ->addFields($background);
            
 $section = new FieldBuilder('section');
-$columms
+$section
     ->addTab('Content')
     ->addText('section_title')
     ->addRepeater('columns', ['min' => 1])
