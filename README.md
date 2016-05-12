@@ -18,10 +18,10 @@ add_action('acf/init', function() {
 ```
 
 `$banner->build();` will return:
-```
+```php
 [
   'key' => 'group_banner',
-  'title => 'Banner',
+  'title' => 'Banner',
   'fields' => [
     [
       'key' => 'field_title',
