@@ -1,6 +1,3 @@
-//gulpfile.js
-var phpunit = require('gulp-phpunit');
- 
 var gulp = require('gulp'),
     notify  = require('gulp-notify'),
     phpunit = require('gulp-phpunit');
@@ -14,9 +11,8 @@ gulp.task('phpunit', function() {
             message: "Error(s) occurred during testing..."
         }));
 });
- 
-gulp.task('default', function(){
-    gulp.run('phpunit');
+
+gulp.task('default', ['phpunit'], function(){
     gulp.watch('**/*.php', function(){
         gulp.run('phpunit');
     });

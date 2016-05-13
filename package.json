@@ -1,4 +1,12 @@
-//package.json
 {
-
+  "name": "acf-builder",
+  "version": "1.0.0",
+  "description": "An Advanced Custom Field Configuration Builder",
+  "author": "Steve Pfisterer <steve@stoutlogic.com>",
+  "license": "GPL-2.0+",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-phpunit": "^0.14.0"
+  }
 }
