@@ -116,3 +116,6 @@ or you can use the built in gulp task to run it on file change
 npm install
 gulp
 ```
+
+## Documentation
+See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documenation.
