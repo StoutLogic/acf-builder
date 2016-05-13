@@ -6,7 +6,7 @@ class FieldsBuilder extends Builder
 {
     protected $config = [];
     protected $fields = [];
-    protected $location = [];
+    protected $location = null;
     protected $name;
 
     public function __construct($name, $groupConfig = [])
