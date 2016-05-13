@@ -68,9 +68,9 @@ As you can see it saves you a lot of typing and is less error-prone. But brevity
 
 ```php
 
-use StoutLogic\AcfBuilder\FieldBuilder;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
-$background = new FieldBuilder('background');
+$background = new FieldsBuilder('background');
 $background
     ->addTab('Background')
     ->addImage('background_image')
@@ -78,14 +78,14 @@ $background
         ->instructions("Check to add a parallax effect where the background image doesn't move when scrolling")
     ->addColorPicker('background_color');
            
-$banner = new FieldBuilder('banner');
+$banner = new FieldsBuilder('banner');
 $banner
     ->addTab('Content')
     ->addText('title')
     ->addWysiwyg('content')
     ->addFields($background);
            
-$section = new FieldBuilder('section');
+$section = new FieldsBuilder('section');
 $section
     ->addTab('Content')
     ->addText('section_title')

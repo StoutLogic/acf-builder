@@ -337,7 +337,7 @@ class FieldsBuilder extends Builder
         return $this->fields;
     }
 
-    protected function getFieldByName($name) 
+    public function getFieldByName($name) 
     {
         foreach ($this->fields as $field) {
             if ($field['name'] === $name) {
