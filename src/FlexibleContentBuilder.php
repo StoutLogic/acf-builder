@@ -53,8 +53,10 @@ class FlexibleContentBuilder extends Builder
 
     public function addLayout($layout, $args = [])
     {
-        if (!is_a($layout, Builder::class)) {
-             $layout = new FieldsBuilder($layout, $args);
+        if (is_a($layout, Builder::class)) {
+             $layout = clone $layout;
+        } else {
+            $layout = new FieldsBuilder($layout, $args);
         }
 
         $layout->setGroupConfig('name', $layout->getName());
