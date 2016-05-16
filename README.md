@@ -103,7 +103,7 @@ Here a `background` field group is created, and then used in two other field gro
 ## Install
 Use composer to install:
 ```
-composer install stoutlogic/acf-builder
+composer require stoutlogic/acf-builder
 ```
 
 ## Tests
