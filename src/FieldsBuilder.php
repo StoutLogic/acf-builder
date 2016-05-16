@@ -351,7 +351,7 @@ class FieldsBuilder extends Builder
         return false;
     }
 
-    public function default($value)
+    public function defaultValue($value)
     {
         return $this->setConfig('default_value', $value);
     }

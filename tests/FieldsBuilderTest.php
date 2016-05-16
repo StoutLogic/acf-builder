@@ -546,11 +546,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-    public function testDefault()
+    public function testDefaultValue()
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name')
-                    ->default('John Smith');
+                    ->defaultValue('John Smith');
 
         $expectedConfig = [
             'fields' => [
