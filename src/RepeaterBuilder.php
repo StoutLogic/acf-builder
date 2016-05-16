@@ -31,4 +31,9 @@ class RepeaterBuilder extends FieldsBuilder
     {
         return $this->getParentContext();
     }
+
+    public function setLocation($param, $operator, $value)
+    {
+        return $this->getParentContext()->setLocation($param, $operator, $value);
+    }
 }

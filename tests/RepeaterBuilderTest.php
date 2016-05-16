@@ -45,4 +45,20 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
                 ->endRepeater()
                 ->addText('parent_title');
     }
+
+    public function testSetLocation()
+    {
+        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+                              ->setConstructorArgs(['parent'])
+                              ->getMock();
+
+        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder->setParentContext($fieldsBuilder);
+
+        $fieldsBuilder->expects($this->once())->method('setLocation');
+
+        $repeaterBuilder->addText('title')
+                ->addWysiwyg('content')
+                ->setLocation('post_type', '==', 'page');
+    }
 }
