@@ -16,7 +16,7 @@ class ConditionalBuilder extends Builder
         return $this->config;
     }
 
-    public function and($name, $operator, $value)
+    public function andCondition($name, $operator, $value)
     {
         $orCondition = $this->popOrCondition();
         $orCondition[] = $this->createCondition($name, $operator, $value);
@@ -25,7 +25,7 @@ class ConditionalBuilder extends Builder
         return $this;
     }
 
-    public function or($name, $operator, $value)
+    public function orCondition($name, $operator, $value)
     {
         $condition = $this->createCondition($name, $operator, $value);
         $this->pushOrCondition([$condition]);
@@ -52,4 +52,20 @@ class ConditionalBuilder extends Builder
         $this->config[] = $condition;
     }
 
+    /**
+     * Allow the use of reserved words and / or for methods
+     */
+    public function __call($methodName, $arguments) {
+        if ($methodName === 'and') {
+            list($name, $operator, $value) = $arguments;
+            return $this->andCondition($name, $operator, $value);
+        }
+        else if ($methodName === 'or') {
+            list($name, $operator, $value) = $arguments;
+            return $this->orCondition($name, $operator, $value);
+        }
+        else {
+            return parent::__call($methodName, $arguments);
+        }
+    }
 }
