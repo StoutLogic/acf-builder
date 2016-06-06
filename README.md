@@ -1,9 +1,10 @@
 # ACF Builder
+
 Create configuration arrays for [Advanced Custom Fields Pro](https://www.advancedcustomfields.com/pro/) using the builder pattern and a fluent API.
 
 Quickly create, register, and reuse ACF configurations, and keep them in your source code repository. To read more about registering ACF fields via php consult https://www.advancedcustomfields.com/resources/register-fields-via-php/
 
-[![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)](https://travis-ci.org/StoutLogic/acf-builder)
+[![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)](https://travis-ci.org/StoutLogic/acf-builder) [![Join the chat at https://gitter.im/StoutLogic/acf-builder](https://badges.gitter.im/StoutLogic/acf-builder.svg)](https://gitter.im/StoutLogic/acf-builder?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### Simple Example
 ```php
