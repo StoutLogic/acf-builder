@@ -3,7 +3,7 @@ Create configuration arrays for [Advanced Custom Fields Pro](https://www.advance
 
 Quickly create, register, and reuse ACF configurations, and keep them in your source code repository. To read more about registering ACF fields via php consult https://www.advancedcustomfields.com/resources/register-fields-via-php/
 
-![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)
+[![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)](https://travis-ci.org/StoutLogic/acf-builder)
 
 ### Simple Example
 ```php
