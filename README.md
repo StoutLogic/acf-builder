@@ -3,6 +3,8 @@ Create configuartion arrays for [Advanced Custom Fields Pro](https://www.advance
 
 Quickly create, register, and reuse ACF configurations, and keep them in your source code repository. To read more about registering ACF fields via php consult https://www.advancedcustomfields.com/resources/register-fields-via-php/
 
+![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)
+
 ### Simple Example
 ```php
 $banner = new StoutLogic\AcfBuilder\FieldsBuilder('banner');
@@ -12,7 +14,7 @@ $banner
     ->addImage('background_image')
     ->setLocation('post_type', '==', 'page')
         ->or('post_type', '==', 'post');
-       
+
 add_action('acf/init', function() {
    acf_add_local_field_group($banner->build());
 });
@@ -77,14 +79,14 @@ $background
     ->addTrueFalse('fixed')
         ->instructions("Check to add a parallax effect where the background image doesn't move when scrolling")
     ->addColorPicker('background_color');
-           
+
 $banner = new FieldsBuilder('banner');
 $banner
     ->addTab('Content')
     ->addText('title')
     ->addWysiwyg('content')
     ->addFields($background);
-           
+
 $section = new FieldsBuilder('section');
 $section
     ->addTab('Content')
@@ -117,5 +119,8 @@ npm install
 gulp
 ```
 
+## Requirements
+At this time only PHP 5.5 and later are supported. This is due to the use of [::class](http://php.net/manual/en/language.oop5.basic.php#language.oop5.basic.class.class)
+
 ## Documentation
-See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documenation.
+See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documentation.
