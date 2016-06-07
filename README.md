@@ -109,6 +109,8 @@ Use composer to install:
 composer require stoutlogic/acf-builder
 ```
 
+If your project isn't using composer, you can require the `autoload.php` file.
+
 ## Tests
 To run the tests you can manually run
 ```

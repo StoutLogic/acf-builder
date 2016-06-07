@@ -31,12 +31,12 @@ class FieldsBuilder extends Builder
     }
 
     /**
-     * Build the final config array. Build any other builders that may exist 
+     * Build the final config array. Build any other builders that may exist
      * in the config.
      * @return array    final field config
      */
     public function build()
-    {   
+    {
         $fields = $this->getFields();
 
         $fields = $this->buildFields($fields);
@@ -57,8 +57,8 @@ class FieldsBuilder extends Builder
         }
 
         return array_merge($this->config, [
-            'fields' => $fields,   
-            'location' => $location,     
+            'fields' => $fields,
+            'location' => $location,
         ]);
     }
 
@@ -69,7 +69,7 @@ class FieldsBuilder extends Builder
         foreach($fields as $i => $field) {
             if (is_subclass_of($field, Builder::class)) {
                 $builtFields[] = $field->build();
-            }   
+            }
             else {
                 $builtFields[] = $field;
             }
@@ -102,7 +102,7 @@ class FieldsBuilder extends Builder
     }
 
     /**
-     * Add multiple fields either via an array or from another builder 
+     * Add multiple fields either via an array or from another builder
      * @param mixed $fields array of fields or a FieldBuilder
      */
     public function addFields($fields)
@@ -112,7 +112,7 @@ class FieldsBuilder extends Builder
             foreach ($fields->getFields() as $field) {
                 $this->pushField($field);
             }
-        }        
+        }
         else {
             foreach ($fields as $field) {
                 $this->pushField($field);
@@ -140,7 +140,7 @@ class FieldsBuilder extends Builder
         return $this->addField($name, array_merge([
             'type' => $type,
         ], $args));
-    } 
+    }
 
     public function addText($name, $args = [])
     {
@@ -340,7 +340,7 @@ class FieldsBuilder extends Builder
         return $this->fields;
     }
 
-    public function getFieldByName($name) 
+    public function getFieldByName($name)
     {
         foreach ($this->fields as $field) {
             if ($field['name'] === $name) {
@@ -377,6 +377,10 @@ class FieldsBuilder extends Builder
 
     public function setLocation($param, $operator, $value)
     {
+        if ($this->getParentContext()) {
+            return $this->getParentContext()->setLocation($param, $operator, $value);
+        }
+
         $this->location = new LocationBuilder($param, $operator, $value);
         $this->location->setParentContext($this);
 
