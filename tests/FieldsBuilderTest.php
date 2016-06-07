@@ -82,11 +82,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'name_two',
                     'label' => 'Name Two',
                 ],
-            ],            
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
-    }    
+    }
 
     public function testAddText()
     {
@@ -155,7 +155,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
-    }    
+    }
 
     public function testAddUrl()
     {
@@ -314,7 +314,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        
+
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -519,7 +519,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'name_five',
                     'required' => 1,
                 ],
-            ],            
+            ],
         ];
 
         $config = $builder->build();
@@ -540,7 +540,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'name',
                     'instructions' => 'Last Name, First Name',
                 ],
-            ],            
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
@@ -558,7 +558,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'name',
                     'default_value' => 'John Smith',
                 ],
-            ],            
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
@@ -593,7 +593,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     'name' => 'background_color',
                 ],
-            ],            
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
@@ -612,7 +612,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'label' => 'Warning',
                     'message' => 'This is my message',
                 ],
-            ],            
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
@@ -689,7 +689,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                         ]
                     ],
                 ],
-            ],            
+            ],
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
@@ -805,7 +805,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        
+
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -904,11 +904,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        
+
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-    public function testFlexibleCOntent()
+    public function testFlexibleContent()
     {
         $builder = new FieldsBuilder('page_content');
         $builder->addFlexibleContent('sections')
@@ -969,5 +969,25 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ],
         ];
         $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testReturnExistingParentContextForSetLocation()
+    {
+        $builder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+                        ->setConstructorArgs(['parent'])
+                        ->getMock();
+
+        $middleBuilder =  new FieldsBuilder('middle');
+        $middleBuilder->setParentContext($builder);
+
+        $subBuilder = new FieldsBuilder('child');
+        $subBuilder->setParentContext($middleBuilder);
+
+        $builder->expects($this->exactly(2))->method('setLocation');
+
+        $subBuilder
+            ->setLocation('post_type', '==', 'page');
+        $middleBuilder
+            ->setLocation('post_type', '==', 'page');
     }
 }

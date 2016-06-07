@@ -19,9 +19,9 @@ abstract class Builder
     }
 
     public function __call($method, $args) {
-        if (isset($this->parentContext)) {
+        if ($this->parentContext) {
             return call_user_func_array([$this->parentContext, $method], $args);
-        }    
+        }
 
         throw new \Exception('No such function: '.$method);
     }

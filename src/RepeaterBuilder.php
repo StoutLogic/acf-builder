@@ -4,8 +4,6 @@ namespace StoutLogic\AcfBuilder;
 
 class RepeaterBuilder extends FieldsBuilder
 {
-   
-
     public function __construct($name, $args = [])
     {
         $this->config = array_merge(
@@ -14,7 +12,7 @@ class RepeaterBuilder extends FieldsBuilder
                 'name' => $name,
                 'label' => $this->generateLabel($name),
                 'type' => 'repeater',
-            ], 
+            ],
             $args
         );
     }
@@ -30,10 +28,5 @@ class RepeaterBuilder extends FieldsBuilder
     public function endRepeater()
     {
         return $this->getParentContext();
-    }
-
-    public function setLocation($param, $operator, $value)
-    {
-        return $this->getParentContext()->setLocation($param, $operator, $value);
     }
 }

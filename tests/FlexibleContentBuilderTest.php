@@ -61,7 +61,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        
+
         $this->assertArraySubset($expectedConfig, $builder->build());
         $this->assertArrayNotHasKey('fields', $builder->build());
     }
@@ -72,7 +72,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                         ->setConstructorArgs(['parent'])
                         ->getMock();
 
-        $banner->expects($this->once())->method('build')->willReturn([        
+        $banner->expects($this->once())->method('build')->willReturn([
             'key' => 'group_banner',
             'name' => 'banner',
             'title' => 'Banner',
@@ -117,7 +117,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ]
         ];
-        
+
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -140,5 +140,25 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                     ->addWysiwyg('content')
             ->endFlexibleContent()
         ->addText('parent_title');
+    }
+
+    public function testSetLocation()
+    {
+        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+                              ->setConstructorArgs(['parent'])
+                              ->getMock();
+
+        $builder = new FlexibleContentBuilder('content_areas');
+        $builder->setParentContext($fieldsBuilder);
+        $fieldsBuilder->expects($this->once())->method('setLocation');
+
+        $builder
+            ->addLayout('banner')
+                ->addText('title')
+                ->addWysiwyg('content')
+            ->addLayout('content_columns')
+                ->addRepeater('columns', ['min' => 1, 'max' => 2])
+                    ->addWysiwyg('content')
+            ->setLocation('post_type', '==', 'page');
     }
 }
