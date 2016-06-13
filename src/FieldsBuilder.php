@@ -107,7 +107,7 @@ class FieldsBuilder extends Builder
      */
     public function addFields($fields)
     {
-        if (is_subclass_of($fields, FieldsBuilder::class)) {
+        if (is_a($fields, FieldsBuilder::class)) {
             $fields = clone $fields;
             foreach ($fields->getFields() as $field) {
                 $this->pushField($field);

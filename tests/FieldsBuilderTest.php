@@ -811,20 +811,10 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
     function testAddAnotherBuildersFields()
     {
-        $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
-                        ->setConstructorArgs(['parent'])
-                        ->getMock();
-
-        $banner->expects($this->any())->method('getFields')->willReturn([
-                [
-                    'name' => 'title',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'content',
-                    'type' => 'wysiwyg',
-                ]
-            ]);
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
 
         $builder = new FieldsBuilder('content');
         $builder->addTextarea('summary')
@@ -840,6 +830,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'name' => 'title',
+                    'label' => 'Title',
                     'type' => 'text',
                 ],
                 [
@@ -849,6 +840,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         $this->assertArraySubset($expectedConfig, $builder->build());
+        print_r($builder->build());
     }
 
     public function testLocation()
