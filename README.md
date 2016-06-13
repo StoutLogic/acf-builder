@@ -87,19 +87,21 @@ $banner
     ->addTab('Content')
     ->addText('title')
     ->addWysiwyg('content')
-    ->addFields($background);
+    ->addFields($background)
+    ->setLocation('post_type', '==', 'page');
 
 $section = new FieldsBuilder('section');
 $section
     ->addTab('Content')
     ->addText('section_title')
-    ->addRepeater('columns', ['min' => 1])
+    ->addRepeater('columns', ['min' => 1, 'layout' => 'block'])
         ->addTab('Content')
         ->addText('title')
         ->addWysiwyg('content')
         ->addFields($background)
         ->endRepeater()
-    ->addFields($background);
+    ->addFields($background)
+    ->setLocation('post_type', '==', 'page');
 ```
 
 Here a `background` field group is created, and then used in two other field groups, including twice in the `section` field group. This can really DRY up your code and keep your admin UI consistent. If you wanted to add a light/dark field for the text color field based on the background used, it would just need to be added in one spot and used everywhere.
