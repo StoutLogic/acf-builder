@@ -66,11 +66,10 @@ class FieldsBuilder extends Builder
     {
         $builtFields = [];
 
-        foreach($fields as $i => $field) {
+        foreach ($fields as $i => $field) {
             if (is_subclass_of($field, Builder::class)) {
                 $builtFields[] = $field->build();
-            }
-            else {
+            } else {
                 $builtFields[] = $field;
             }
         }
@@ -112,8 +111,7 @@ class FieldsBuilder extends Builder
             foreach ($fields->getFields() as $field) {
                 $this->pushField($field);
             }
-        }
-        else {
+        } else {
             foreach ($fields as $field) {
                 $this->pushField($field);
             }
