@@ -247,6 +247,16 @@ class FieldsBuilder extends Builder
         return $this->addFieldType($name, 'date_picker', $args);
     }
 
+    public function addTimePicker($name, $args = [])
+    {
+        return $this->addFieldType($name, 'time_picker', $args);
+    }
+
+    public function addDateTimePicker($name, $args = [])
+    {
+        return $this->addFieldType($name, 'date_time_picker', $args);
+    }
+
     public function addColorPicker($name, $args = [])
     {
         return $this->addFieldType($name, 'color_picker', $args);
