@@ -472,6 +472,40 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddTimePicker()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addTimePicker('start_time');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'start_time',
+                    'type' => 'time_picker',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddDateTimePicker()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addDateTimePicker('start_date_time');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'start_date_time',
+                    'type' => 'date_time_picker',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testAddColorPicker()
     {
         $builder = new FieldsBuilder('fields');
