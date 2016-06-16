@@ -348,15 +348,44 @@ class FieldsBuilder extends Builder
         return $this->fields;
     }
 
-    protected function getFieldByName($name)
+    /**
+     * Return the index in the $this->fields array looked up by the field's name
+     * @param  string $name Field Name
+     *
+     * @throws FieldNotFoundException if the field name doesn't exist
+     *
+     * @return integer Field Index
+     */
+    protected function getFieldIndexByName($name)
     {
-        foreach ($this->fields as $field) {
+        foreach ($this->fields as $index => $field) {
             if ($field['name'] === $name) {
-                return $field;
+                return $index;
             }
         }
 
-        return false;
+        throw new FieldNotFoundException("Field name '{$name}' not found.");
+    }
+
+    protected function getFieldByName($name)
+    {
+        return $this->fields[$this->getFieldIndexByName($name)];
+    }
+
+    public function modifyField($name, $args = [])
+    {
+        $index = $this->getFieldIndexByName($name);
+        $this->fields[$index] = array_merge($this->fields[$index], $args);
+
+        return $this;
+    }
+
+    public function removeField($name)
+    {
+        $index = $this->getFieldIndexByName($name);
+        unset($this->fields[$index]);
+        
+        return $this;
     }
 
     public function defaultValue($value)
