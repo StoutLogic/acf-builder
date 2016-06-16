@@ -59,12 +59,10 @@ class ConditionalBuilder extends Builder
         if ($methodName === 'and') {
             list($name, $operator, $value) = $arguments;
             return $this->andCondition($name, $operator, $value);
-        }
-        else if ($methodName === 'or') {
+        } else if ($methodName === 'or') {
             list($name, $operator, $value) = $arguments;
             return $this->orCondition($name, $operator, $value);
-        }
-        else {
+        } else {
             return parent::__call($methodName, $arguments);
         }
     }
