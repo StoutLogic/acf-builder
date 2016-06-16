@@ -2,6 +2,10 @@
 
 namespace StoutLogic\AcfBuilder;
 
+/**
+ * @method ConditionalBuilder and()
+ * @method ConditionalBuilder or()
+ */
 class ConditionalBuilder extends Builder
 {
     private $config = [[]];
