@@ -1072,4 +1072,62 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $fields);
     }
+
+    public function testModifyFieldWithClosure()
+    {
+
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', function($fieldsBuilder) {
+                return $fieldsBuilder
+                    ->setConfig('label', 'Banner Title')
+                    ->addText('sub_title');
+            });
+
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                    'label' => 'Banner Title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'sub_title',
+                    'label' => 'Sub Title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ],
+            ]
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    /**
+     * @expectedException StoutLogic\AcfBuilder\ModifyFieldReturnTypeException
+     */
+    public function testModifyFieldWithClosureNotReturningFieldsBuilder()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', function($fieldsBuilder) {
+                $fieldsBuilder
+                    ->setConfig('label', 'Banner Title')
+                    ->addText('sub_title');
+            });
+
+        $builder->build();
+    }
 }
