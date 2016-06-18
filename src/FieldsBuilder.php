@@ -348,15 +348,82 @@ class FieldsBuilder extends Builder
         return $this->fields;
     }
 
-    protected function getFieldByName($name)
+    /**
+     * Return the index in the $this->fields array looked up by the field's name
+     * @param  string $name Field Name
+     *
+     * @throws FieldNotFoundException if the field name doesn't exist
+     *
+     * @return integer Field Index
+     */
+    protected function getFieldIndexByName($name)
     {
-        foreach ($this->fields as $field) {
+        foreach ($this->fields as $index => $field) {
             if ($field['name'] === $name) {
-                return $field;
+                return $index;
             }
         }
 
-        return false;
+        throw new FieldNotFoundException("Field name '{$name}' not found.");
+    }
+
+    protected function getFieldByName($name)
+    {
+        return $this->fields[$this->getFieldIndexByName($name)];
+    }
+
+    /**
+     * Modify an already defined field
+     * @param  string $name   Name of the field
+     * @param  mixed  $modify Array of field configs or a closure that accepts
+     *                        a FieldsBuilder and returns a FieldsBuilder.
+     *
+     * @throws ModifyFieldReturnTypeException if $modify is a closure and doesn't
+     *                                        return a FieldsBuilder.
+     *
+     * @return FieldsBuilder  $this
+     */
+    public function modifyField($name, $modify)
+    {
+        $index = $this->getFieldIndexByName($name);
+
+        if ($modify instanceof \Closure) {
+            // Initialize Modifying FieldsBuilder
+            $modifyBuilder = new FieldsBuilder($name);
+            $modifyBuilder->addFields([$this->fields[$index]]);
+
+            // Modify Field
+            $modifyBuilder = $modify($modifyBuilder);
+
+            // Check if a FieldsBuilder is returned
+            if (!is_a($modifyBuilder, FieldsBuilder::class)) {
+                throw new ModifyFieldReturnTypeException(gettype($modifyBuilder));
+            } else {
+                // Build Modifcations
+                $modifyConfig = $modifyBuilder->build();
+
+                // Build Modifcations
+                array_splice($this->fields, $index, 1, $modifyConfig['fields']);
+            }
+        } else {
+            $this->fields[$index] = array_merge($this->fields[$index], $modify);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a field by name
+     * @param  string $name Field to remove
+     *
+     * @return FieldsBuilder  $this
+     */
+    public function removeField($name)
+    {
+        $index = $this->getFieldIndexByName($name);
+        unset($this->fields[$index]);
+
+        return $this;
     }
 
     public function defaultValue($value)

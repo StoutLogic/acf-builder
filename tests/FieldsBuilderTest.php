@@ -874,7 +874,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         $this->assertArraySubset($expectedConfig, $builder->build());
-        print_r($builder->build());
     }
 
     public function testLocation()
@@ -1015,5 +1014,120 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ->setLocation('post_type', '==', 'page');
         $middleBuilder
             ->setLocation('post_type', '==', 'page');
+    }
+
+    public function testModifyFieldArguments()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', ['label' => 'Banner Title']);
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                    'label' => 'Banner Title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ],
+            ]
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    /**
+     * @expectedException StoutLogic\AcfBuilder\FieldNotFoundException
+     */
+    public function testModifyFieldDoesntExist()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('button', ['label' => 'Banner Title']);
+    }
+
+    public function testRemoveField()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->removeField('title');
+
+        $config = $builder->build();
+        $fields = $config['fields'];
+
+        $this->assertCount(1, $fields);
+    }
+
+    public function testModifyFieldWithClosure()
+    {
+
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', function($fieldsBuilder) {
+                return $fieldsBuilder
+                    ->setConfig('label', 'Banner Title')
+                    ->addText('sub_title');
+            });
+
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                    'label' => 'Banner Title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'sub_title',
+                    'label' => 'Sub Title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ],
+            ]
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    /**
+     * @expectedException StoutLogic\AcfBuilder\ModifyFieldReturnTypeException
+     */
+    public function testModifyFieldWithClosureNotReturningFieldsBuilder()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', function($fieldsBuilder) {
+                $fieldsBuilder
+                    ->setConfig('label', 'Banner Title')
+                    ->addText('sub_title');
+            });
+
+        $builder->build();
     }
 }
