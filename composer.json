@@ -16,8 +16,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "StoutLogic\\AcfBuilder\\Tests\\": "tests/",
             "StoutLogic\\AcfBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StoutLogic\\AcfBuilder\\Tests\\": "tests/"
         }
     }
 }
