@@ -17,41 +17,45 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                         ->addWysiwyg('content');
 
         $expectedConfig =  [
-            'key' => 'field_content_areas',
+            'key' => 'content_areas',
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
             'button' => 'Add Content Area',
             'layouts' => [
                 [
-                    'key' => 'group_banner',
+                    'key' => 'field_content_areas_banner',
                     'name' => 'banner',
                     'label' => 'Banner',
                     'display' => 'block',
                     'sub_fields' => [
                         [
+                            'key' => 'field_content_areas_banner_title',
                             'name' => 'title',
                             'type' => 'text',
                         ],
                         [
+                            'key' => 'field_content_areas_banner_content',
                             'name' => 'content',
                             'type' => 'wysiwyg',
                         ]
                     ]
                 ],
                 [
-                    'key' => 'group_content_columns',
+                    'key' => 'field_content_areas_content_columns',
                     'name' => 'content_columns',
                     'label' => 'Content Columns',
                     'display' => 'block',
                     'sub_fields' => [
                         [
+                            'key' => 'field_content_areas_content_columns_columns',
                             'name' => 'columns',
                             'type' => 'repeater',
                             'min' => 1,
                             'max' => 2,
                             'sub_fields' => [
                                 [
+                                    'key' => 'field_content_areas_content_columns_columns_content',
                                     'name' => 'content',
                                     'type' => 'wysiwyg',
                                 ],
@@ -79,6 +83,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
             'display' => 'block',
             'fields' => [
                 [
+                    'key' => 'field_banner_title',
                     'name' => 'title',
                     'type' => 'text',
                 ],
@@ -93,19 +98,20 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->addLayout($banner);
 
         $expectedConfig =  [
-            'key' => 'field_content_areas',
+            'key' => 'content_areas',
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
             'button' => 'Add Content Area',
             'layouts' => [
                 [
-                    'key' => 'group_banner',
+                    'key' => 'field_content_areas_banner',
                     'name' => 'banner',
                     'label' => 'Banner',
                     'display' => 'block',
                     'sub_fields' => [
                         [
+                            'key' => 'field_content_areas_banner_title',
                             'name' => 'title',
                             'type' => 'text',
                         ],
@@ -118,7 +124,8 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->assertArraySubset($expectedConfig, $builder->build());
+        $config = $builder->build();
+        $this->assertArraySubset($expectedConfig, $config);
     }
 
     public function testEndFlexibleContent()

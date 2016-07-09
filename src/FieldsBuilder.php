@@ -12,7 +12,7 @@ class FieldsBuilder extends Builder
     public function __construct($name, $groupConfig = [])
     {
         $this->name = $name;
-        $this->setGroupConfig('key', 'group_'.$name);
+        $this->setGroupConfig('key', $name);
         $this->setGroupConfig('title', $this->generateLabel($name));
 
         $this->config = array_merge($this->config, $groupConfig);
@@ -31,6 +31,103 @@ class FieldsBuilder extends Builder
     }
 
     /**
+     * Namespace a group key
+     * Append the namespace 'group' before the set key.
+     *
+     * @param  string $key Field Key
+     * @return string      Field Key
+     */
+    private function namespaceGroupKey($key)
+    {
+        if (strpos($key, 'group_') !== 0) {
+            $key = 'group_'.$key;
+        }
+        return $key;
+    }
+
+    /**
+     * Namespace a field key
+     * Append the namespace consisting of 'field' and the group's name before the
+     * set key.
+     * Ensure all lowercase.
+     *
+     * @param  string $key Field Key
+     * @return string      Field Key
+     */
+    private function namespaceFieldKey($key)
+    {
+        $namespace = 'field_';
+
+        if ($this->getName()) {
+            // remove field_ if already at the begining of the key
+            $key = preg_replace('/^field_/', '', $key);
+            $key = preg_replace('/^group_/', '', $key);
+            $namespace .= str_replace(' ', '_', $this->getName()).'_';
+        }
+        return strtolower($namespace.$key);
+    }
+
+    /**
+     * Namespace all field keys so they are unique for each field group
+     * @param  array $fields Fields
+     * @return array         Fields
+     */
+    private function namespaceFieldKeys($fields)
+    {
+        array_walk_recursive($fields, function(&$value, $key) {
+            switch ($key) {
+                case 'key':
+                case 'field':
+                    $value = $this->namespaceFieldKey($value);
+                    break;
+            }
+        });
+        return $fields;
+    }
+
+    /**
+     * Replace field values with the field's respective key
+     * @param  array $config
+     * @return array
+     */
+    private function transformConditionalConfig($config)
+    {
+        // Replace field name with the field's key, default: field_$name
+        array_walk_recursive($config, function(&$value, $key) {
+            switch ($key) {
+                case 'field':
+                    if ($field = $this->getFieldByName($value)) {
+                        $value = $field['key'];
+                    } else {
+                        $value = 'field_'.$value;
+                    }
+                    break;
+            }
+        });
+
+        return $config;
+    }
+
+    /**
+     * Build the conditional logic of a field
+     * @param  array $fields Fields
+     * @return array         Fields
+     */
+    private function buildConditionalLogic($fields)
+    {
+        array_walk_recursive($fields, function(&$value, $key) {
+
+            switch ($key) {
+                case 'conditional_logic':
+                    $value = $value->build();
+                    $value = $this->transformConditionalConfig($value);
+                    break;
+            }
+        });
+        return $fields;
+    }
+
+    /**
      * Build the final config array. Build any other builders that may exist
      * in the config.
      * @return array    final field config
@@ -41,15 +138,9 @@ class FieldsBuilder extends Builder
 
         $fields = $this->buildFields($fields);
 
-        array_walk_recursive($fields, function(&$value, $key) {
+        $fields = $this->buildConditionalLogic($fields);
+        $fields = $this->namespaceFieldKeys($fields);
 
-            switch ($key) {
-                case 'conditional_logic':
-                    $value = $value->build();
-                    $value = $this->transformConditionalConfig($value);
-                    break;
-            }
-        });
 
         $location = $this->getLocation();
         if (is_subclass_of($location, Builder::class)) {
@@ -59,6 +150,7 @@ class FieldsBuilder extends Builder
         return array_merge($this->config, [
             'fields' => $fields,
             'location' => $location,
+            'key' => $this->namespaceGroupKey($this->config['key']),
         ]);
     }
 
@@ -77,28 +169,6 @@ class FieldsBuilder extends Builder
         return $builtFields;
     }
 
-    /**
-     * Replace field values with the field's respective key
-     * @param  array $config
-     * @return array
-     */
-    protected function transformConditionalConfig($config)
-    {
-        // Replace field name with the field's key, default: field_$name
-        array_walk_recursive($config, function(&$value, $key) {
-            switch ($key) {
-                case 'field':
-                    if ($field = $this->getFieldByName($value)) {
-                        $value = $field['key'];
-                    } else {
-                        $value = 'field_'.$value;
-                    }
-                    break;
-            }
-        });
-
-        return $config;
-    }
 
     /**
      * Add multiple fields either via an array or from another builder
@@ -123,7 +193,7 @@ class FieldsBuilder extends Builder
     public function addField($name, $args = [])
     {
         $field = array_merge([
-            'key' => 'field_'.$name,
+            'key' => $name,
             'name' => $name,
             'label' => $this->generateLabel($name),
         ], $args);
@@ -389,7 +459,7 @@ class FieldsBuilder extends Builder
 
         if ($modify instanceof \Closure) {
             // Initialize Modifying FieldsBuilder
-            $modifyBuilder = new FieldsBuilder($name);
+            $modifyBuilder = new FieldsBuilder('');
             $modifyBuilder->addFields([$this->fields[$index]]);
 
             // Modify Field

@@ -6,9 +6,10 @@ class RepeaterBuilder extends FieldsBuilder
 {
     public function __construct($name, $args = [])
     {
+        $this->name = $name;
         $this->config = array_merge(
             [
-                'key' => 'field_'.$name,
+                'key' => $name,
                 'name' => $name,
                 'label' => $this->generateLabel($name),
                 'type' => 'repeater',

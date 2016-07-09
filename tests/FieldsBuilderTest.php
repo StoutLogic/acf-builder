@@ -73,12 +73,12 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig = [
             'fields' => [
                 [
-                    'key' => 'field_name',
+                    'key' => 'field_fields_name',
                     'name' => 'name',
                     'label' => 'Name',
                 ],
                 [
-                    'key' => 'field_name_two',
+                    'key' => 'field_fields_name_two',
                     'name' => 'name_two',
                     'label' => 'Name Two',
                 ],
@@ -609,7 +609,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig = [
             'fields' => [
                 [
-                    'key' => 'field_content_tab',
+                    'key' => 'field_fields_content_tab',
                     'name' => 'content_tab',
                     'label' => 'Content',
                     'type' => 'tab',
@@ -618,7 +618,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'name',
                 ],
                 [
-                    'key' => 'field_background_color_tab',
+                    'key' => 'field_fields_background_color_tab',
                     'name' => 'background_color_tab',
                     'label' => 'Background Color',
                     'type' => 'tab',
@@ -641,7 +641,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig = [
             'fields' => [
                 [
-                    'key' => 'field_warning_message',
+                    'key' => 'field_fields_warning_message',
                     'name' => 'warning_message',
                     'label' => 'Warning',
                     'message' => 'This is my message',
@@ -657,14 +657,14 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addRadio('color')
                     ->addChoices('red', 'blue', 'green', 'other')
-                ->addRadio('number', ['key' => 'field_num'])
+                ->addRadio('number', ['key' => 'num'])
                     ->addChoices('one', 'two', 'three', 'other')
                 ->addText('other_value')
                     ->conditional('color', '==', 'other')
                         ->and('day', '!=', 'tue')
                         ->or('number', '==', 'other')
                         ->and('number', '!=', 'two')
-                ->addRadio('day', ['key' => 'field_day_of_week'])
+                ->addRadio('day', ['key' => 'day_of_week'])
                     ->addChoices('mon', 'tue', 'wed', 'thu', 'other')
                 ->addText('other_day')
                     ->conditional('day', '==', 'other');
@@ -672,11 +672,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig = [
             'fields' => [
                 [
-                    'key' => 'field_color',
+                    'key' => 'field_fields_color',
                     'name' => 'color',
                 ],
                 [
-                    'key' => 'field_num',
+                    'key' => 'field_fields_num',
                     'name' => 'number',
                 ],
                 [
@@ -684,24 +684,24 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'conditional_logic' => [
                         [
                             [
-                                'field' => 'field_color',
+                                'field' => 'field_fields_color',
                                 'operator'  =>  '==',
                                 'value' => 'other',
                             ],
                             [
-                                'field' => 'field_day_of_week',
+                                'field' => 'field_fields_day_of_week',
                                 'operator'  =>  '!=',
                                 'value' => 'tue',
                             ]
                         ],
                         [
                             [
-                                'field' => 'field_num',
+                                'field' => 'field_fields_num',
                                 'operator'  =>  '==',
                                 'value' => 'other',
                             ],
                             [
-                                'field' => 'field_num',
+                                'field' => 'field_fields_num',
                                 'operator'  =>  '!=',
                                 'value' => 'two',
                             ]
@@ -716,7 +716,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'conditional_logic' => [
                         [
                             [
-                                'field' => 'field_day_of_week',
+                                'field' => 'field_fields_day_of_week',
                                 'operator'  =>  '==',
                                 'value' => 'other',
                             ],
@@ -947,41 +947,45 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig = [
             'fields' => [
                 [
-                    'key' => 'field_sections',
+                    'key' => 'field_page_content_sections',
                     'name' => 'sections',
                     'label' => 'Sections',
                     'type' => 'flexible_content',
                     'button' => 'Add Section',
                     'layouts' => [
                         [
-                            'key' => 'group_banner',
+                            'key' => 'field_page_content_sections_banner',
                             'name' => 'banner',
                             'label' => 'Banner',
                             'display' => 'block',
                             'sub_fields' => [
                                 [
+                                    'key' => 'field_page_content_sections_banner_title',
                                     'name' => 'title',
                                     'type' => 'text',
                                 ],
                                 [
+                                    'key' => 'field_page_content_sections_banner_content',
                                     'name' => 'content',
                                     'type' => 'wysiwyg',
                                 ]
                             ]
                         ],
                         [
-                            'key' => 'group_content_columns',
+                            'key' => 'field_page_content_sections_content_columns',
                             'name' => 'content_columns',
                             'label' => 'Content Columns',
                             'display' => 'block',
                             'sub_fields' => [
                                 [
+                                    'key' => 'field_page_content_sections_content_columns_columns',
                                     'name' => 'columns',
                                     'type' => 'repeater',
                                     'min' => 1,
                                     'max' => 2,
                                     'sub_fields' => [
                                         [
+                                            'key' => 'field_page_content_sections_content_columns_columns_content',
                                             'name' => 'content',
                                             'type' => 'wysiwyg',
                                         ],
@@ -993,6 +997,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
+
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -1129,5 +1134,36 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             });
 
         $builder->build();
+    }
+
+    public function testModifyingReusedAddedFields()
+    {
+        $text = new FieldsBuilder('Text');
+        $text
+          ->addText('Name', ['key' => 'my_key']);
+
+        $foo = new FieldsBuilder('foo');
+        $foo
+          ->addFields($text)
+          ->modifyField('Name', function($fieldsBuilder) {
+            return $fieldsBuilder
+              ->defaultValue('Foo');
+          })
+          ->setLocation('post_type', '==', 'page');
+
+        $bar = new FieldsBuilder('bar');
+        $bar
+          ->addFields($text)
+          ->modifyField('Name', function($fieldsBuilder) {
+            return $fieldsBuilder
+              ->defaultValue('Bar');
+          })
+          ->setLocation('post_type', '==', 'page');
+
+        $fooConfig = $foo->build();
+        $barConfig = $bar->build();
+
+        $this->assertNotSame($fooConfig['fields']['0']['default_value'], $barConfig['fields']['0']['default_value']);
+        $this->assertNotSame($fooConfig['fields']['0']['key'], $barConfig['fields']['0']['key']);
     }
 }

@@ -7,11 +7,14 @@ class FlexibleContentBuilder extends Builder
     private $config = [];
     private $layouts = [];
 
+    private $name;
+
     public function __construct($name, $args = [])
     {
+        $this->name = $name;
         $this->config = array_merge(
             [
-                'key' => 'field_'.$name,
+                'key' => $name,
                 'name' => $name,
                 'label' => $this->generateLabel($name),
                 'type' => 'flexible_content',
@@ -40,6 +43,50 @@ class FlexibleContentBuilder extends Builder
         ]);
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Namespace a field key
+     * Append the namespace consitint of 'field' and the group's name before the
+     * set key.
+     *
+     * @param  string $key Field Key
+     * @return string      Field Key
+     */
+    private function namespaceFieldKey($key)
+    {
+        $namespace = 'field_';
+
+        if ($this->getName()) {
+            // remove field_ if already at the begining of the key
+            $key = preg_replace('/^field_/', '', $key);
+            $key = preg_replace('/^group_/', '', $key);
+            $namespace .= str_replace(' ', '_', $this->getName()).'_';
+        }
+        return strtolower($namespace.$key);
+    }
+
+    /**
+     * Namespace all field keys so they are unique for each field group
+     * @param  array $fields Fields
+     * @return array         Fields
+     */
+    private function namespaceFieldKeys($fields)
+    {
+        array_walk_recursive($fields, function(&$value, $key) {
+            switch ($key) {
+                case 'key':
+                case 'field':
+                    $value = $this->namespaceFieldKey($value);
+                    break;
+            }
+        });
+        return $fields;
+    }
+
     public function transformLayout($layoutConfig)
     {
         $layoutConfig['sub_fields'] = $layoutConfig['fields'];
@@ -48,6 +95,8 @@ class FlexibleContentBuilder extends Builder
         $layoutConfig['label'] = $layoutConfig['title'];
         unset($layoutConfig['title']);
 
+
+        $layoutConfig = $this->namespaceFieldKeys($layoutConfig);
         return $layoutConfig;
     }
 
