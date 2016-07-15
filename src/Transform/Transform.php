@@ -6,7 +6,7 @@ use StoutLogic\AcfBuilder\Builder;
 
 abstract class Transform
 {
-    protected $bulider;
+    private $bulider;
 
     public function __construct(Builder $builder)
     {

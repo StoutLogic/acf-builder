@@ -60,7 +60,7 @@ class FlexibleContentBuilder extends Builder
 
     public function addLayout($layout, $args = [])
     {
-        if ($layout instanceof Builder) {
+        if ($layout instanceof FieldsBuilder) {
             $layout = clone $layout;
         } else {
             $layout = new FieldsBuilder($layout, $args);
