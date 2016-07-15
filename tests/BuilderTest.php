@@ -25,7 +25,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\Builder');
         $child->setParentContext($parent);
 
-        $this->setExpectedException(\Exception::class);
+        $this->setExpectedException('\Exception');
         $child->nonExistantParentMethod();
     }
 }

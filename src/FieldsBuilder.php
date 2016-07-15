@@ -91,7 +91,7 @@ class FieldsBuilder extends Builder
      */
     public function addFields($fields)
     {
-        if (is_a($fields, FieldsBuilder::class)) {
+        if ($fields instanceof FieldsBuilder) {
             $fields = clone $fields;
             foreach ($fields->getFields() as $field) {
                 $this->pushField($field);
@@ -381,7 +381,7 @@ class FieldsBuilder extends Builder
             $modifyBuilder = $modify($modifyBuilder);
 
             // Check if a FieldsBuilder is returned
-            if (!is_a($modifyBuilder, FieldsBuilder::class)) {
+            if (!$modifyBuilder instanceof FieldsBuilder) {
                 throw new ModifyFieldReturnTypeException(gettype($modifyBuilder));
             } else {
                 // Build Modifcations

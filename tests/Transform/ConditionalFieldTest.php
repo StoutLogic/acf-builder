@@ -4,27 +4,26 @@ namespace StoutLogic\AcfBuilder\Tests\Transform;
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\Transform;
-use PHPUnit\Framework\TestCase;
 
-class ConditionalFieldTest extends TestCase
+class ConditionalFieldTest extends \PHPUnit_Framework_TestCase
 {
     public function testIsRecursive()
     {
-        $builder = $this->prophesize(FieldsBuilder::class);
+        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $transform = new Transform\ConditionalField($builder->reveal());
-        $this->assertInstanceOf(Transform\RecursiveTransform::class, $transform);
+        $this->assertInstanceOf('\StoutLogic\AcfBuilder\Transform\RecursiveTransform', $transform);
     }
 
     public function testGetKeys()
     {
-        $builder = $this->prophesize(FieldsBuilder::class);
+        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $transform = new Transform\ConditionalField($builder->reveal());
         $this->assertSame(['field'], $transform->getKeys());
     }
 
     public function testTransformValue()
     {
-        $builder = $this->prophesize(FieldsBuilder::class);
+        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $builder
             ->getFieldByName('value')
             ->willReturn([
