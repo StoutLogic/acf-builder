@@ -29,18 +29,28 @@ class FlexibleContentBuilder extends Builder
 
     public function build()
     {
-        $layouts = $this->getLayouts();
-
-        foreach ($layouts as $i => $layout) {
-            if (is_a($layout, Builder::class)) {
-                $layout = $layout->build();
-            }
-            $layouts[$i] = $this->transformLayout($layout);
-        }
-
         return array_merge($this->config, [
-            'layouts' => $layouts,
+            'layouts' => $this->buildLayouts(),
         ]);
+    }
+
+    private function buildLayouts()
+    {
+        return array_map(function($layout) {
+            $layout = ($layout instanceof Builder) ? $layout->build() : $layout;
+            return $this->transformLayout($layout);
+        }, $this->getLayouts());
+    }
+
+    private function transformLayout($layout)
+    {
+        $layoutTransform = new Transform\FlexibleContentLayout($this);
+        $namespaceTransform = new Transform\NamespaceFieldKey($this);
+
+        return
+            $namespaceTransform->transform(
+                $layoutTransform->transform($layout)
+            );
     }
 
     public function getName()
@@ -48,61 +58,9 @@ class FlexibleContentBuilder extends Builder
         return $this->name;
     }
 
-    /**
-     * Namespace a field key
-     * Append the namespace consitint of 'field' and the group's name before the
-     * set key.
-     *
-     * @param  string $key Field Key
-     * @return string      Field Key
-     */
-    private function namespaceFieldKey($key)
-    {
-        $namespace = 'field_';
-
-        if ($this->getName()) {
-            // remove field_ if already at the begining of the key
-            $key = preg_replace('/^field_/', '', $key);
-            $key = preg_replace('/^group_/', '', $key);
-            $namespace .= str_replace(' ', '_', $this->getName()).'_';
-        }
-        return strtolower($namespace.$key);
-    }
-
-    /**
-     * Namespace all field keys so they are unique for each field group
-     * @param  array $fields Fields
-     * @return array         Fields
-     */
-    private function namespaceFieldKeys($fields)
-    {
-        array_walk_recursive($fields, function(&$value, $key) {
-            switch ($key) {
-                case 'key':
-                case 'field':
-                    $value = $this->namespaceFieldKey($value);
-                    break;
-            }
-        });
-        return $fields;
-    }
-
-    public function transformLayout($layoutConfig)
-    {
-        $layoutConfig['sub_fields'] = $layoutConfig['fields'];
-        unset($layoutConfig['fields']);
-
-        $layoutConfig['label'] = $layoutConfig['title'];
-        unset($layoutConfig['title']);
-
-
-        $layoutConfig = $this->namespaceFieldKeys($layoutConfig);
-        return $layoutConfig;
-    }
-
     public function addLayout($layout, $args = [])
     {
-        if (is_a($layout, Builder::class)) {
+        if ($layout instanceof Builder) {
             $layout = clone $layout;
         } else {
             $layout = new FieldsBuilder($layout, $args);

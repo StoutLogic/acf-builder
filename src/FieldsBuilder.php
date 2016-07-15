@@ -46,129 +46,44 @@ class FieldsBuilder extends Builder
     }
 
     /**
-     * Namespace a field key
-     * Append the namespace consisting of 'field' and the group's name before the
-     * set key.
-     * Ensure all lowercase.
-     *
-     * @param  string $key Field Key
-     * @return string      Field Key
-     */
-    private function namespaceFieldKey($key)
-    {
-        $namespace = 'field_';
-
-        if ($this->getName()) {
-            // remove field_ if already at the begining of the key
-            $key = preg_replace('/^field_/', '', $key);
-            $key = preg_replace('/^group_/', '', $key);
-            $namespace .= str_replace(' ', '_', $this->getName()).'_';
-        }
-        return strtolower($namespace.$key);
-    }
-
-    /**
-     * Namespace all field keys so they are unique for each field group
-     * @param  array $fields Fields
-     * @return array         Fields
-     */
-    private function namespaceFieldKeys($fields)
-    {
-        array_walk_recursive($fields, function(&$value, $key) {
-            switch ($key) {
-                case 'key':
-                case 'field':
-                    $value = $this->namespaceFieldKey($value);
-                    break;
-            }
-        });
-        return $fields;
-    }
-
-    /**
-     * Replace field values with the field's respective key
-     * @param  array $config
-     * @return array
-     */
-    private function transformConditionalConfig($config)
-    {
-        // Replace field name with the field's key, default: field_$name
-        array_walk_recursive($config, function(&$value, $key) {
-            switch ($key) {
-                case 'field':
-                    if ($field = $this->getFieldByName($value)) {
-                        $value = $field['key'];
-                    } else {
-                        $value = 'field_'.$value;
-                    }
-                    break;
-            }
-        });
-
-        return $config;
-    }
-
-    /**
-     * Build the conditional logic of a field
-     * @param  array $fields Fields
-     * @return array         Fields
-     */
-    private function buildConditionalLogic($fields)
-    {
-        array_walk_recursive($fields, function(&$value, $key) {
-
-            switch ($key) {
-                case 'conditional_logic':
-                    $value = $value->build();
-                    $value = $this->transformConditionalConfig($value);
-                    break;
-            }
-        });
-        return $fields;
-    }
-
-    /**
      * Build the final config array. Build any other builders that may exist
      * in the config.
      * @return array    final field config
      */
     public function build()
     {
-        $fields = $this->getFields();
-
-        $fields = $this->buildFields($fields);
-
-        $fields = $this->buildConditionalLogic($fields);
-        $fields = $this->namespaceFieldKeys($fields);
-
-
-        $location = $this->getLocation();
-        if (is_subclass_of($location, Builder::class)) {
-            $location = $location->build();
-        }
-
         return array_merge($this->config, [
-            'fields' => $fields,
-            'location' => $location,
+            'fields' => $this->buildFields(),
+            'location' => $this->buildLocation(),
             'key' => $this->namespaceGroupKey($this->config['key']),
         ]);
     }
 
-    private function buildFields($fields)
+    private function buildFields()
     {
-        $builtFields = [];
+        $fields = array_map(function($field) {
+            return ($field instanceof Builder) ? $field->build() : $field;
+        }, $this->getFields());
 
-        foreach ($fields as $i => $field) {
-            if (is_subclass_of($field, Builder::class)) {
-                $builtFields[] = $field->build();
-            } else {
-                $builtFields[] = $field;
-            }
-        }
-
-        return $builtFields;
+        return $this->transformFields($fields);
     }
 
+    private function transformFields($fields)
+    {
+        $conditionalTransform = new Transform\ConditionalLogic($this);
+        $namespaceFieldKeyTransform = new Transform\NamespaceFieldKey($this);
+
+        return
+            $namespaceFieldKeyTransform->transform(
+                $conditionalTransform->transform($fields)
+            );
+    }
+
+    private function buildLocation()
+    {
+        $location = $this->getLocation();
+        return ($location instanceof Builder) ? $location->build() : $location;
+    }
 
     /**
      * Add multiple fields either via an array or from another builder
@@ -437,7 +352,7 @@ class FieldsBuilder extends Builder
         throw new FieldNotFoundException("Field name '{$name}' not found.");
     }
 
-    protected function getFieldByName($name)
+    public function getFieldByName($name)
     {
         return $this->fields[$this->getFieldIndexByName($name)];
     }

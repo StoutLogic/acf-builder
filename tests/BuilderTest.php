@@ -8,7 +8,10 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturningParent()
     {
-        $parent = $this->getMock('StoutLogic\AcfBuilder\Builder', ['parentMethod', 'build']);
+        $parent = $this
+            ->getMockBuilder('StoutLogic\AcfBuilder\Builder')
+            ->setMethods(['parentMethod', 'build'])
+            ->getMockForAbstractClass();
         $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\Builder');
         $child->setParentContext($parent);
 
