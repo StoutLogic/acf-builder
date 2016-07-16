@@ -3,8 +3,8 @@
 namespace StoutLogic\AcfBuilder;
 
 /**
- * @method ConditionalBuilder and($name, $operator, $value)
- * @method ConditionalBuilder or($name, $operator, $value)
+ * @method ConditionalBuilder and(string $name, string $operator, string $value)
+ * @method ConditionalBuilder or(string $name, string $operator, string $value)
  */
 class ConditionalBuilder extends Builder
 {

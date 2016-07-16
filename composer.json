@@ -2,7 +2,7 @@
     "name": "stoutlogic/acf-builder",
     "description": "An Advanced Custom Field Configuration Builder",
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=5.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*"
