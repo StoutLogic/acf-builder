@@ -126,7 +126,7 @@ gulp
 ```
 
 ## Requirements
-At this time only PHP 5.5 and later are supported. This is due to the use of [::class](http://php.net/manual/en/language.oop5.basic.php#language.oop5.basic.class.class)
+PHP 5.4 and later are supported.
 
 ## Documentation
 See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documentation.
