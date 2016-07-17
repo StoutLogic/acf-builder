@@ -7,11 +7,14 @@ class FlexibleContentBuilder extends Builder
     private $config = [];
     private $layouts = [];
 
+    private $name;
+
     public function __construct($name, $args = [])
     {
+        $this->name = $name;
         $this->config = array_merge(
             [
-                'key' => 'field_'.$name,
+                'key' => $name,
                 'name' => $name,
                 'label' => $this->generateLabel($name),
                 'type' => 'flexible_content',
@@ -26,34 +29,38 @@ class FlexibleContentBuilder extends Builder
 
     public function build()
     {
-        $layouts = $this->getLayouts();
-
-        foreach ($layouts as $i => $layout) {
-            if (is_a($layout, Builder::class)) {
-                $layout = $layout->build();
-            }
-            $layouts[$i] = $this->transformLayout($layout);
-        }
-
         return array_merge($this->config, [
-            'layouts' => $layouts,
+            'layouts' => $this->buildLayouts(),
         ]);
     }
 
-    public function transformLayout($layoutConfig)
+    private function buildLayouts()
     {
-        $layoutConfig['sub_fields'] = $layoutConfig['fields'];
-        unset($layoutConfig['fields']);
+        return array_map(function($layout) {
+            $layout = ($layout instanceof Builder) ? $layout->build() : $layout;
+            return $this->transformLayout($layout);
+        }, $this->getLayouts());
+    }
 
-        $layoutConfig['label'] = $layoutConfig['title'];
-        unset($layoutConfig['title']);
+    private function transformLayout($layout)
+    {
+        $layoutTransform = new Transform\FlexibleContentLayout($this);
+        $namespaceTransform = new Transform\NamespaceFieldKey($this);
 
-        return $layoutConfig;
+        return
+            $namespaceTransform->transform(
+                $layoutTransform->transform($layout)
+            );
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function addLayout($layout, $args = [])
     {
-        if (is_a($layout, Builder::class)) {
+        if ($layout instanceof FieldsBuilder) {
             $layout = clone $layout;
         } else {
             $layout = new FieldsBuilder($layout, $args);

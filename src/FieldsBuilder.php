@@ -12,7 +12,7 @@ class FieldsBuilder extends Builder
     public function __construct($name, $groupConfig = [])
     {
         $this->name = $name;
-        $this->setGroupConfig('key', 'group_'.$name);
+        $this->setGroupConfig('key', $name);
         $this->setGroupConfig('title', $this->generateLabel($name));
 
         $this->config = array_merge($this->config, $groupConfig);
@@ -31,73 +31,58 @@ class FieldsBuilder extends Builder
     }
 
     /**
+     * Namespace a group key
+     * Append the namespace 'group' before the set key.
+     *
+     * @param  string $key Field Key
+     * @return string      Field Key
+     */
+    private function namespaceGroupKey($key)
+    {
+        if (strpos($key, 'group_') !== 0) {
+            $key = 'group_'.$key;
+        }
+        return $key;
+    }
+
+    /**
      * Build the final config array. Build any other builders that may exist
      * in the config.
      * @return array    final field config
      */
     public function build()
     {
-        $fields = $this->getFields();
-
-        $fields = $this->buildFields($fields);
-
-        array_walk_recursive($fields, function(&$value, $key) {
-
-            switch ($key) {
-                case 'conditional_logic':
-                    $value = $value->build();
-                    $value = $this->transformConditionalConfig($value);
-                    break;
-            }
-        });
-
-        $location = $this->getLocation();
-        if (is_subclass_of($location, Builder::class)) {
-            $location = $location->build();
-        }
-
         return array_merge($this->config, [
-            'fields' => $fields,
-            'location' => $location,
+            'fields' => $this->buildFields(),
+            'location' => $this->buildLocation(),
+            'key' => $this->namespaceGroupKey($this->config['key']),
         ]);
     }
 
-    private function buildFields($fields)
+    private function buildFields()
     {
-        $builtFields = [];
+        $fields = array_map(function($field) {
+            return ($field instanceof Builder) ? $field->build() : $field;
+        }, $this->getFields());
 
-        foreach ($fields as $i => $field) {
-            if (is_subclass_of($field, Builder::class)) {
-                $builtFields[] = $field->build();
-            } else {
-                $builtFields[] = $field;
-            }
-        }
-
-        return $builtFields;
+        return $this->transformFields($fields);
     }
 
-    /**
-     * Replace field values with the field's respective key
-     * @param  array $config
-     * @return array
-     */
-    protected function transformConditionalConfig($config)
+    private function transformFields($fields)
     {
-        // Replace field name with the field's key, default: field_$name
-        array_walk_recursive($config, function(&$value, $key) {
-            switch ($key) {
-                case 'field':
-                    if ($field = $this->getFieldByName($value)) {
-                        $value = $field['key'];
-                    } else {
-                        $value = 'field_'.$value;
-                    }
-                    break;
-            }
-        });
+        $conditionalTransform = new Transform\ConditionalLogic($this);
+        $namespaceFieldKeyTransform = new Transform\NamespaceFieldKey($this);
 
-        return $config;
+        return
+            $namespaceFieldKeyTransform->transform(
+                $conditionalTransform->transform($fields)
+            );
+    }
+
+    private function buildLocation()
+    {
+        $location = $this->getLocation();
+        return ($location instanceof Builder) ? $location->build() : $location;
     }
 
     /**
@@ -106,7 +91,7 @@ class FieldsBuilder extends Builder
      */
     public function addFields($fields)
     {
-        if (is_a($fields, FieldsBuilder::class)) {
+        if ($fields instanceof FieldsBuilder) {
             $fields = clone $fields;
             foreach ($fields->getFields() as $field) {
                 $this->pushField($field);
@@ -123,7 +108,7 @@ class FieldsBuilder extends Builder
     public function addField($name, $args = [])
     {
         $field = array_merge([
-            'key' => 'field_'.$name,
+            'key' => $name,
             'name' => $name,
             'label' => $this->generateLabel($name),
         ], $args);
@@ -367,7 +352,7 @@ class FieldsBuilder extends Builder
         throw new FieldNotFoundException("Field name '{$name}' not found.");
     }
 
-    protected function getFieldByName($name)
+    public function getFieldByName($name)
     {
         return $this->fields[$this->getFieldIndexByName($name)];
     }
@@ -389,14 +374,14 @@ class FieldsBuilder extends Builder
 
         if ($modify instanceof \Closure) {
             // Initialize Modifying FieldsBuilder
-            $modifyBuilder = new FieldsBuilder($name);
+            $modifyBuilder = new FieldsBuilder('');
             $modifyBuilder->addFields([$this->fields[$index]]);
 
             // Modify Field
             $modifyBuilder = $modify($modifyBuilder);
 
             // Check if a FieldsBuilder is returned
-            if (!is_a($modifyBuilder, FieldsBuilder::class)) {
+            if (!$modifyBuilder instanceof FieldsBuilder) {
                 throw new ModifyFieldReturnTypeException(gettype($modifyBuilder));
             } else {
                 // Build Modifcations
