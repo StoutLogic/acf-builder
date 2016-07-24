@@ -2,7 +2,7 @@
 
 namespace StoutLogic\AcfBuilder;
 
-class FieldsBuilder extends Builder
+class FieldsBuilder extends Builder implements NamedBuilder
 {
     protected $config = [];
     protected $fields = [];
@@ -92,19 +92,25 @@ class FieldsBuilder extends Builder
     public function addFields($fields)
     {
         if ($fields instanceof FieldsBuilder) {
-            $fields = clone $fields;
-            foreach ($fields->getFields() as $field) {
-                $this->pushField($field);
-            }
-        } else {
-            foreach ($fields as $field) {
-                $this->pushField($field);
-            }
+            $fields = (clone $fields)->getFields();
+        }
+
+        foreach ($fields as $field) {
+            $this->pushField($field);
         }
 
         return $this;
     }
 
+    /**
+     * Add field to field group
+     * @param string $name field name
+     * @param array $args field options
+     *
+     * @throws FieldNameCollisionException if name already exists.
+     *
+     * @return $this
+     */
     public function addField($name, $args = [])
     {
         $field = array_merge([
@@ -114,7 +120,6 @@ class FieldsBuilder extends Builder
         ], $args);
 
         $this->pushField($field);
-
         return $this;
     }
 
@@ -344,17 +349,56 @@ class FieldsBuilder extends Builder
     protected function getFieldIndexByName($name)
     {
         foreach ($this->fields as $index => $field) {
-            if ($field['name'] === $name) {
+            if ($this->getFieldName($field) === $name) {
                 return $index;
             }
         }
 
-        throw new FieldNotFoundException("Field name '{$name}' not found.");
+        return false;
     }
 
+    private function getFieldName($field) {
+        if ($field instanceof NamedBuilder) {
+            return $field->getName();
+        }
+
+        if (!is_array($field)) {
+            die($field);
+        }
+
+        if (array_key_exists('name', $field)) {
+            return $field['name'];
+        }
+    }
+
+    /**
+     * Does a field with this name exist
+     * @param  string $name field name
+     * @return bool
+     */
+    public function fieldNameExists($name)
+    {
+
+        return ($this->getFieldIndexByName($name) !== false);
+    }
+
+    /**
+     * Return the index in the $this->fields array looked up by the field's name
+     * @param  string $name Field Name
+     *
+     * @throws FieldNotFoundException if the field name doesn't exist
+     *
+     * @return mixed Field
+     */
     public function getFieldByName($name)
     {
-        return $this->fields[$this->getFieldIndexByName($name)];
+        $index = $this->getFieldIndexByName($name);
+
+        if ($index === false) {
+            throw new FieldNotFoundException("Field name '{$name}' not found.");
+        }
+
+        return $this->fields[$index];
     }
 
     /**
@@ -365,17 +409,21 @@ class FieldsBuilder extends Builder
      *
      * @throws ModifyFieldReturnTypeException if $modify is a closure and doesn't
      *                                        return a FieldsBuilder.
+     * @throws FieldNotFoundException if the field name doesn't exist.
      *
      * @return FieldsBuilder  $this
      */
     public function modifyField($name, $modify)
     {
+        $field = $this->getFieldByName($name);
         $index = $this->getFieldIndexByName($name);
 
-        if ($modify instanceof \Closure) {
+        if (is_array($modify)) {
+            $this->fields[$index] = array_merge($field, $modify);
+        } else if ($modify instanceof \Closure) {
             // Initialize Modifying FieldsBuilder
             $modifyBuilder = new FieldsBuilder('');
-            $modifyBuilder->addFields([$this->fields[$index]]);
+            $modifyBuilder->addFields([$field]);
 
             // Modify Field
             $modifyBuilder = $modify($modifyBuilder);
@@ -383,15 +431,13 @@ class FieldsBuilder extends Builder
             // Check if a FieldsBuilder is returned
             if (!$modifyBuilder instanceof FieldsBuilder) {
                 throw new ModifyFieldReturnTypeException(gettype($modifyBuilder));
-            } else {
-                // Build Modifcations
-                $modifyConfig = $modifyBuilder->build();
-
-                // Build Modifcations
-                array_splice($this->fields, $index, 1, $modifyConfig['fields']);
             }
-        } else {
-            $this->fields[$index] = array_merge($this->fields[$index], $modify);
+
+            // Build Modifcations
+            $modifyConfig = $modifyBuilder->build();
+
+            // Insert field(s)
+            $this->replaceField($modifyConfig['fields'], $index);
         }
 
         return $this;
@@ -406,9 +452,14 @@ class FieldsBuilder extends Builder
     public function removeField($name)
     {
         $index = $this->getFieldIndexByName($name);
-        unset($this->fields[$index]);
+        $this->removeFieldAtIndex($index);
 
         return $this;
+    }
+
+    protected function removeFieldAtIndex($index)
+    {
+        array_splice($this->fields, $index, 1);
     }
 
     public function defaultValue($value)
@@ -457,9 +508,38 @@ class FieldsBuilder extends Builder
         return array_pop($this->fields);
     }
 
+    protected function validateField($field)
+    {
+        return $this->validateFieldName($field);
+    }
+
+    private function validateFieldName($field)
+    {
+
+        $fieldName = $this->getFieldName($field);
+        if ($this->fieldNameExists($fieldName)) {
+            throw new FieldNameCollisionException("Field Name: `{$fieldName}` already exists in Field Group: `{$this->getName()}`");
+        }
+
+        return true;
+    }
+
     protected function pushField($field)
     {
-        $this->fields[] = $field;
+        if ($this->validateField($field)) {
+            $this->fields[] = $field;
+        }
+    }
+
+    protected function replaceField($newFields, $index)
+    {
+        $this->removeFieldAtIndex($index);
+
+        foreach ($newFields as $i => $newField) {
+            if ($this->validateField($newField)) {
+                array_splice($this->fields, $index + $i, 0, [$newField]);
+            }
+        }
     }
 
     protected function generateLabel($name)

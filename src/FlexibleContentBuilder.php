@@ -2,7 +2,7 @@
 
 namespace StoutLogic\AcfBuilder;
 
-class FlexibleContentBuilder extends Builder
+class FlexibleContentBuilder extends Builder implements NamedBuilder
 {
     private $config = [];
     private $layouts = [];
