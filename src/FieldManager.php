@@ -43,7 +43,7 @@ class FieldManager
             $fields = [$fields];
         }
 
-        foreach($fields as $i => $field) {
+        foreach ($fields as $i => $field) {
             if ($this->validateField($field)) {
                 array_splice($this->fields, $index + $i, 0, [$field]);
             }
@@ -129,7 +129,7 @@ class FieldManager
      */
     public function getFieldIndex($name)
     {
-        foreach($this->getFields() as $index => $field) {
+        foreach ($this->getFields() as $index => $field) {
             if ($this->getFieldName($field) === $name) {
                 return $index;
             }
