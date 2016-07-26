@@ -93,7 +93,8 @@ class FieldsBuilder extends Builder implements NamedBuilder
     public function addFields($fields)
     {
         if ($fields instanceof FieldsBuilder) {
-            $fields = (clone $fields)->getFields();
+            $builder = clone $fields;
+            $fields = $builder->getFields();
         }
 
         foreach ($fields as $field) {
