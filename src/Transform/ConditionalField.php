@@ -12,7 +12,7 @@ class ConditionalField extends RecursiveTransform
 
     public function transformValue($value)
     {
-        $field = $this->getBuilder()->getFieldByName($value);
+        $field = $this->getBuilder()->getField($value);
         return $field['key'];
     }
 }

@@ -5,12 +5,13 @@ namespace StoutLogic\AcfBuilder;
 class FieldsBuilder extends Builder implements NamedBuilder
 {
     protected $config = [];
-    protected $fields = [];
+    protected $fieldManager;
     protected $location = null;
     protected $name;
 
     public function __construct($name, $groupConfig = [])
     {
+        $this->fieldManager = new FieldManager();
         $this->name = $name;
         $this->setGroupConfig('key', $name);
         $this->setGroupConfig('title', $this->generateLabel($name));
@@ -96,7 +97,7 @@ class FieldsBuilder extends Builder implements NamedBuilder
         }
 
         foreach ($fields as $field) {
-            $this->pushField($field);
+            $this->getFieldManager()->pushField($field);
         }
 
         return $this;
@@ -119,7 +120,7 @@ class FieldsBuilder extends Builder implements NamedBuilder
             'label' => $this->generateLabel($name),
         ], $args);
 
-        $this->pushField($field);
+        $this->getFieldManager()->pushField($field);
         return $this;
     }
 
@@ -280,7 +281,7 @@ class FieldsBuilder extends Builder implements NamedBuilder
     {
         $repeaterBuilder = new RepeaterBuilder($name, $args);
         $repeaterBuilder->setParentContext($this);
-        $this->pushField($repeaterBuilder);
+        $this->getFieldManager()->pushField($repeaterBuilder);
 
         return $repeaterBuilder;
     }
@@ -289,20 +290,20 @@ class FieldsBuilder extends Builder implements NamedBuilder
     {
         $flexibleContentBuilder = new FlexibleContentBuilder($name, $args);
         $flexibleContentBuilder->setParentContext($this);
-        $this->pushField($flexibleContentBuilder);
+        $this->getFieldManager()->pushField($flexibleContentBuilder);
 
         return $flexibleContentBuilder;
     }
 
     public function addChoice($choice, $label = null)
     {
-        $field = $this->popLastField();
+        $field = $this->getFieldManager()->popField();
 
         array_key_exists('choices', $field) ?: $field['choices'] = [];
         $label ?: $label = $choice;
 
         $field['choices'][$choice] = $label;
-        $this->pushField($field);
+        $this->getFieldManager()->pushField($field);
 
         return $this;
     }
@@ -323,38 +324,29 @@ class FieldsBuilder extends Builder implements NamedBuilder
 
     public function conditional($name, $operator, $value)
     {
-        $field = $this->popLastField();
+        $field = $this->getFieldManager()->popField();
         $conditionalBuilder = new ConditionalBuilder($name, $operator, $value);
         $conditionalBuilder->setParentContext($this);
 
         $field['conditional_logic'] = $conditionalBuilder;
-        $this->pushField($field);
+        $this->getFieldManager()->pushField($field);
 
         return $conditionalBuilder;
     }
 
-    public function getFields()
+    protected function getFieldManager()
     {
-        return $this->fields;
+        return $this->fieldManager;
     }
 
-    /**
-     * Return the index in the $this->fields array looked up by the field's name
-     * @param  string $name Field Name
-     *
-     * @throws FieldNotFoundException if the field name doesn't exist
-     *
-     * @return integer Field Index
-     */
-    protected function getFieldIndexByName($name)
+    public function getFields()
     {
-        foreach ($this->fields as $index => $field) {
-            if ($this->getFieldName($field) === $name) {
-                return $index;
-            }
-        }
+        return $this->getFieldManager()->getFields();
+    }
 
-        return false;
+    protected function getFieldIndex($name)
+    {
+        return $this->getFieldManager()->getFieldIndex($name);
     }
 
     private function getFieldName($field) {
@@ -371,34 +363,9 @@ class FieldsBuilder extends Builder implements NamedBuilder
         }
     }
 
-    /**
-     * Does a field with this name exist
-     * @param  string $name field name
-     * @return bool
-     */
-    public function fieldNameExists($name)
+    public function getField($name)
     {
-
-        return ($this->getFieldIndexByName($name) !== false);
-    }
-
-    /**
-     * Return the index in the $this->fields array looked up by the field's name
-     * @param  string $name Field Name
-     *
-     * @throws FieldNotFoundException if the field name doesn't exist
-     *
-     * @return mixed Field
-     */
-    public function getFieldByName($name)
-    {
-        $index = $this->getFieldIndexByName($name);
-
-        if ($index === false) {
-            throw new FieldNotFoundException("Field name '{$name}' not found.");
-        }
-
-        return $this->fields[$index];
+        return $this->getFieldManager()->getField($name);
     }
 
     /**
@@ -415,12 +382,12 @@ class FieldsBuilder extends Builder implements NamedBuilder
      */
     public function modifyField($name, $modify)
     {
-        $field = $this->getFieldByName($name);
-        $index = $this->getFieldIndexByName($name);
-
         if (is_array($modify)) {
-            $this->fields[$index] = array_merge($field, $modify);
+            $this->getFieldManager()->modifyField($name, $modify);
         } else if ($modify instanceof \Closure) {
+            $field = $this->getField($name);
+            $index = $this->getFieldIndex($name);
+
             // Initialize Modifying FieldsBuilder
             $modifyBuilder = new FieldsBuilder('');
             $modifyBuilder->addFields([$field]);
@@ -437,7 +404,7 @@ class FieldsBuilder extends Builder implements NamedBuilder
             $modifyConfig = $modifyBuilder->build();
 
             // Insert field(s)
-            $this->replaceField($modifyConfig['fields'], $index);
+            $this->getFieldManager()->replaceField($name, $modifyConfig['fields']);
         }
 
         return $this;
@@ -451,15 +418,9 @@ class FieldsBuilder extends Builder implements NamedBuilder
      */
     public function removeField($name)
     {
-        $index = $this->getFieldIndexByName($name);
-        $this->removeFieldAtIndex($index);
+        $this->getFieldManager()->removeField($name);
 
         return $this;
-    }
-
-    protected function removeFieldAtIndex($index)
-    {
-        array_splice($this->fields, $index, 1);
     }
 
     public function defaultValue($value)
@@ -479,9 +440,9 @@ class FieldsBuilder extends Builder implements NamedBuilder
 
     public function setConfig($key, $value)
     {
-        $field = $this->popLastField();
+        $field = $this->getFieldManager()->popField();
         $field[$key] = $value;
-        $this->pushField($field);
+        $this->getFieldManager()->pushField($field);
 
         return $this;
     }
@@ -501,45 +462,6 @@ class FieldsBuilder extends Builder implements NamedBuilder
     public function getLocation()
     {
         return $this->location;
-    }
-
-    protected function popLastField()
-    {
-        return array_pop($this->fields);
-    }
-
-    protected function validateField($field)
-    {
-        return $this->validateFieldName($field);
-    }
-
-    private function validateFieldName($field)
-    {
-
-        $fieldName = $this->getFieldName($field);
-        if ($this->fieldNameExists($fieldName)) {
-            throw new FieldNameCollisionException("Field Name: `{$fieldName}` already exists in Field Group: `{$this->getName()}`");
-        }
-
-        return true;
-    }
-
-    protected function pushField($field)
-    {
-        if ($this->validateField($field)) {
-            $this->fields[] = $field;
-        }
-    }
-
-    protected function replaceField($newFields, $index)
-    {
-        $this->removeFieldAtIndex($index);
-
-        foreach ($newFields as $i => $newField) {
-            if ($this->validateField($newField)) {
-                array_splice($this->fields, $index + $i, 0, [$newField]);
-            }
-        }
     }
 
     protected function generateLabel($name)

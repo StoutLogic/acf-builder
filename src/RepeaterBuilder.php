@@ -16,6 +16,7 @@ class RepeaterBuilder extends FieldsBuilder
             ],
             $args
         );
+        $this->fieldManager = new FieldManager();
     }
 
     public function build()

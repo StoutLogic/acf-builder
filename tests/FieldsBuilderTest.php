@@ -756,6 +756,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
+
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
