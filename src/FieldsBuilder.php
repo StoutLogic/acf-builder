@@ -349,21 +349,7 @@ class FieldsBuilder extends Builder implements NamedBuilder
     {
         return $this->getFieldManager()->getFieldIndex($name);
     }
-
-    private function getFieldName($field) {
-        if ($field instanceof NamedBuilder) {
-            return $field->getName();
-        }
-
-        if (!is_array($field)) {
-            die($field);
-        }
-
-        if (array_key_exists('name', $field)) {
-            return $field['name'];
-        }
-    }
-
+    
     public function getField($name)
     {
         return $this->getFieldManager()->getField($name);
