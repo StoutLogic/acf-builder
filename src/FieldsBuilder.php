@@ -5,7 +5,7 @@ namespace StoutLogic\AcfBuilder;
 /**
  * Builds configurations for ACF Field Groups
  */
-class FieldsBuilder extends Builder implements NamedBuilder
+class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
     /**
      * Field Group Configuration
@@ -83,7 +83,7 @@ class FieldsBuilder extends Builder implements NamedBuilder
     /**
      * Build the final config array. Build any other builders that may exist
      * in the config.
-     * @return array    final field config
+     * @return array Final field config
      */
     public function build()
     {

@@ -13,6 +13,22 @@ class ConditionalLogic extends RecursiveTransform
     protected $keys = ['conditional_logic'];
 
     /**
+     * @param \StoutLogic\AcfBuilder\FieldsBuilder $builder
+     */
+    public function __construct(\StoutLogic\AcfBuilder\FieldsBuilder $builder)
+    {
+        parent::__construct($builder);
+    }
+
+    /**
+     * @return \StoutLogic\AcfBuilder\FieldsBuilder
+     */
+    public function getBuilder()
+    {
+        return parent::getBuilder();
+    }
+
+    /**
      * Replace field values of a ConditionalBuilder with the proper keys using
      * the ConditionalField Transform.
      *

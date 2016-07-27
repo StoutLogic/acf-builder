@@ -3,9 +3,9 @@
 namespace StoutLogic\AcfBuilder;
 
 /**
- * Interface for Builders that must have a name
+ * Builder with a name
  */
-interface NamedBuilder
+interface NamedBuilder extends Builder
 {
     /**
      * Returns the name of the builder

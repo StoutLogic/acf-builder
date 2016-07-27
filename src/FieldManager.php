@@ -65,14 +65,18 @@ class FieldManager
 
     /**
      * Insert of field at a specific index
-     * @param  array|Builder $fields a single field or an array of fields
+     * @param  array|NamedBuilder $fields a single field or an array of fields
      * @param  int $index  insertion point
      * @return void
      */
     public function insertFields($fields, $index)
     {
+        if (!$fields instanceof NamedBuilder && !is_array($fields)) {
+            return;
+        }
+
         // If a singular field config, put into an array of fields
-        if ($this->getFieldName($fields)) {
+        if ($fields instanceof NamedBuilder || array_key_exists('name', $fields)) {
             $fields = [$fields];
         }
 
@@ -193,7 +197,7 @@ class FieldManager
     private function validateFieldName($field)
     {
         $fieldName = $this->getFieldName($field);
-        if ($this->fieldNameExists($fieldName)) {
+        if (!$fieldName || $this->fieldNameExists($fieldName)) {
             throw new FieldNameCollisionException("Field Name: `{$fieldName}` already exists.");
         }
 

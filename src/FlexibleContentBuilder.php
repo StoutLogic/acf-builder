@@ -7,7 +7,7 @@ namespace StoutLogic\AcfBuilder;
  * A flexible content field can have many different `layouts` which are
  * groups of fields.
  */
-class FlexibleContentBuilder extends Builder implements NamedBuilder
+class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
     /**
      * @var array
