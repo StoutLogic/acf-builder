@@ -14,6 +14,9 @@ abstract class RecursiveTransform extends Transform
      */
     protected $keys = [];
 
+    /**
+     * @return array
+     */
     public function getKeys()
     {
         return $this->keys;
@@ -26,7 +29,7 @@ abstract class RecursiveTransform extends Transform
      */
     public function transform($config)
     {
-        array_walk_recursive($config, function(&$value, $key) {
+        array_walk_recursive($config, function (&$value, $key) {
             if (in_array($key, $this->getKeys())) {
                 $value = $this->transformValue($value);
             }

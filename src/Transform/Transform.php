@@ -4,15 +4,28 @@ namespace StoutLogic\AcfBuilder\Transform;
 
 use StoutLogic\AcfBuilder\Builder;
 
+/**
+ * A Transform that is applied to configuration array of a Builder
+ */
 abstract class Transform
 {
-    private $bulider;
+    /**
+     * Used to call funtions on the builder.
+     * @var \StoutLogic\AcfBuilder\Builder
+     */
+    private $builder;
 
+    /**
+     * @param Builder $builder
+     */
     public function __construct(Builder $builder)
     {
         $this->builder = $builder;
     }
 
+    /**
+     * @return Builder
+     */
     public function getBuilder()
     {
         return $this->builder;

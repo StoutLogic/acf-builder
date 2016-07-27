@@ -2,4 +2,9 @@
 
 namespace StoutLogic\AcfBuilder;
 
-class FieldNameCollisionException extends \Exception { }
+/**
+ * Thrown when a sibling field name already exists in a Builder
+ */
+class FieldNameCollisionException extends \Exception
+{
+}
