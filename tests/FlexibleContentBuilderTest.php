@@ -17,7 +17,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                         ->addWysiwyg('content');
 
         $expectedConfig =  [
-            'key' => 'content_areas',
+            'key' => 'field_content_areas',
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
@@ -65,12 +65,11 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
         $this->assertArraySubset($expectedConfig, $builder->build());
         $this->assertArrayNotHasKey('fields', $builder->build());
     }
 
-    function testAddingFieldsBuilderAsLayout()
+    public function testAddingFieldsBuilderAsLayout()
     {
         $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
                         ->setConstructorArgs(['parent'])
@@ -98,7 +97,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->addLayout($banner);
 
         $expectedConfig =  [
-            'key' => 'content_areas',
+            'key' => 'field_content_areas',
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',

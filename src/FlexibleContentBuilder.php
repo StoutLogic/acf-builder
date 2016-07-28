@@ -7,43 +7,24 @@ namespace StoutLogic\AcfBuilder;
  * A flexible content field can have many different `layouts` which are
  * groups of fields.
  */
-class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBuilder
+class FlexibleContentBuilder extends FieldBuilder
 {
-    /**
-     * @var array
-     */
-    private $config = [];
-
     /**
      * @var array
      */
     private $layouts = [];
 
     /**
-     * Field Name
-     * @var string
+     * @param string $name Field name
+     * @param string $type Field name
+     * @param array $config Field configuration
      */
-    private $name;
-
-    /**
-     * @param string $name
-     * @param array $args field configuration
-     */
-    public function __construct($name, $args = [])
+    public function __construct($name, $type = 'flexible_content', $config = [])
     {
-        $this->name = $name;
-        $this->config = array_merge(
-            [
-                'key' => $name,
-                'name' => $name,
-                'label' => $this->generateLabel($name),
-                'type' => 'flexible_content',
-            ],
-            $args
-        );
+        parent::__construct($name, $type, $config);
 
-        if (!isset($this->config['button'])) {
-            $this->config['button'] = 'Add '.rtrim($this->config['label'], 's');
+        if (!isset($config['button'])) {
+            $this->setConfig('button', $this->getDefaultButtonLabel());
         }
     }
 
@@ -53,7 +34,10 @@ class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBui
      */
     public function build()
     {
-        return array_merge($this->config, [
+        print_r([
+            'layouts' => $this->buildLayouts(),
+        ]);
+        return array_merge(parent::build(), [
             'layouts' => $this->buildLayouts(),
         ]);
     }
@@ -87,14 +71,6 @@ class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBui
     }
 
     /**
-     * @return string Flexible Content field name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Add a layout, which is a FieldsBuilder. `addLayout` can be chained to add
      * multiple layouts to the Flexible Content field.
      * @param string|FieldsBuilder $layout layout name.
@@ -111,7 +87,7 @@ class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBui
             $layout = new FieldsBuilder($layout, $args);
         }
 
-        $layout = $this->configureLayout($layout, $args);
+        $layout = $this->initializeLayout($layout, $args);
         $this->pushLayout($layout);
 
         return $layout;
@@ -123,7 +99,7 @@ class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBui
      * @param  array         $args FieldGroup Configuration
      * @return FieldsBuilder Configured Layout
      */
-    protected function configureLayout(FieldsBuilder $layout, $args = [])
+    protected function initializeLayout(FieldsBuilder $layout, $args = [])
     {
         $layout->setGroupConfig('name', $layout->getName());
         $layout->setGroupConfig('display', 'block');
@@ -164,13 +140,8 @@ class FlexibleContentBuilder extends ParentDelegationBuilder implements NamedBui
         return $this->layouts;
     }
 
-    /**
-     * Generate a label based on the name. Title case.
-     * @param  string $name
-     * @return string
-     */
-    protected function generateLabel($name)
+    private function getDefaultButtonLabel()
     {
-        return ucwords(str_replace("_", " ", $name));
+        return 'Add '.rtrim($this->getLabel(), 's');
     }
 }

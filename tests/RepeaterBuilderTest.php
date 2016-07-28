@@ -3,6 +3,7 @@
 namespace StoutLogic\AcfBuilder\Tests;
 
 use StoutLogic\AcfBuilder\RepeaterBuilder;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +25,6 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
         $this->assertArraySubset($expectedConfig, $builder->build());
         $this->assertArrayNotHasKey('fields', $builder->build());
     }
@@ -60,5 +60,44 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
         $repeaterBuilder->addText('title')
                 ->addWysiwyg('content')
                 ->setLocation('post_type', '==', 'page');
+    }
+
+    public function testAddFields()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder
+            ->addFields($banner)
+            ->addImage('thumbnail');
+
+        $expectedConfig =  [
+            'name' => 'slides',
+            'type' => 'repeater',
+            'sub_fields' => [
+                [
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'content',
+                ],
+                [
+                    'name' => 'thumbnail',
+                ],
+            ],
+        ];
+        $this->assertArraySubset($expectedConfig, $repeaterBuilder->build());
+
+        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder
+            ->addFields([
+                $banner->getField('title'),
+                $banner->getField('content'),
+            ])
+            ->addImage('thumbnail');
+        $this->assertArraySubset($expectedConfig, $repeaterBuilder->build());
     }
 }

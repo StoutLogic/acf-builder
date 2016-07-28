@@ -67,8 +67,8 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testChainableAddField()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addField('name')
-                ->addField('name_two');
+        $builder->addField('name', 'text')
+                ->addField('name_two', 'text');
 
         $expectedConfig = [
             'fields' => [
@@ -296,7 +296,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testAddSelect()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addSelect('colors', ['choices' => ['yellow' => 'Yellow']])
+        $builder->addSelect('colors', ['choices' => [['yellow' => 'Yellow']]])
                     ->addChoices(['red' => 'Rojo'], 'blue')
                     ->addChoice('green');
 
@@ -526,11 +526,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testRequired()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addField('name')->required()
-                ->addField('name_two')->required(true)
-                ->addField('name_three')
-                ->addField('name_four')->required(false)
-                ->addField('name_five', ['required' => 1]);
+        $builder->addField('name', 'text')->setRequired()
+                ->addField('name_two', 'text')->setRequired()
+                ->addField('name_three', 'text')
+                ->addField('name_four', 'text')->setUnrequired()
+                ->addField('name_five', 'text', ['required' => 1]);
 
         $expectedConfig = [
             'fields' => [
@@ -565,8 +565,8 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testInstructions()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addField('name')
-                    ->instructions('Last Name, First Name');
+        $builder->addField('name', 'text')
+                    ->setInstructions('Last Name, First Name');
 
         $expectedConfig = [
             'fields' => [
@@ -583,8 +583,8 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testDefaultValue()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addField('name')
-                    ->defaultValue('John Smith');
+        $builder->addField('name', 'text')
+                    ->setDefaultValue('John Smith');
 
         $expectedConfig = [
             'fields' => [
@@ -725,7 +725,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -844,7 +843,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-    function testAddAnotherBuildersFields()
+    public function testAddAnotherBuildersFields()
     {
         $banner = new FieldsBuilder('banner');
         $banner
@@ -998,7 +997,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
@@ -1077,94 +1075,5 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $fields = $config['fields'];
 
         $this->assertCount(1, $fields);
-    }
-
-    public function testModifyFieldWithClosure()
-    {
-
-        $builder = new FieldsBuilder('Banner');
-        $builder
-            ->addText('title')
-            ->addWysiwyg('content');
-
-        $builder
-            ->modifyField('title', function($fieldsBuilder) {
-                return $fieldsBuilder
-                    ->setConfig('label', 'Banner Title')
-                    ->addText('sub_title');
-            });
-
-
-        $expectedConfig = [
-            'fields' => [
-                [
-                    'name' => 'title',
-                    'label' => 'Banner Title',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'sub_title',
-                    'label' => 'Sub Title',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'content',
-                    'type' => 'wysiwyg',
-                ],
-            ]
-        ];
-
-        $this->assertArraySubset($expectedConfig, $builder->build());
-    }
-
-    /**
-     * @expectedException StoutLogic\AcfBuilder\ModifyFieldReturnTypeException
-     */
-    public function testModifyFieldWithClosureNotReturningFieldsBuilder()
-    {
-        $builder = new FieldsBuilder('Banner');
-        $builder
-            ->addText('title')
-            ->addWysiwyg('content');
-
-        $builder
-            ->modifyField('title', function($fieldsBuilder) {
-                $fieldsBuilder
-                    ->setConfig('label', 'Banner Title')
-                    ->addText('sub_title');
-            });
-
-        $builder->build();
-    }
-
-    public function testModifyingReusedAddedFields()
-    {
-        $text = new FieldsBuilder('Text');
-        $text
-          ->addText('Name', ['key' => 'my_key']);
-
-        $foo = new FieldsBuilder('foo');
-        $foo
-          ->addFields($text)
-          ->modifyField('Name', function($fieldsBuilder) {
-            return $fieldsBuilder
-              ->defaultValue('Foo');
-          })
-          ->setLocation('post_type', '==', 'page');
-
-        $bar = new FieldsBuilder('bar');
-        $bar
-          ->addFields($text)
-          ->modifyField('Name', function($fieldsBuilder) {
-            return $fieldsBuilder
-              ->defaultValue('Bar');
-          })
-          ->setLocation('post_type', '==', 'page');
-
-        $fooConfig = $foo->build();
-        $barConfig = $bar->build();
-
-        $this->assertNotSame($fooConfig['fields']['0']['default_value'], $barConfig['fields']['0']['default_value']);
-        $this->assertNotSame($fooConfig['fields']['0']['key'], $barConfig['fields']['0']['key']);
     }
 }

@@ -34,10 +34,10 @@ class FieldNameCollisionExceptionTest extends \PHPUnit_Framework_TestCase
             ->addText('title')
             ->addRepeater('slides')
                 ->addRadio('slides')
-                    ->addChoices(1,2,3,4)
+                    ->addChoices(1, 2, 3, 4)
                 ->endRepeater()
             ->addRadio('slides')
-                ->addChoices(1,2,3,4);
+                ->addChoices(1, 2, 3, 4);
     }
 
     /**
@@ -75,20 +75,4 @@ class FieldNameCollisionExceptionTest extends \PHPUnit_Framework_TestCase
 
         $builder->addFields($builder2);
     }
-
-        /**
-         * @expectedException StoutLogic\AcfBuilder\FieldNameCollisionException
-         */
-        public function testExceptionThrownDuringFieldNameCollisionUsingModifyField()
-        {
-            $builder = new FieldsBuilder('Banner');
-            $builder
-                ->addText('title')
-                ->addWysiwyg('content');
-
-            $builder->modifyField('content', function($builder) {
-                return $builder->addField('title');
-            });
-        }
-
 }

@@ -22,7 +22,7 @@ class FieldManager
     }
 
     /**
-     * @return array field configs
+     * @return array[NamedBuilder] field configs
      */
     public function getFields()
     {
@@ -65,7 +65,7 @@ class FieldManager
 
     /**
      * Insert of field at a specific index
-     * @param  array|NamedBuilder $fields a single field or an array of fields
+     * @param  NamedBuilder $fields a single field or an array of fields
      * @param  int $index  insertion point
      * @return void
      */
@@ -76,9 +76,10 @@ class FieldManager
         }
 
         // If a singular field config, put into an array of fields
-        if ($fields instanceof NamedBuilder || array_key_exists('name', $fields)) {
+        if ($fields instanceof NamedBuilder) {
             $fields = [$fields];
         }
+
 
         foreach ($fields as $i => $field) {
             if ($this->validateField($field)) {
@@ -140,29 +141,11 @@ class FieldManager
     /**
      * Return a field by name
      * @param  string $name field name
-     * @return array|Builder  Field config array or Builder
+     * @return FieldBuilder
      */
     public function getField($name)
     {
         return $this->fields[$this->getFieldIndex($name)];
-    }
-
-    /**
-     * Return the name given a field
-     * @param  array|NamedBuilder $field
-     * @return string|false field name
-     */
-    public function getFieldName($field)
-    {
-        if ($field instanceof NamedBuilder) {
-            return $field->getName();
-        }
-
-        if (is_array($field) && array_key_exists('name', $field)) {
-            return $field['name'];
-        }
-
-        return false;
     }
 
     /**
@@ -173,14 +156,13 @@ class FieldManager
      */
     public function modifyField($name, $modifications)
     {
-        $field = $this->getField($name);
-        $field = array_merge($field, $modifications);
+        $field = $this->getField($name)->updateConfig($modifications);
         $this->replaceField($name, $field);
     }
 
     /**
      * Validate a field
-     * @param  array|Builder $field
+     * @param  NamedBuilder $field
      * @return bool
      */
     private function validateField($field)
@@ -190,13 +172,13 @@ class FieldManager
 
     /**
      * Validates that a field's name doesn't already exist
-     * @param  array|NamedBuilder $field
+     * @param  NamedBuilder $field
      * @throws FieldNameCollisionException when the name already exists
      * @return bool
      */
     private function validateFieldName($field)
     {
-        $fieldName = $this->getFieldName($field);
+        $fieldName = $field->getName();
         if (!$fieldName || $this->fieldNameExists($fieldName)) {
             throw new FieldNameCollisionException("Field Name: `{$fieldName}` already exists.");
         }
@@ -213,7 +195,7 @@ class FieldManager
     public function getFieldIndex($name)
     {
         foreach ($this->getFields() as $index => $field) {
-            if ($this->getFieldName($field) === $name) {
+            if ($field->getName() === $name) {
                 return $index;
             }
         }

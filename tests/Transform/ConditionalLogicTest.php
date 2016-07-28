@@ -3,6 +3,7 @@
 namespace StoutLogic\AcfBuilder\Tests\Transform;
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
+use StoutLogic\AcfBuilder\FieldBuilder;
 use StoutLogic\AcfBuilder\ConditionalBuilder;
 use StoutLogic\AcfBuilder\Transform;
 
@@ -24,27 +25,25 @@ class ConditionalLogicTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformValue()
     {
+        $field = $this->prophesize('\StoutLogic\AcfBuilder\FieldBuilder');
+        $field
+            ->getKey()
+            ->willReturn('field_name');
+
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $builder
             ->getField('name')
-            ->willReturn([
-                'key' => 'field_name',
-            ]);
-
-        $conditionalBuilder = $this->prophesize('\StoutLogic\AcfBuilder\ConditionalBuilder');
-        $conditionalBuilder
-            ->build()
-            ->willReturn([[[
-                'field' => 'name',
-                'operator' => '==',
-                'value' => 1.
-            ]]]);
+            ->willReturn($field->reveal());
 
         $transform = new Transform\ConditionalLogic($builder->reveal());
         $this->assertSame([[[
             'field' => 'field_name',
             'operator' => '==',
-            'value' => 1.
-        ]]], $transform->transformValue($conditionalBuilder->reveal()));
+            'value' => 1,
+        ]]], $transform->transformValue([[[
+            'field' => 'name',
+            'operator' => '==',
+            'value' => 1,
+        ]]]));
     }
 }

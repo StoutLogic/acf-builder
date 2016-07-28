@@ -153,36 +153,41 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
-     * Add field to field group
-     * @param string $name field name
-     * @param array $args field options
-     * @throws FieldNameCollisionException if name already exists.
-     * @return $this
-     */
-    public function addField($name, $args = [])
-    {
-        $field = array_merge([
-            'key' => $name,
-            'name' => $name,
-            'label' => $this->generateLabel($name),
-        ], $args);
-
-        $this->getFieldManager()->pushField($field);
-        return $this;
-    }
-
-    /**
      * Add a field of a specific type
      * @param string $name
      * @param string $type
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    protected function addFieldType($name, $type, $args = [])
+    public function addField($name, $type, $args = [])
     {
-        return $this->addField($name, array_merge([
-            'type' => $type,
-        ], $args));
+        return $this->initializeField(new FieldBuilder($name, $type, $args));
+    }
+
+    /**
+     * Add a field of a choice type, allows choices to be added.
+     * @param string $name
+     * @param string $type 'select', 'radio', 'checkbox'
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+    public function addChoiceField($name, $type, $args = [])
+    {
+        return $this->initializeField(new ChoiceFieldBuilder($name, $type, $args));
+    }
+
+    /**
+     * Initialize the FieldBuilder, add to FieldManager
+     * @param  FieldBuilder $field
+     * @return FieldBuilder
+     */
+    protected function initializeField($field)
+    {
+        $field->setParentContext($this);
+        $this->getFieldManager()->pushField($field);
+        return $field;
     }
 
     /**
@@ -192,7 +197,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addText($name, $args = [])
     {
-        return $this->addFieldType($name, 'text', $args);
+        return $this->addField($name, 'text', $args);
     }
 
     /**
@@ -202,7 +207,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addTextarea($name, $args = [])
     {
-        return $this->addFieldType($name, 'textarea', $args);
+        return $this->addField($name, 'textarea', $args);
     }
 
     /**
@@ -212,7 +217,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addNumber($name, $args = [])
     {
-        return $this->addFieldType($name, 'number', $args);
+        return $this->addField($name, 'number', $args);
     }
 
     /**
@@ -222,7 +227,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addEmail($name, $args = [])
     {
-        return $this->addFieldType($name, 'email', $args);
+        return $this->addField($name, 'email', $args);
     }
 
     /**
@@ -232,7 +237,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addUrl($name, $args = [])
     {
-        return $this->addFieldType($name, 'url', $args);
+        return $this->addField($name, 'url', $args);
     }
 
     /**
@@ -242,7 +247,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addPassword($name, $args = [])
     {
-        return $this->addFieldType($name, 'password', $args);
+        return $this->addField($name, 'password', $args);
     }
 
     /**
@@ -252,7 +257,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addWysiwyg($name, $args = [])
     {
-        return $this->addFieldType($name, 'wysiwyg', $args);
+        return $this->addField($name, 'wysiwyg', $args);
     }
 
     /**
@@ -262,7 +267,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addOembed($name, $args = [])
     {
-        return $this->addFieldType($name, 'oembed', $args);
+        return $this->addField($name, 'oembed', $args);
     }
 
     /**
@@ -272,7 +277,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addImage($name, $args = [])
     {
-        return $this->addFieldType($name, 'image', $args);
+        return $this->addField($name, 'image', $args);
     }
 
     /**
@@ -282,7 +287,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addFile($name, $args = [])
     {
-        return $this->addFieldType($name, 'file', $args);
+        return $this->addField($name, 'file', $args);
     }
 
     /**
@@ -292,7 +297,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addGallery($name, $args = [])
     {
-        return $this->addFieldType($name, 'gallery', $args);
+        return $this->addField($name, 'gallery', $args);
     }
 
     /**
@@ -302,7 +307,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addTrueFalse($name, $args = [])
     {
-        return $this->addFieldType($name, 'true_false', $args);
+        return $this->addField($name, 'true_false', $args);
     }
 
     /**
@@ -312,7 +317,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addSelect($name, $args = [])
     {
-        return $this->addFieldType($name, 'select', $args);
+        return $this->addChoiceField($name, 'select', $args);
     }
 
     /**
@@ -322,7 +327,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addRadio($name, $args = [])
     {
-        return $this->addFieldType($name, 'radio', $args);
+        return $this->addChoiceField($name, 'radio', $args);
     }
 
     /**
@@ -332,7 +337,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addCheckbox($name, $args = [])
     {
-        return $this->addFieldType($name, 'checkbox', $args);
+        return $this->addChoiceField($name, 'checkbox', $args);
     }
 
     /**
@@ -342,7 +347,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addPostObject($name, $args = [])
     {
-        return $this->addFieldType($name, 'post_object', $args);
+        return $this->addField($name, 'post_object', $args);
     }
 
     /**
@@ -352,7 +357,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addPostLink($name, $args = [])
     {
-        return $this->addFieldType($name, 'post_link', $args);
+        return $this->addField($name, 'post_link', $args);
     }
 
     /**
@@ -362,7 +367,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addRelationship($name, $args = [])
     {
-        return $this->addFieldType($name, 'relationship', $args);
+        return $this->addField($name, 'relationship', $args);
     }
 
     /**
@@ -372,7 +377,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addTaxonomy($name, $args = [])
     {
-        return $this->addFieldType($name, 'taxonomy', $args);
+        return $this->addField($name, 'taxonomy', $args);
     }
 
     /**
@@ -382,7 +387,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addUser($name, $args = [])
     {
-        return $this->addFieldType($name, 'user', $args);
+        return $this->addField($name, 'user', $args);
     }
 
     /**
@@ -392,7 +397,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addDatePicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'date_picker', $args);
+        return $this->addField($name, 'date_picker', $args);
     }
 
     /**
@@ -402,7 +407,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addTimePicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'time_picker', $args);
+        return $this->addField($name, 'time_picker', $args);
     }
 
     /**
@@ -412,7 +417,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addDateTimePicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'date_time_picker', $args);
+        return $this->addField($name, 'date_time_picker', $args);
     }
 
     /**
@@ -422,7 +427,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addColorPicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'color_picker', $args);
+        return $this->addField($name, 'color_picker', $args);
     }
 
     /**
@@ -434,22 +439,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addTab($label, $args = [])
     {
-        $name = $this->generateName($label).'_tab';
-        $args = array_merge([
-            'label' => $label,
-        ], $args);
-
-        return $this->addFieldType($name, 'tab', $args);
-    }
-
-    /**
-     * Configs the tab as an endpoint tab. New tabs will start on another row.
-     * @param  int $value boolean 1 or 0
-     * @return $this
-     */
-    public function endpoint($value = 1)
-    {
-        return $this->setConfig('endpoint', $value);
+        return $this->initializeField(new TabBuilder($label, 'tab', $args));
     }
 
     /**
@@ -467,7 +457,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
             'message' => $message,
         ], $args);
 
-        return $this->addFieldType($name, 'message', $args);
+        return $this->addField($name, 'message', $args);
     }
 
     /**
@@ -479,11 +469,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addRepeater($name, $args = [])
     {
-        $repeaterBuilder = new RepeaterBuilder($name, $args);
-        $repeaterBuilder->setParentContext($this);
-        $this->getFieldManager()->pushField($repeaterBuilder);
-
-        return $repeaterBuilder;
+        return $this->initializeField(new RepeaterBuilder($name, 'repeater', $args));
     }
 
     /**
@@ -496,75 +482,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addFlexibleContent($name, $args = [])
     {
-        $flexibleContentBuilder = new FlexibleContentBuilder($name, $args);
-        $flexibleContentBuilder->setParentContext($this);
-        $this->getFieldManager()->pushField($flexibleContentBuilder);
-
-        return $flexibleContentBuilder;
-    }
-
-    /**
-     * Add a choice to the previously added radio, select or checkbox field
-     * @param string $choice
-     * @param string $label By default the value of $choice will appear next
-     * to the field. Optionally pass in a manual value for the label.
-     * @return $this
-     */
-    public function addChoice($choice, $label = null)
-    {
-        $field = $this->getFieldManager()->popField();
-
-        array_key_exists('choices', $field) ?: $field['choices'] = [];
-        $label ?: $label = $choice;
-
-        $field['choices'][$choice] = $label;
-        $this->getFieldManager()->pushField($field);
-
-        return $this;
-    }
-
-    /**
-     * Add a number of choices to a radio, select or checkbox field at once.
-     * Each argument will be a choice. Pass in an array of format ['name' => 'label']
-     * to specifiy a manually set label.
-     * @return $this
-     */
-    public function addChoices()
-    {
-        foreach (func_get_args() as $choice) {
-            if (is_array($choice)) {
-                $values = each($choice);
-                $this->addChoice($values['key'], $values['value']);
-                continue;
-            }
-
-            $this->addChoice($choice);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add a conditional logic statement that will determine if the last added
-     * field will display or not. You can add `or` or `and` calls after
-     * to build complex logic. Any other function call will return you to the
-     * parentContext.
-     * @param  string $name Dependent field name
-     *                      (choice type: radio, checkbox, select, trueFalse)
-     * @param  string $operator ==, !=
-     * @param  string $value    1 or choice value
-     * @return ConditionalBuilder
-     */
-    public function conditional($name, $operator, $value)
-    {
-        $field = $this->getFieldManager()->popField();
-        $conditionalBuilder = new ConditionalBuilder($name, $operator, $value);
-        $conditionalBuilder->setParentContext($this);
-
-        $field['conditional_logic'] = $conditionalBuilder;
-        $this->getFieldManager()->pushField($field);
-
-        return $conditionalBuilder;
+        return $this->initializeField(new FlexibleContentBuilder($name, 'flexible_content', $args));
     }
 
     /**
@@ -585,7 +503,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * @param string $name [description]
-     * @return array|Builder
+     * @return FieldBuilder
      */
     public function getField($name)
     {
@@ -641,51 +559,6 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     public function removeField($name)
     {
         $this->getFieldManager()->removeField($name);
-
-        return $this;
-    }
-
-    /**
-     * Set the default value of previously added field
-     * @param  string $value
-     * @return $this
-     */
-    public function defaultValue($value)
-    {
-        return $this->setConfig('default_value', $value);
-    }
-
-    /**
-     * Mark the previously added field as required
-     * @param  bool $value
-     * @return $this
-     */
-    public function required($value = true)
-    {
-        return $this->setConfig('required', $value ? 1 : 0);
-    }
-
-    /**
-     * Add instructions for the previously added field
-     * @param  string $value
-     * @return $this
-     */
-    public function instructions($value)
-    {
-        return $this->setConfig('instructions', $value);
-    }
-
-    /**
-     * Set a configuration by key on the previously added field
-     * @param string $key
-     * @param string $value
-     * @return $this
-     */
-    public function setConfig($key, $value)
-    {
-        $field = $this->getFieldManager()->popField();
-        $field[$key] = $value;
-        $this->getFieldManager()->pushField($field);
 
         return $this;
     }

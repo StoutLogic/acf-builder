@@ -28,16 +28,21 @@ class ConditionalLogic extends RecursiveTransform
         return parent::getBuilder();
     }
 
+    public function transform($config)
+    {
+        return parent::transform($config);
+    }
+
     /**
      * Replace field values of a ConditionalBuilder with the proper keys using
      * the ConditionalField Transform.
      *
-     * @param  ConditionalBuilder $value
+     * @param  array $value
      * @return array Transformed config array
      */
     public function transformValue($value)
     {
         $conditionalFieldTransform = new ConditionalField($this->getBuilder());
-        return $conditionalFieldTransform->transform($value->build());
+        return $conditionalFieldTransform->transform($value);
     }
 }

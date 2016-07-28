@@ -3,36 +3,17 @@
 namespace StoutLogic\AcfBuilder\Tests;
 
 use StoutLogic\AcfBuilder\FieldManager;
+use StoutLogic\AcfBuilder\FieldBuilder;
 
 class FieldManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $testFields;
     public function setup()
     {
-        $this->testFields['test1'] = [
-            'key' => 'field_test1',
-            'name' => 'test1',
-            'label' => 'Test1',
-            'type' => 'text',
-        ];
-        $this->testFields['test2'] = [
-            'key' => 'field_test2',
-            'name' => 'test2',
-            'label' => 'Test2',
-            'type' => 'text',
-        ];
-        $this->testFields['test3'] = [
-            'key' => 'field_test3',
-            'name' => 'test3',
-            'label' => 'Test3',
-            'type' => 'text',
-        ];
-        $this->testFields['test4'] = [
-            'key' => 'field_test4',
-            'name' => 'test4',
-            'label' => 'Test4',
-            'type' => 'text',
-        ];
+        $this->testFields['test1'] = new FieldBuilder('test1', 'text');
+        $this->testFields['test2'] = new FieldBuilder('test2', 'text');
+        $this->testFields['test3'] = new FieldBuilder('test3', 'text');
+        $this->testFields['test4'] = new FieldBuilder('test4', 'text');
     }
 
     public function testPushField()
@@ -60,7 +41,6 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInsertingFields()
     {
-
         $subject = new FieldManager([
             $this->testFields['test1'],
             $this->testFields['test2'],
@@ -220,14 +200,16 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             $this->testFields['test1'],
         ]);
 
+        print_r($subject->getFields());
         $subject->modifyField('test1', ['label' => 'new label']);
+        print_r($subject->getFields());
 
-        $this->assertSame([
+        $this->assertEquals([
             'key' => 'field_test1',
             'name' => 'test1',
             'label' => 'new label',
             'type' => 'text',
-        ], $subject->getField('test1'));
+        ], $subject->getField('test1')->build());
     }
 
     /**
