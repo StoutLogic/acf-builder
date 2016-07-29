@@ -34,9 +34,6 @@ class FlexibleContentBuilder extends FieldBuilder
      */
     public function build()
     {
-        print_r([
-            'layouts' => $this->buildLayouts(),
-        ]);
         return array_merge(parent::build(), [
             'layouts' => $this->buildLayouts(),
         ]);
