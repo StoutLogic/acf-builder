@@ -121,7 +121,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        print_r( $builder->build());
+
         $this->assertArraySubset($expectedConfig, $builder->build());
         $this->assertArrayNotHasKey('fields', $builder->build());
     }
