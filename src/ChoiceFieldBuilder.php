@@ -31,7 +31,7 @@ class ChoiceFieldBuilder extends FieldBuilder
      * will be used.
      * @param string $choice choice value
      * @param string $label  label that appears
-     * @return $this;
+     * @return $this
      */
     public function addChoice($choice, $label = null)
     {

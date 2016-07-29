@@ -130,13 +130,17 @@ class FlexibleContentBuilder extends FieldBuilder
     }
 
     /**
-     * @return array[FieldsBuilder]
+     * @return FieldsBuilder[]
      */
     public function getLayouts()
     {
         return $this->layouts;
     }
 
+    /**
+     * Gerenates the default button label.
+     * @return string
+     */
     private function getDefaultButtonLabel()
     {
         return 'Add '.rtrim($this->getLabel(), 's');

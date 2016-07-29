@@ -37,6 +37,22 @@ abstract class ParentDelegationBuilder implements Builder
     }
 
     /**
+     * Returns the root context
+     * @return Builder
+     */
+    public function getRootContext()
+    {
+        if ($parentContext = $this->getParentContext()) {
+            if ($parentContext instanceof ParentDelegationBuilder) {
+                return $parentContext->getRootContext();
+            }
+            return $parentContext;
+        }
+
+        return $this;
+    }
+
+    /**
      * If a method is missing, check to see if it exist on the $parentContext
      * and delegate the call to it.
      * @param  string $method

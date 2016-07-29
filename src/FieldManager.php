@@ -22,7 +22,7 @@ class FieldManager
     }
 
     /**
-     * @return array[NamedBuilder] field configs
+     * @return NamedBuilder[] field configs
      */
     public function getFields()
     {
@@ -40,7 +40,7 @@ class FieldManager
 
     /**
      * Add field to end of array
-     * @param  array|Builder $field Field array config or Builder
+     * @param  NamedBuilder $field Field array config or Builder
      * @return void
      */
     public function pushField($field)
@@ -51,7 +51,7 @@ class FieldManager
     /**
      * Remove last field from end of array
      * @throws \OutOfRangeException if array is empty
-     * @return array|Builder Field array config or Builder
+     * @return NamedBuilder Field array config or Builder
      */
     public function popField()
     {
@@ -112,7 +112,7 @@ class FieldManager
     /**
      * Replace a field with a single field or array of fields
      * @param  string $name  name of field to replace
-     * @param  array|Builder $field single or array of fields
+     * @param  NamedBuilder $field single or array of fields
      * @return void
      */
     public function replaceField($name, $field)
