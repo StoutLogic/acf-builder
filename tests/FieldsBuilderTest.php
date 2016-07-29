@@ -50,6 +50,15 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testGetGroupConfig()
+    {
+        $builder = new FieldsBuilder('my_fields', ['style' => 'seamless']);
+
+        $this->assertSame('seamless', $builder->getGroupConfig('style'));
+        $this->assertNull($builder->getGroupConfig('hide_on_screen'));
+    }
+
+
     public function testGroupConfigOverride()
     {
         $builder = new FieldsBuilder('my_fields', ['style' => 'seamlees']);

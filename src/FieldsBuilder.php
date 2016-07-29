@@ -58,6 +58,21 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Get a value for a particular key in the group config.
+     * Returns null if the key isn't defined in the config.
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getGroupConfig($key)
+    {
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
+        }
+
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getName()
