@@ -41,7 +41,7 @@ class RepeaterBuilder extends FieldBuilder
      * Used to contain and add fields
      * @var FieldsBuilder
      */
-    private $fieldsBuilder;
+    protected $fieldsBuilder;
 
     /**
      * @param string $name Field name

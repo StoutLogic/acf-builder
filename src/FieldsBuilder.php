@@ -144,7 +144,6 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
             $builder = clone $fields;
             $fields = $builder->getFields();
         }
-
         foreach ($fields as $field) {
             $this->getFieldManager()->pushField($field);
         }
