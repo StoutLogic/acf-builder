@@ -200,10 +200,8 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             $this->testFields['test1'],
         ]);
 
-        print_r($subject->getFields());
         $subject->modifyField('test1', ['label' => 'new label']);
-        print_r($subject->getFields());
-
+        
         $this->assertEquals([
             'key' => 'field_test1',
             'name' => 'test1',
