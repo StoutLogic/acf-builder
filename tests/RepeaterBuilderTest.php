@@ -16,6 +16,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
         $expectedConfig =  [
             'name' => 'slides',
             'type' => 'repeater',
+            'button_label' => 'Add Slide',
             'sub_fields' => [
                 [
                     'name' => 'title',
@@ -99,5 +100,29 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
             ])
             ->addImage('thumbnail');
         $this->assertArraySubset($expectedConfig, $repeaterBuilder->build());
+    }
+
+    public function testOverrideButton()
+    {
+        $builder = new RepeaterBuilder('slides', 'repeater', ['button_label' => 'Add New Slide']);
+        $builder->addText('title')
+                ->addWysiwyg('content');
+
+        $expectedConfig =  [
+            'name' => 'slides',
+            'type' => 'repeater',
+            'button_label' => 'Add New Slide',
+            'sub_fields' => [
+                [
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'content',
+                ],
+            ],
+        ];
+        print_r( $builder->build());
+        $this->assertArraySubset($expectedConfig, $builder->build());
+        $this->assertArrayNotHasKey('fields', $builder->build());
     }
 }

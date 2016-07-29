@@ -23,8 +23,8 @@ class FlexibleContentBuilder extends FieldBuilder
     {
         parent::__construct($name, $type, $config);
 
-        if (!isset($config['button'])) {
-            $this->setConfig('button', $this->getDefaultButtonLabel());
+        if (!isset($config['button_label'])) {
+            $this->setConfig('button_label', $this->getDefaultButtonLabel());
         }
     }
 

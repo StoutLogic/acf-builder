@@ -53,6 +53,10 @@ class RepeaterBuilder extends FieldBuilder
         parent::__construct($name, $type, $config);
         $this->fieldsBuilder = new FieldsBuilder($name);
         $this->fieldsBuilder->setParentContext($this);
+
+        if (!array_key_exists('button_label', $config)) {
+            $this->setConfig('button_label', $this->getDefaultButtonLabel());
+        }
     }
 
     /**
@@ -114,5 +118,14 @@ class RepeaterBuilder extends FieldBuilder
     private function callAddFieldMethod($method, $args)
     {
         return call_user_func_array([$this->fieldsBuilder, $method], $args);
+    }
+
+    /**
+     * Gerenates the default button label.
+     * @return string
+     */
+    private function getDefaultButtonLabel()
+    {
+        return 'Add '.rtrim($this->getLabel(), 's');
     }
 }

@@ -960,7 +960,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                     'name' => 'sections',
                     'label' => 'Sections',
                     'type' => 'flexible_content',
-                    'button' => 'Add Section',
+                    'button_label' => 'Add Section',
                     'layouts' => [
                         [
                             'key' => 'field_page_content_sections_banner',
@@ -1067,7 +1067,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ->addWysiwyg('content');
 
         $builder
-            ->modifyField('button', ['label' => 'Banner Title']);
+            ->modifyField('button_label', ['label' => 'Banner Title']);
     }
 
     public function testRemoveField()

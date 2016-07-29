@@ -21,7 +21,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
-            'button' => 'Add Content Area',
+            'button_label' => 'Add Content Area',
             'layouts' => [
                 [
                     'key' => 'field_content_areas_banner',
@@ -101,7 +101,7 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
-            'button' => 'Add Content Area',
+            'button_label' => 'Add Content Area',
             'layouts' => [
                 [
                     'key' => 'field_content_areas_banner',
@@ -166,5 +166,20 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                 ->addRepeater('columns', ['min' => 1, 'max' => 2])
                     ->addWysiwyg('content')
             ->setLocation('post_type', '==', 'page');
+    }
+
+    public function testOverrideButton()
+    {
+
+        $builder = new FlexibleContentBuilder('content_areas', 'flexible_content', ['button_label' => 'Add Area']);
+
+
+        $expectedConfig =  [
+            'name' => 'content_areas',
+            'type' => 'flexible_content',
+            'button_label' => 'Add Area',
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
     }
 }
