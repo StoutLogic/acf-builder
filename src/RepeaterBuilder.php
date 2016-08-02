@@ -23,7 +23,7 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addRadio(string $name, array $args = [])
  * @method FieldBuilder addCheckbox(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
- * @method FieldBuilder addPostLink(string $name, array $args = [])
+ * @method FieldBuilder addPageLink(string $name, array $args = [])
  * @method FieldBuilder addTaxonomy(string $name, array $args = [])
  * @method FieldBuilder addUser(string $name, array $args = [])
  * @method FieldBuilder addDatePicker(string $name, array $args = [])

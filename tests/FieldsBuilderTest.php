@@ -399,13 +399,13 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testAddPostList()
     {
         $builder = new FieldsBuilder('fields');
-        $builder->addPostLink('related_page');
+        $builder->addPageLink('related_page');
 
         $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'related_page',
-                    'type' => 'post_link',
+                    'type' => 'page_link',
                 ],
             ],
         ];

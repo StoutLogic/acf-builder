@@ -369,9 +369,9 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @param array $args field configuration
      * @return $this
      */
-    public function addPostLink($name, $args = [])
+    public function addPageLink($name, $args = [])
     {
-        return $this->addField($name, 'post_link', $args);
+        return $this->addField($name, 'page_link', $args);
     }
 
     /**
