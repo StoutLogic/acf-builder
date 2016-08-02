@@ -10,7 +10,7 @@ namespace StoutLogic\AcfBuilder\Transform;
  */
 class NamespaceFieldKey extends RecursiveTransform
 {
-    protected $keys = ['key', 'field'];
+    protected $keys = ['key', 'field', 'collapsed'];
 
     /**
      * @param \StoutLogic\AcfBuilder\NamedBuilder $builder

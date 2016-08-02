@@ -125,4 +125,28 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
         $this->assertArrayNotHasKey('fields', $builder->build());
     }
+
+    public function testCollapseSetting()
+    {
+        $builder = new RepeaterBuilder('slides', 'repeater', ['collapsed' => 'title']);
+        $builder->addText('title')
+            ->addWysiwyg('content');
+
+        $expectedConfig =  [
+            'name' => 'slides',
+            'type' => 'repeater',
+            'collapsed' => 'slides_title',
+            'sub_fields' => [
+                [
+                    'key' => 'field_slides_title',
+                    'name' => 'title',
+                ],
+                [
+                    'name' => 'content',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }
