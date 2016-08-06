@@ -2,6 +2,8 @@
 
 namespace StoutLogic\AcfBuilder;
 
+use Doctrine\Common\Inflector\Inflector;
+
 /**
  * Repeater field
  * Can add multiple fields as subfields to the repeater.
@@ -131,6 +133,6 @@ class RepeaterBuilder extends FieldBuilder
      */
     private function getDefaultButtonLabel()
     {
-        return 'Add '.rtrim($this->getLabel(), 's');
+        return 'Add '.Inflector::singularize($this->getLabel());
     }
 }

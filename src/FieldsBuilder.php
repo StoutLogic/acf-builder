@@ -49,6 +49,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * Set a value for a particular key in the group config
      * @param string $key
      * @param mixed $value
+     * @return $this
      */
     public function setGroupConfig($key, $value)
     {

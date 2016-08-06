@@ -2,6 +2,8 @@
 
 namespace StoutLogic\AcfBuilder;
 
+use Doctrine\Common\Inflector\Inflector;
+
 /**
  * Create a configuration array for an ACF Flexible Content field.
  * A flexible content field can have many different `layouts` which are
@@ -143,6 +145,6 @@ class FlexibleContentBuilder extends FieldBuilder
      */
     private function getDefaultButtonLabel()
     {
-        return 'Add '.rtrim($this->getLabel(), 's');
+        return 'Add '.Inflector::singularize($this->getLabel());
     }
 }
