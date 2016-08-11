@@ -525,6 +525,11 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
         return $this->getFieldManager()->getField($name);
     }
 
+    public function fieldExists($name)
+    {
+        return $this->getFieldManager()->fieldNameExists($name);
+    }
+
     /**
      * Modify an already defined field
      * @param  string $name   Name of the field
