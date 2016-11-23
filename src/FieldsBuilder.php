@@ -2,15 +2,42 @@
 
 namespace StoutLogic\AcfBuilder;
 
-class FieldsBuilder extends Builder
+/**
+ * Builds configurations for ACF Field Groups
+ */
+class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
+    /**
+     * Field Group Configuration
+     * @var array
+     */
     protected $config = [];
-    protected $fields = [];
+
+    /**
+     * Manages the Field Configurations
+     * @var FieldManager
+     */
+    protected $fieldManager;
+
+    /**
+     * Location configuration for Field Group
+     * @var LocationBuilder
+     */
     protected $location = null;
+
+    /**
+     * Field Group Name
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @param string $name Field Group name
+     * @param array $groupConfig Field Group configuration
+     */
     public function __construct($name, $groupConfig = [])
     {
+        $this->fieldManager = new FieldManager();
         $this->name = $name;
         $this->setGroupConfig('key', $name);
         $this->setGroupConfig('title', $this->generateLabel($name));
@@ -18,6 +45,12 @@ class FieldsBuilder extends Builder
         $this->config = array_merge($this->config, $groupConfig);
     }
 
+    /**
+     * Set a value for a particular key in the group config
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
     public function setGroupConfig($key, $value)
     {
         $this->config[$key] = $value;
@@ -25,6 +58,24 @@ class FieldsBuilder extends Builder
         return $this;
     }
 
+    /**
+     * Get a value for a particular key in the group config.
+     * Returns null if the key isn't defined in the config.
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getGroupConfig($key)
+    {
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
@@ -48,7 +99,7 @@ class FieldsBuilder extends Builder
     /**
      * Build the final config array. Build any other builders that may exist
      * in the config.
-     * @return array    final field config
+     * @return array Final field config
      */
     public function build()
     {
@@ -59,15 +110,24 @@ class FieldsBuilder extends Builder
         ]);
     }
 
+    /**
+     * Return a fields config array
+     * @return array
+     */
     private function buildFields()
     {
-        $fields = array_map(function($field) {
+        $fields = array_map(function ($field) {
             return ($field instanceof Builder) ? $field->build() : $field;
         }, $this->getFields());
 
         return $this->transformFields($fields);
     }
 
+    /**
+     * Apply field transforms
+     * @param  array $fields
+     * @return array Transformed fields config
+     */
     private function transformFields($fields)
     {
         $conditionalTransform = new Transform\ConditionalLogic($this);
@@ -79,6 +139,10 @@ class FieldsBuilder extends Builder
             );
     }
 
+    /**
+     * Return a locations config array
+     * @return array
+     */
     private function buildLocation()
     {
         $location = $this->getLocation();
@@ -88,178 +152,318 @@ class FieldsBuilder extends Builder
     /**
      * Add multiple fields either via an array or from another builder
      * @param mixed $fields array of fields or a FieldBuilder
+     * @return $this
      */
     public function addFields($fields)
     {
         if ($fields instanceof FieldsBuilder) {
-            $fields = clone $fields;
-            foreach ($fields->getFields() as $field) {
-                $this->pushField($field);
-            }
-        } else {
-            foreach ($fields as $field) {
-                $this->pushField($field);
-            }
+            $builder = clone $fields;
+            $fields = $builder->getFields();
+        }
+        foreach ($fields as $field) {
+            $this->getFieldManager()->pushField($field);
         }
 
         return $this;
     }
 
-    public function addField($name, $args = [])
+    /**
+     * Add a field of a specific type
+     * @param string $name
+     * @param string $type
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+    public function addField($name, $type, $args = [])
     {
-        $field = array_merge([
-            'key' => $name,
-            'name' => $name,
-            'label' => $this->generateLabel($name),
-        ], $args);
-
-        $this->pushField($field);
-
-        return $this;
+        return $this->initializeField(new FieldBuilder($name, $type, $args));
     }
 
-    protected function addFieldType($name, $type, $args = [])
+    /**
+     * Add a field of a choice type, allows choices to be added.
+     * @param string $name
+     * @param string $type 'select', 'radio', 'checkbox'
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+    public function addChoiceField($name, $type, $args = [])
     {
-        return $this->addField($name, array_merge([
-            'type' => $type,
-        ], $args));
+        return $this->initializeField(new ChoiceFieldBuilder($name, $type, $args));
     }
 
+    /**
+     * Initialize the FieldBuilder, add to FieldManager
+     * @param  FieldBuilder $field
+     * @return FieldBuilder
+     */
+    protected function initializeField($field)
+    {
+        $field->setParentContext($this);
+        $this->getFieldManager()->pushField($field);
+        return $field;
+    }
+
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addText($name, $args = [])
     {
-        return $this->addFieldType($name, 'text', $args);
+        return $this->addField($name, 'text', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addTextarea($name, $args = [])
     {
-        return $this->addFieldType($name, 'textarea', $args);
+        return $this->addField($name, 'textarea', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addNumber($name, $args = [])
     {
-        return $this->addFieldType($name, 'number', $args);
+        return $this->addField($name, 'number', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addEmail($name, $args = [])
     {
-        return $this->addFieldType($name, 'email', $args);
+        return $this->addField($name, 'email', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addUrl($name, $args = [])
     {
-        return $this->addFieldType($name, 'url', $args);
+        return $this->addField($name, 'url', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addPassword($name, $args = [])
     {
-        return $this->addFieldType($name, 'password', $args);
+        return $this->addField($name, 'password', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addWysiwyg($name, $args = [])
     {
-        return $this->addFieldType($name, 'wysiwyg', $args);
+        return $this->addField($name, 'wysiwyg', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addOembed($name, $args = [])
     {
-        return $this->addFieldType($name, 'oembed', $args);
+        return $this->addField($name, 'oembed', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addImage($name, $args = [])
     {
-        return $this->addFieldType($name, 'image', $args);
+        return $this->addField($name, 'image', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addFile($name, $args = [])
     {
-        return $this->addFieldType($name, 'file', $args);
+        return $this->addField($name, 'file', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addGallery($name, $args = [])
     {
-        return $this->addFieldType($name, 'gallery', $args);
+        return $this->addField($name, 'gallery', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addTrueFalse($name, $args = [])
     {
-        return $this->addFieldType($name, 'true_false', $args);
+        return $this->addField($name, 'true_false', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addSelect($name, $args = [])
     {
-        return $this->addFieldType($name, 'select', $args);
+        return $this->addChoiceField($name, 'select', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addRadio($name, $args = [])
     {
-        return $this->addFieldType($name, 'radio', $args);
+        return $this->addChoiceField($name, 'radio', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addCheckbox($name, $args = [])
     {
-        return $this->addFieldType($name, 'checkbox', $args);
+        return $this->addChoiceField($name, 'checkbox', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addPostObject($name, $args = [])
     {
-        return $this->addFieldType($name, 'post_object', $args);
+        return $this->addField($name, 'post_object', $args);
     }
 
-    public function addPostLink($name, $args = [])
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
+    public function addPageLink($name, $args = [])
     {
-        return $this->addFieldType($name, 'post_link', $args);
+        return $this->addField($name, 'page_link', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addRelationship($name, $args = [])
     {
-        return $this->addFieldType($name, 'relationship', $args);
+        return $this->addField($name, 'relationship', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addTaxonomy($name, $args = [])
     {
-        return $this->addFieldType($name, 'taxonomy', $args);
+        return $this->addField($name, 'taxonomy', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addUser($name, $args = [])
     {
-        return $this->addFieldType($name, 'user', $args);
+        return $this->addField($name, 'user', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addDatePicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'date_picker', $args);
+        return $this->addField($name, 'date_picker', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addTimePicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'time_picker', $args);
+        return $this->addField($name, 'time_picker', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addDateTimePicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'date_time_picker', $args);
+        return $this->addField($name, 'date_time_picker', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addColorPicker($name, $args = [])
     {
-        return $this->addFieldType($name, 'color_picker', $args);
+        return $this->addField($name, 'color_picker', $args);
     }
 
+    /**
+     * All fields added after will appear under this tab, until another tab
+     * is added.
+     * @param string $label Tab label
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addTab($label, $args = [])
     {
-        $name = $this->generateName($label).'_tab';
-        $args = array_merge([
-            'label' => $label,
-        ], $args);
-
-        return $this->addFieldType($name, 'tab', $args);
+        return $this->initializeField(new TabBuilder($label, 'tab', $args));
     }
 
-    public function endpoint($value = 1)
-    {
-        return $this->setConfig('endpoint', $value);
-    }
-
+    /**
+     * Addes a message field
+     * @param string $label
+     * @param string $message
+     * @param array $args field configuration
+     * @return $this
+     */
     public function addMessage($label, $message, $args = [])
     {
         $name = $this->generateName($label).'_message';
@@ -268,130 +472,100 @@ class FieldsBuilder extends Builder
             'message' => $message,
         ], $args);
 
-        return $this->addFieldType($name, 'message', $args);
-    }
-
-    public function addRepeater($name, $args = [])
-    {
-        $repeaterBuilder = new RepeaterBuilder($name, $args);
-        $repeaterBuilder->setParentContext($this);
-        $this->pushField($repeaterBuilder);
-
-        return $repeaterBuilder;
-    }
-
-    public function addFlexibleContent($name, $args = [])
-    {
-        $flexibleContentBuilder = new FlexibleContentBuilder($name, $args);
-        $flexibleContentBuilder->setParentContext($this);
-        $this->pushField($flexibleContentBuilder);
-
-        return $flexibleContentBuilder;
-    }
-
-    public function addChoice($choice, $label = null)
-    {
-        $field = $this->popLastField();
-
-        array_key_exists('choices', $field) ?: $field['choices'] = [];
-        $label ?: $label = $choice;
-
-        $field['choices'][$choice] = $label;
-        $this->pushField($field);
-
-        return $this;
-    }
-
-    public function addChoices()
-    {
-        foreach (func_get_args() as $choice) {
-            if (is_array($choice)) {
-                $values = each($choice);
-                $this->addChoice($values['key'], $values['value']);
-            } else {
-                $this->addChoice($choice);
-            }
-        }
-
-        return $this;
-    }
-
-    public function conditional($name, $operator, $value)
-    {
-        $field = $this->popLastField();
-        $conditionalBuilder = new ConditionalBuilder($name, $operator, $value);
-        $conditionalBuilder->setParentContext($this);
-
-        $field['conditional_logic'] = $conditionalBuilder;
-        $this->pushField($field);
-
-        return $conditionalBuilder;
-    }
-
-    public function getFields()
-    {
-        return $this->fields;
+        return $this->addField($name, 'message', $args);
     }
 
     /**
-     * Return the index in the $this->fields array looked up by the field's name
-     * @param  string $name Field Name
-     *
-     * @throws FieldNotFoundException if the field name doesn't exist
-     *
-     * @return integer Field Index
+     * Add a repeater field. Any fields added after will be added to the repeater
+     * until `endRepeater` is called.
+     * @param string $name
+     * @param array $args field configuration
+     * @return RepeaterBuilder
      */
-    protected function getFieldIndexByName($name)
+    public function addRepeater($name, $args = [])
     {
-        foreach ($this->fields as $index => $field) {
-            if ($field['name'] === $name) {
-                return $index;
-            }
-        }
-
-        throw new FieldNotFoundException("Field name '{$name}' not found.");
+        return $this->initializeField(new RepeaterBuilder($name, 'repeater', $args));
     }
 
-    public function getFieldByName($name)
+    /**
+     * Add a flexible content field. Once adding a layout with `addLayout`,
+     * any fields added after will be added to that layout until another
+     * `addLayout` call is made, or until `endFlexibleContent` is called.
+     * @param string $name
+     * @param array $args field configuration
+     * @return FlexibleContentBuilder
+     */
+    public function addFlexibleContent($name, $args = [])
     {
-        return $this->fields[$this->getFieldIndexByName($name)];
+        return $this->initializeField(new FlexibleContentBuilder($name, 'flexible_content', $args));
+    }
+
+    /**
+     * @return FieldManager
+     */
+    protected function getFieldManager()
+    {
+        return $this->fieldManager;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->getFieldManager()->getFields();
+    }
+
+    /**
+     * @param string $name [description]
+     * @return FieldBuilder
+     */
+    public function getField($name)
+    {
+        return $this->getFieldManager()->getField($name);
+    }
+
+    public function fieldExists($name)
+    {
+        return $this->getFieldManager()->fieldNameExists($name);
     }
 
     /**
      * Modify an already defined field
      * @param  string $name   Name of the field
-     * @param  mixed  $modify Array of field configs or a closure that accepts
-     *                        a FieldsBuilder and returns a FieldsBuilder.
-     *
+     * @param  array|\Closure  $modify Array of field configs or a closure that accepts
+     * a FieldsBuilder and returns a FieldsBuilder.
      * @throws ModifyFieldReturnTypeException if $modify is a closure and doesn't
-     *                                        return a FieldsBuilder.
-     *
-     * @return FieldsBuilder  $this
+     * return a FieldsBuilder.
+     * @throws FieldNotFoundException if the field name doesn't exist.
+     * @return $this
      */
     public function modifyField($name, $modify)
     {
-        $index = $this->getFieldIndexByName($name);
+        if (is_array($modify)) {
+            $this->getFieldManager()->modifyField($name, $modify);
+        } elseif ($modify instanceof \Closure) {
+            $field = $this->getField($name);
 
-        if ($modify instanceof \Closure) {
             // Initialize Modifying FieldsBuilder
             $modifyBuilder = new FieldsBuilder('');
-            $modifyBuilder->addFields([$this->fields[$index]]);
+            $modifyBuilder->addFields([$field]);
 
-            // Modify Field
+            /**
+             * @var FieldsBuilder
+             */
             $modifyBuilder = $modify($modifyBuilder);
 
             // Check if a FieldsBuilder is returned
             if (!$modifyBuilder instanceof FieldsBuilder) {
                 throw new ModifyFieldReturnTypeException(gettype($modifyBuilder));
-            } else {
-                // Build Modifcations
-                $modifyConfig = $modifyBuilder->build();
-
-                // Build Modifcations
-                array_splice($this->fields, $index, 1, $modifyConfig['fields']);
             }
-        } else {
-            $this->fields[$index] = array_merge($this->fields[$index], $modify);
+
+            // Build Modifications
+            $modifyConfig = $modifyBuilder->build();
+
+            // Insert field(s)
+            $this->getFieldManager()->replaceField($name, $modifyConfig['fields']);
         }
 
         return $this;
@@ -400,41 +574,25 @@ class FieldsBuilder extends Builder
     /**
      * Remove a field by name
      * @param  string $name Field to remove
-     *
-     * @return FieldsBuilder  $this
+     * @return $this
      */
     public function removeField($name)
     {
-        $index = $this->getFieldIndexByName($name);
-        unset($this->fields[$index]);
+        $this->getFieldManager()->removeField($name);
 
         return $this;
     }
 
-    public function defaultValue($value)
-    {
-        return $this->setConfig('default_value', $value);
-    }
-
-    public function required($value = true)
-    {
-        return $this->setConfig('required', $value ? 1 : 0);
-    }
-
-    public function instructions($value)
-    {
-        return $this->setConfig('instructions', $value);
-    }
-
-    public function setConfig($key, $value)
-    {
-        $field = $this->popLastField();
-        $field[$key] = $value;
-        $this->pushField($field);
-
-        return $this;
-    }
-
+    /**
+     * Set the location of the field group. See
+     * https://github.com/StoutLogic/acf-builder/wiki/location and
+     * https://www.advancedcustomfields.com/resources/custom-location-rules/
+     * for more details.
+     * @param string $param
+     * @param string $operator
+     * @param string $value
+     * @return LocationBuilder
+     */
     public function setLocation($param, $operator, $value)
     {
         if ($this->getParentContext()) {
@@ -447,26 +605,29 @@ class FieldsBuilder extends Builder
         return $this->location;
     }
 
+    /**
+     * @return LocationBuilder
+     */
     public function getLocation()
     {
         return $this->location;
     }
 
-    protected function popLastField()
-    {
-        return array_pop($this->fields);
-    }
-
-    protected function pushField($field)
-    {
-        $this->fields[] = $field;
-    }
-
+    /**
+     * Create a field label based on the field's name. Generates title case.
+     * @param  string $name
+     * @return string label
+     */
     protected function generateLabel($name)
     {
         return ucwords(str_replace("_", " ", $name));
     }
 
+    /**
+     * Generates a snaked cased name.
+     * @param  string $name
+     * @return string
+     */
     protected function generateName($name)
     {
         return strtolower(str_replace(" ", "_", $name));

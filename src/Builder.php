@@ -2,27 +2,15 @@
 
 namespace StoutLogic\AcfBuilder;
 
-abstract class Builder
+/**
+ * Interface for Builder
+ * Builds a configuration array
+ */
+interface Builder
 {
-    private $parentContext;
-
-    abstract public function build();
-
-    public function setParentContext(Builder $builder)
-    {
-        $this->parentContext = $builder;
-    }
-
-    public function getParentContext()
-    {
-        return $this->parentContext;
-    }
-
-    public function __call($method, $args) {
-        if ($this->parentContext) {
-            return call_user_func_array([$this->parentContext, $method], $args);
-        }
-
-        throw new \Exception('No such function: '.$method);
-    }
+    /**
+     * Builds the configuration
+     * @return array configuration
+     */
+    public function build();
 }

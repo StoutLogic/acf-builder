@@ -19,7 +19,7 @@ class NamespaceFieldKeyTest extends \PHPUnit_Framework_TestCase
     {
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $transform = new Transform\NamespaceFieldKey($builder->reveal());
-        $this->assertSame(['key', 'field'], $transform->getKeys());
+        $this->assertSame(['key', 'field', 'collapsed'], $transform->getKeys());
     }
 
     public function testTransformValue()

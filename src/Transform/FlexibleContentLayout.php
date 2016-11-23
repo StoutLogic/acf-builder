@@ -10,6 +10,10 @@ namespace StoutLogic\AcfBuilder\Transform;
  */
 class FlexibleContentLayout extends Transform
 {
+    /**
+     * @param  array $config
+     * @return array
+     */
     public function transform($config)
     {
         $config['sub_fields'] = $config['fields'];

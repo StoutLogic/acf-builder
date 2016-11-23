@@ -4,15 +4,15 @@ namespace StoutLogic\AcfBuilder\Tests;
 
 use StoutLogic\AcfBuilder\Builder;
 
-class BuilderTest extends \PHPUnit_Framework_TestCase
+class ParentDelegationBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturningParent()
     {
         $parent = $this
-            ->getMockBuilder('StoutLogic\AcfBuilder\Builder')
+            ->getMockBuilder('StoutLogic\AcfBuilder\ParentDelegationBuilder')
             ->setMethods(['parentMethod', 'build'])
             ->getMockForAbstractClass();
-        $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\Builder');
+        $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
         $child->setParentContext($parent);
 
         $parent->expects($this->once())->method('parentMethod');
@@ -21,8 +21,8 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowingException()
     {
-        $parent = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\Builder');
-        $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\Builder');
+        $parent = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
+        $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
         $child->setParentContext($parent);
 
         $this->setExpectedException('\Exception');

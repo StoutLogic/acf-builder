@@ -17,11 +17,11 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                         ->addWysiwyg('content');
 
         $expectedConfig =  [
-            'key' => 'content_areas',
+            'key' => 'field_content_areas',
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
-            'button' => 'Add Content Area',
+            'button_label' => 'Add Content Area',
             'layouts' => [
                 [
                     'key' => 'field_content_areas_banner',
@@ -65,12 +65,11 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
         $this->assertArraySubset($expectedConfig, $builder->build());
         $this->assertArrayNotHasKey('fields', $builder->build());
     }
 
-    function testAddingFieldsBuilderAsLayout()
+    public function testAddingFieldsBuilderAsLayout()
     {
         $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
                         ->setConstructorArgs(['parent'])
@@ -98,11 +97,11 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->addLayout($banner);
 
         $expectedConfig =  [
-            'key' => 'content_areas',
+            'key' => 'field_content_areas',
             'name' => 'content_areas',
             'label' => 'Content Areas',
             'type' => 'flexible_content',
-            'button' => 'Add Content Area',
+            'button_label' => 'Add Content Area',
             'layouts' => [
                 [
                     'key' => 'field_content_areas_banner',
@@ -167,5 +166,20 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
                 ->addRepeater('columns', ['min' => 1, 'max' => 2])
                     ->addWysiwyg('content')
             ->setLocation('post_type', '==', 'page');
+    }
+
+    public function testOverrideButton()
+    {
+
+        $builder = new FlexibleContentBuilder('content_areas', 'flexible_content', ['button_label' => 'Add Area']);
+
+
+        $expectedConfig =  [
+            'name' => 'content_areas',
+            'type' => 'flexible_content',
+            'button_label' => 'Add Area',
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
     }
 }

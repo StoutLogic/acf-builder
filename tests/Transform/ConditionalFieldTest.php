@@ -23,12 +23,15 @@ class ConditionalFieldTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformValue()
     {
+        $field = $this->prophesize('\StoutLogic\AcfBuilder\FieldBuilder');
+        $field
+            ->getKey()
+            ->willReturn('field_key');
+
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $builder
-            ->getFieldByName('value')
-            ->willReturn([
-                'key' => 'field_key',
-            ]);
+            ->getField('value')
+            ->willReturn($field->reveal());
 
         $transform = new Transform\ConditionalField($builder->reveal());
         $this->assertSame('field_key', $transform->transformValue('value'));
