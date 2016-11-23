@@ -205,9 +205,9 @@ class FieldsBuilder extends Builder
         return $this->addFieldType($name, 'post_object', $args);
     }
 
-    public function addPostLink($name, $args = [])
+    public function addPageLink($name, $args = [])
     {
-        return $this->addFieldType($name, 'post_link', $args);
+        return $this->addFieldType($name, 'page_link', $args);
     }
 
     public function addRelationship($name, $args = [])
