@@ -5,7 +5,9 @@ Create configuration arrays for [Advanced Custom Fields Pro](https://www.advance
 Quickly create, register, and reuse ACF configurations, and keep them in your source code repository. To read more about registering ACF fields via php consult https://www.advancedcustomfields.com/resources/register-fields-via-php/
 
 [![Latest Stable Version](https://poser.pugx.org/stoutlogic/acf-builder/v/stable)](https://packagist.org/packages/stoutlogic/acf-builder)
-[![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)](https://travis-ci.org/StoutLogic/acf-builder) [![Join the chat at https://gitter.im/StoutLogic/acf-builder](https://badges.gitter.im/StoutLogic/acf-builder.svg)](https://gitter.im/StoutLogic/acf-builder?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://api.travis-ci.org/StoutLogic/acf-builder.svg?branch=master)](https://travis-ci.org/StoutLogic/acf-builder) 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/StoutLogic/acf-builder/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/StoutLogic/acf-builder/?branch=master)
+[![Join the chat at https://gitter.im/StoutLogic/acf-builder](https://badges.gitter.im/StoutLogic/acf-builder.svg)](https://gitter.im/StoutLogic/acf-builder?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### Simple Example
 ```php
