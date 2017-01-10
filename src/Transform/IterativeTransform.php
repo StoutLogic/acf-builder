@@ -14,30 +14,8 @@ abstract class IterativeTransform extends RecursiveTransform
      */
    protected $dontRecurseKeys = ['fields', 'sub_fields', 'layouts'];
 
-    /**
-     * Apply the `transformValue` function to all values in multidementional
-     * associative array where the key matches one of the keys defined
-     * on the IterativeTransform.
-     * @param  array $config
-     * @return array transformed config
-     */
-    public function transform($config)
-    {
-        array_walk($config, function (&$value, $key) {
-            if (in_array($key, $this->getKeys(), true)) {
-                $value = $this->transformValue($value);
-            } else {
-                if (is_array($value) && !in_array($key, $this->getDontRecurseKeys(), true)) {
-                    $value = $this->transform($value);
-                }
-            }
-        });
-
-        return $config;
-    }
-
-    public function getDontRecurseKeys()
-    {
-        return $this->dontRecurseKeys;
-    }
+   protected function shouldRecurse($value, $key)
+   {
+       return is_array($value) && !in_array($key, $this->dontRecurseKeys, true);
+   }
 }
