@@ -446,6 +446,16 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * @param string $name
+     * @param array $args field configuration
+     * @return FieldsBuilder
+     */
+    public function addGoogleMap($name, $args = [])
+    {
+        return $this->addField($name, 'google_map', $args);
+    }
+
+    /**
      * All fields added after will appear under this tab, until another tab
      * is added.
      * @param string $label Tab label

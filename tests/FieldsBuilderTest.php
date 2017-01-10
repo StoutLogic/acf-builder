@@ -532,6 +532,23 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddGoogleMap()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addGoogleMap('map');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'map',
+                    'type' => 'google_map',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testRequired()
     {
         $builder = new FieldsBuilder('fields');
