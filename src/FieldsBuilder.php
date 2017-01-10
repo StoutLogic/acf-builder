@@ -116,7 +116,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     private function buildFields()
     {
-        $fields = array_map(function ($field) {
+        $fields = array_map(function($field) {
             return ($field instanceof Builder) ? $field->build() : $field;
         }, $this->getFields());
 
@@ -549,7 +549,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
-     * @return array
+     * @return NamedBuilder[]
      */
     public function getFields()
     {
