@@ -31,7 +31,7 @@ abstract class RecursiveTransform extends Transform
      */
     public function transform($config)
     {
-        array_walk($config, function (&$value, $key) {
+        array_walk($config, function(&$value, $key) {
             if (in_array($key, $this->getKeys(), true)) {
                 $value = $this->transformValue($value);
             } else {

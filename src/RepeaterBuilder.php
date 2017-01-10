@@ -73,7 +73,7 @@ class RepeaterBuilder extends FieldBuilder
         if (array_key_exists('collapsed', $config)) {
             $fieldKey = $this->fieldsBuilder->getField($config['collapsed'])->getKey();
             $fieldKey = preg_replace('/^field_/', '', $fieldKey);
-            $config['collapsed'] =  $this->getName() . '_' . $fieldKey;
+            $config['collapsed'] = $this->getName().'_'.$fieldKey;
         }
         return $config;
     }
