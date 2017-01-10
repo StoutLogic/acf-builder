@@ -31,17 +31,29 @@ abstract class RecursiveTransform extends Transform
      */
     public function transform($config)
     {
-        array_walk($config, function (&$value, $key) {
+        array_walk($config, function(&$value, $key) {
             if (in_array($key, $this->getKeys(), true)) {
                 $value = $this->transformValue($value);
             } else {
-                if (is_array($value)) {
+                if ($this->shouldRecurse($value, $key)) {
                     $value = $this->transform($value);
                 }
             }
         });
 
         return $config;
+    }
+
+    /**
+     * Based upon the value or key, determine if the transform function
+     * should recurse.
+     * @param $value
+     * @param string $key
+     * @return bool
+     */
+    protected function shouldRecurse($value, $key)
+    {
+        return is_array($value);
     }
 
     /**

@@ -47,7 +47,7 @@ class FlexibleContentBuilder extends FieldBuilder
      */
     private function buildLayouts()
     {
-        return array_map(function ($layout) {
+        return array_map(function($layout) {
             $layout = ($layout instanceof Builder) ? $layout->build() : $layout;
             return $this->transformLayout($layout);
         }, $this->getLayouts());

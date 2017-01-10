@@ -8,7 +8,7 @@ use StoutLogic\AcfBuilder\ConditionalBuilder;
  * Applies the ConditionalField Transform to the conditional_logic value
  * of each field, in the field group config.
  */
-class ConditionalLogic extends RecursiveTransform
+class ConditionalLogic extends IterativeTransform
 {
     protected $keys = ['conditional_logic'];
 

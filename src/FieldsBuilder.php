@@ -23,7 +23,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * Location configuration for Field Group
      * @var LocationBuilder
      */
-    protected $location = null;
+    protected $location;
 
     /**
      * Field Group Name
@@ -35,7 +35,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @param string $name Field Group name
      * @param array $groupConfig Field Group configuration
      */
-    public function __construct($name, $groupConfig = [])
+    public function __construct($name, array $groupConfig = [])
     {
         $this->fieldManager = new FieldManager();
         $this->name = $name;
@@ -116,7 +116,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     private function buildFields()
     {
-        $fields = array_map(function ($field) {
+        $fields = array_map(function($field) {
             return ($field instanceof Builder) ? $field->build() : $field;
         }, $this->getFields());
 
@@ -141,7 +141,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Return a locations config array
-     * @return array
+     * @return array|LocationBuilder
      */
     private function buildLocation()
     {
@@ -151,7 +151,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Add multiple fields either via an array or from another builder
-     * @param mixed $fields array of fields or a FieldBuilder
+     * @param FieldsBuilder|array $fields
      * @return $this
      */
     public function addFields($fields)
@@ -160,6 +160,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
             $builder = clone $fields;
             $fields = $builder->getFields();
         }
+
         foreach ($fields as $field) {
             $this->getFieldManager()->pushField($field);
         }
@@ -175,7 +176,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @throws FieldNameCollisionException if name already exists.
      * @return FieldBuilder
      */
-    public function addField($name, $type, $args = [])
+    public function addField($name, $type, array $args = [])
     {
         return $this->initializeField(new FieldBuilder($name, $type, $args));
     }
@@ -188,7 +189,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @throws FieldNameCollisionException if name already exists.
      * @return FieldBuilder
      */
-    public function addChoiceField($name, $type, $args = [])
+    public function addChoiceField($name, $type, array $args = [])
     {
         return $this->initializeField(new ChoiceFieldBuilder($name, $type, $args));
     }
@@ -208,9 +209,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addText($name, $args = [])
+    public function addText($name, array $args = [])
     {
         return $this->addField($name, 'text', $args);
     }
@@ -218,9 +220,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addTextarea($name, $args = [])
+    public function addTextarea($name, array $args = [])
     {
         return $this->addField($name, 'textarea', $args);
     }
@@ -228,9 +231,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addNumber($name, $args = [])
+    public function addNumber($name, array $args = [])
     {
         return $this->addField($name, 'number', $args);
     }
@@ -238,9 +242,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addEmail($name, $args = [])
+    public function addEmail($name, array $args = [])
     {
         return $this->addField($name, 'email', $args);
     }
@@ -248,9 +253,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addUrl($name, $args = [])
+    public function addUrl($name, array $args = [])
     {
         return $this->addField($name, 'url', $args);
     }
@@ -258,9 +264,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addPassword($name, $args = [])
+    public function addPassword($name, array $args = [])
     {
         return $this->addField($name, 'password', $args);
     }
@@ -268,9 +275,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addWysiwyg($name, $args = [])
+    public function addWysiwyg($name, array $args = [])
     {
         return $this->addField($name, 'wysiwyg', $args);
     }
@@ -278,9 +286,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addOembed($name, $args = [])
+    public function addOembed($name, array $args = [])
     {
         return $this->addField($name, 'oembed', $args);
     }
@@ -288,9 +297,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addImage($name, $args = [])
+    public function addImage($name, array $args = [])
     {
         return $this->addField($name, 'image', $args);
     }
@@ -298,9 +308,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addFile($name, $args = [])
+    public function addFile($name, array $args = [])
     {
         return $this->addField($name, 'file', $args);
     }
@@ -308,9 +319,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addGallery($name, $args = [])
+    public function addGallery($name, array $args = [])
     {
         return $this->addField($name, 'gallery', $args);
     }
@@ -318,9 +330,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addTrueFalse($name, $args = [])
+    public function addTrueFalse($name, array $args = [])
     {
         return $this->addField($name, 'true_false', $args);
     }
@@ -328,9 +341,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addSelect($name, $args = [])
+    public function addSelect($name, array $args = [])
     {
         return $this->addChoiceField($name, 'select', $args);
     }
@@ -338,9 +352,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addRadio($name, $args = [])
+    public function addRadio($name, array $args = [])
     {
         return $this->addChoiceField($name, 'radio', $args);
     }
@@ -348,9 +363,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addCheckbox($name, $args = [])
+    public function addCheckbox($name, array $args = [])
     {
         return $this->addChoiceField($name, 'checkbox', $args);
     }
@@ -358,9 +374,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addPostObject($name, $args = [])
+    public function addPostObject($name, array $args = [])
     {
         return $this->addField($name, 'post_object', $args);
     }
@@ -368,9 +385,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addPageLink($name, $args = [])
+    public function addPageLink($name, array $args = [])
     {
         return $this->addField($name, 'page_link', $args);
     }
@@ -378,9 +396,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addRelationship($name, $args = [])
+    public function addRelationship($name, array $args = [])
     {
         return $this->addField($name, 'relationship', $args);
     }
@@ -388,9 +407,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addTaxonomy($name, $args = [])
+    public function addTaxonomy($name, array $args = [])
     {
         return $this->addField($name, 'taxonomy', $args);
     }
@@ -398,9 +418,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addUser($name, $args = [])
+    public function addUser($name, array $args = [])
     {
         return $this->addField($name, 'user', $args);
     }
@@ -408,9 +429,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addDatePicker($name, $args = [])
+    public function addDatePicker($name, array $args = [])
     {
         return $this->addField($name, 'date_picker', $args);
     }
@@ -418,9 +440,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addTimePicker($name, $args = [])
+    public function addTimePicker($name, array $args = [])
     {
         return $this->addField($name, 'time_picker', $args);
     }
@@ -428,9 +451,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addDateTimePicker($name, $args = [])
+    public function addDateTimePicker($name, array $args = [])
     {
         return $this->addField($name, 'date_time_picker', $args);
     }
@@ -438,11 +462,23 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addColorPicker($name, $args = [])
+    public function addColorPicker($name, array $args = [])
     {
         return $this->addField($name, 'color_picker', $args);
+    }
+
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+    public function addGoogleMap($name, array $args = [])
+    {
+        return $this->addField($name, 'google_map', $args);
     }
 
     /**
@@ -450,9 +486,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * is added.
      * @param string $label Tab label
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addTab($label, $args = [])
+    public function addTab($label, array $args = [])
     {
         return $this->initializeField(new TabBuilder($label, 'tab', $args));
     }
@@ -462,9 +499,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @param string $label
      * @param string $message
      * @param array $args field configuration
-     * @return $this
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
      */
-    public function addMessage($label, $message, $args = [])
+    public function addMessage($label, $message, array $args = [])
     {
         $name = $this->generateName($label).'_message';
         $args = array_merge([
@@ -480,9 +518,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * until `endRepeater` is called.
      * @param string $name
      * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
      * @return RepeaterBuilder
      */
-    public function addRepeater($name, $args = [])
+    public function addRepeater($name, array $args = [])
     {
         return $this->initializeField(new RepeaterBuilder($name, 'repeater', $args));
     }
@@ -493,9 +532,10 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * `addLayout` call is made, or until `endFlexibleContent` is called.
      * @param string $name
      * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
      * @return FlexibleContentBuilder
      */
-    public function addFlexibleContent($name, $args = [])
+    public function addFlexibleContent($name, array $args = [])
     {
         return $this->initializeField(new FlexibleContentBuilder($name, 'flexible_content', $args));
     }
@@ -509,7 +549,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
-     * @return array
+     * @return NamedBuilder[]
      */
     public function getFields()
     {
@@ -620,7 +660,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     protected function generateLabel($name)
     {
-        return ucwords(str_replace("_", " ", $name));
+        return ucwords(str_replace('_', ' ', $name));
     }
 
     /**
@@ -630,6 +670,6 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     protected function generateName($name)
     {
-        return strtolower(str_replace(" ", "_", $name));
+        return strtolower(str_replace(' ', '_', $name));
     }
 }
