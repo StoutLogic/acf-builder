@@ -525,6 +525,17 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * @param string $name
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return GroupBuilder
+     */
+    public function addGroup($name, array $args = [])
+    {
+        return $this->initializeField(new GroupBuilder($name, 'group', $args));
+    }
+
+    /**
      * Add a repeater field. Any fields added after will be added to the repeater
      * until `endRepeater` is called.
      * @param string $name

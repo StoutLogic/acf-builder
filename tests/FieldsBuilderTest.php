@@ -3,6 +3,7 @@
 namespace StoutLogic\AcfBuilder\Tests;
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
+use StoutLogic\AcfBuilder\GroupBuilder;
 
 class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -1118,5 +1119,37 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testGroupField()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder
+            ->addGroup('background')
+                ->addColorPicker('color');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'background',
+                    'type' => 'group',
+                    'sub_fields' => [
+                        [
+                            'type' => 'color_picker',
+                            'name' => 'color',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testGroupFieldReturnsGroupBuilder()
+    {
+        $builder = new FieldsBuilder('fields');
+
+        $this->assertInstanceOf(GroupBuilder::class, $builder->addGroup('background'));
     }
 }
