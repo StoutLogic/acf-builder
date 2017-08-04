@@ -77,7 +77,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')
-            ->addField('name_two', 'text');
+                ->addField('name_two', 'text');
 
         $expectedConfig = [
             'fields' => [
@@ -102,7 +102,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addText('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -119,7 +119,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addTextarea('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -136,7 +136,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addNumber('name', ['min' => '1']);
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -154,7 +154,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addEmail('email');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'email',
@@ -171,7 +171,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addUrl('location');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'location',
@@ -188,7 +188,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addPassword('password');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'password',
@@ -205,7 +205,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addWysiwyg('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -222,7 +222,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addOembed('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -239,7 +239,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addImage('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -256,7 +256,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addFile('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -273,7 +273,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addGallery('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -290,7 +290,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addTrueFalse('name');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'name',
@@ -306,10 +306,10 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addSelect('colors', ['choices' => [['yellow' => 'Yellow']]])
-            ->addChoices(['red' => 'Rojo'], 'blue')
-            ->addChoice('green');
+                    ->addChoices(['red' => 'Rojo'], 'blue')
+                    ->addChoice('green');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'colors',
@@ -331,11 +331,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addRadio('colors')
-            ->addChoice('red')
-            ->addChoice('blue')
-            ->addChoice('green');
+                    ->addChoice('red')
+                    ->addChoice('blue')
+                    ->addChoice('green');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'colors',
@@ -356,11 +356,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addCheckbox('colors')
-            ->addChoice('red')
-            ->addChoice('blue')
-            ->addChoice('green');
+                    ->addChoice('red')
+                    ->addChoice('blue')
+                    ->addChoice('green');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'colors',
@@ -381,9 +381,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addPostObject('related_page')
-            ->setConfig('post_type', 'page');
+                    ->setConfig('post_type', 'page');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'related_page',
@@ -401,7 +401,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addPageLink('related_page');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'related_page',
@@ -418,7 +418,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addRelationship('related_page');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'related_page',
@@ -435,7 +435,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addTaxonomy('category');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'category',
@@ -452,7 +452,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addUser('member');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'member',
@@ -469,7 +469,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addDatePicker('start_date');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'start_date',
@@ -486,7 +486,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addTimePicker('start_time');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'start_time',
@@ -503,7 +503,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addDateTimePicker('start_date_time');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'start_date_time',
@@ -520,7 +520,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addColorPicker('background_color');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'background_color',
@@ -537,7 +537,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new FieldsBuilder('fields');
         $builder->addGoogleMap('map');
 
-        $expectedConfig = [
+        $expectedConfig =  [
             'fields' => [
                 [
                     'name' => 'map',
@@ -553,10 +553,10 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')->setRequired()
-            ->addField('name_two', 'text')->setRequired()
-            ->addField('name_three', 'text')
-            ->addField('name_four', 'text')->setUnrequired()
-            ->addField('name_five', 'text', ['required' => 1]);
+                ->addField('name_two', 'text')->setRequired()
+                ->addField('name_three', 'text')
+                ->addField('name_four', 'text')->setUnrequired()
+                ->addField('name_five', 'text', ['required' => 1]);
 
         $expectedConfig = [
             'fields' => [
@@ -592,7 +592,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')
-            ->setInstructions('Last Name, First Name');
+                    ->setInstructions('Last Name, First Name');
 
         $expectedConfig = [
             'fields' => [
@@ -610,7 +610,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')
-            ->setDefaultValue('John Smith');
+                    ->setDefaultValue('John Smith');
 
         $expectedConfig = [
             'fields' => [
@@ -628,9 +628,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addTab('Content')
-            ->addText('name')
-            ->addTab('Background Color')->endpoint()
-            ->addColorPicker('background_color');
+                    ->addText('name')
+                ->addTab('Background Color')->endpoint()
+                    ->addColorPicker('background_color');
 
         $expectedConfig = [
             'fields' => [
@@ -682,18 +682,18 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addRadio('color')
-            ->addChoices('red', 'blue', 'green', 'other')
-            ->addRadio('number', ['key' => 'num'])
-            ->addChoices('one', 'two', 'three', 'other')
-            ->addText('other_value')
-            ->conditional('color', '==', 'other')
-            ->and('day', '!=', 'tue')
-            ->or('number', '==', 'other')
-            ->and('number', '!=', 'two')
-            ->addRadio('day', ['key' => 'day_of_week'])
-            ->addChoices('mon', 'tue', 'wed', 'thu', 'other')
-            ->addText('other_day')
-            ->conditional('day', '==', 'other');
+                    ->addChoices('red', 'blue', 'green', 'other')
+                ->addRadio('number', ['key' => 'num'])
+                    ->addChoices('one', 'two', 'three', 'other')
+                ->addText('other_value')
+                    ->conditional('color', '==', 'other')
+                        ->and('day', '!=', 'tue')
+                        ->or('number', '==', 'other')
+                        ->and('number', '!=', 'two')
+                ->addRadio('day', ['key' => 'day_of_week'])
+                    ->addChoices('mon', 'tue', 'wed', 'thu', 'other')
+                ->addText('other_day')
+                    ->conditional('day', '==', 'other');
 
         $expectedConfig = [
             'fields' => [
@@ -711,24 +711,24 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                         [
                             [
                                 'field' => 'field_fields_color',
-                                'operator' => '==',
+                                'operator'  =>  '==',
                                 'value' => 'other',
                             ],
                             [
                                 'field' => 'field_fields_day_of_week',
-                                'operator' => '!=',
+                                'operator'  =>  '!=',
                                 'value' => 'tue',
                             ]
                         ],
                         [
                             [
                                 'field' => 'field_fields_num',
-                                'operator' => '==',
+                                'operator'  =>  '==',
                                 'value' => 'other',
                             ],
                             [
                                 'field' => 'field_fields_num',
-                                'operator' => '!=',
+                                'operator'  =>  '!=',
                                 'value' => 'two',
                             ]
                         ]
@@ -743,7 +743,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                         [
                             [
                                 'field' => 'field_fields_day_of_week',
-                                'operator' => '==',
+                                'operator'  =>  '==',
                                 'value' => 'other',
                             ],
                         ]
@@ -758,9 +758,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addText('title')
-            ->addRepeater('slides')
-            ->addText('title')
-            ->addWysiwyg('content');
+                ->addRepeater('slides')
+                    ->addText('title')
+                    ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -789,11 +789,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addText('title')
-            ->addRepeater('slides')
-            ->addText('title')
-            ->addWysiwyg('content')
-            ->endRepeater()
-            ->addWysiwyg('content');
+                ->addRepeater('slides')
+                    ->addText('title')
+                    ->addWysiwyg('content')
+                    ->endRepeater()
+                ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -825,14 +825,14 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addText('title')
-            ->addRepeater('slides')
-            ->addText('title')
-            ->addRepeater('logos')
-            ->addImage('logo')
-            ->endRepeater()
-            ->addWysiwyg('content')
-            ->endRepeater()
-            ->addWysiwyg('content');
+                ->addRepeater('slides')
+                    ->addText('title')
+                    ->addRepeater('logos')
+                        ->addImage('logo')
+                        ->endRepeater()
+                    ->addWysiwyg('content')
+                    ->endRepeater()
+                ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -878,7 +878,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new FieldsBuilder('content');
         $builder->addTextarea('summary')
-            ->addFields($banner);
+                ->addFields($banner);
 
         $expectedConfig = [
             'key' => 'group_content',
@@ -906,11 +906,11 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('banner');
         $builder->addText('title')
-            ->addWysiwyg('content')
-            ->setLocation('post_type', '==', 'page')
-            ->or('post_type', '==', 'post')
-            ->and('post_id', '!=', '10')
-            ->addText('subtitle');
+                ->addWysiwyg('content')
+                ->setLocation('post_type', '==', 'page')
+                    ->or('post_type', '==', 'post')
+                    ->and('post_id', '!=', '10')
+                ->addText('subtitle');
 
         $builder->getLocation()->or('post_type', '==', 'team_member');
 
@@ -930,26 +930,26 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     [
                         'param' => 'post_type',
-                        'operator' => '==',
+                        'operator'  =>  '==',
                         'value' => 'page',
                     ],
                 ],
                 [
                     [
                         'param' => 'post_type',
-                        'operator' => '==',
+                        'operator'  =>  '==',
                         'value' => 'post',
                     ],
                     [
                         'param' => 'post_id',
-                        'operator' => '!=',
+                        'operator'  =>  '!=',
                         'value' => '10',
                     ],
                 ],
                 [
                     [
                         'param' => 'post_type',
-                        'operator' => '==',
+                        'operator'  =>  '==',
                         'value' => 'team_member',
                     ],
                 ],
@@ -963,12 +963,12 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('page_content');
         $builder->addFlexibleContent('sections')
-            ->addLayout('banner')
-            ->addText('title')
-            ->addWysiwyg('content')
-            ->addLayout('content_columns')
-            ->addRepeater('columns', ['min' => 1, 'max' => 2])
-            ->addWysiwyg('content');
+                    ->addLayout('banner')
+                        ->addText('title')
+                        ->addWysiwyg('content')
+                    ->addLayout('content_columns')
+                        ->addRepeater('columns', ['min' => 1, 'max' => 2])
+                            ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -1029,10 +1029,10 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     public function testReturnExistingParentContextForSetLocation()
     {
         $builder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
-            ->setConstructorArgs(['parent'])
-            ->getMock();
+                        ->setConstructorArgs(['parent'])
+                        ->getMock();
 
-        $middleBuilder = new FieldsBuilder('middle');
+        $middleBuilder =  new FieldsBuilder('middle');
         $middleBuilder->setParentContext($builder);
 
         $subBuilder = new FieldsBuilder('child');
