@@ -36,7 +36,7 @@ namespace StoutLogic\AcfBuilder;
  * @method GroupBuilder addGroup(string $name, array $args = [])
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
  * @method FlexibleContentBuilder addFlexibleContent(string $name, array $args = [])
- * @method FieldBuilder addLayout(string $layout, array $args = [])
+ * @method FieldsBuilder addLayout(string|FieldsBuilder $layout, array $args = [])
  */
 class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
