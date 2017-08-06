@@ -28,7 +28,7 @@ class GroupBuilder extends FieldBuilder
 
     /**
      * Add multiple fields either via an array or from another builder
-     * @param array|FieldBuilder $fields array of fields or a FieldBuilder
+     * @param array|FieldsBuilder $fields
      * @return $this
      */
     public function addFields($fields)
@@ -38,7 +38,7 @@ class GroupBuilder extends FieldBuilder
     }
 
     /**
-     * Return a repeater field configuration array
+     * Return a group field configuration array
      * @return array
      */
     public function build()
@@ -46,12 +46,25 @@ class GroupBuilder extends FieldBuilder
         $config = parent::build();
         $fields = $this->fieldsBuilder->build();
         $config['sub_fields'] = $fields['fields'];
-        if (array_key_exists('collapsed', $config)) {
-            $fieldKey = $this->fieldsBuilder->getField($config['collapsed'])->getKey();
-            $fieldKey = preg_replace('/^field_/', '', $fieldKey);
-            $config['collapsed'] = $this->getName() . '_' . $fieldKey;
-        }
         return $config;
+    }
+
+    /**
+     * Returns call chain to parentContext
+     * @return FieldBuilder
+     */
+    public function endGroup()
+    {
+        return $this->getParentContext();
+    }
+
+    /**
+     * Returns call chain to parentContext
+     * @return FieldBuilder
+     */
+    public function end()
+    {
+        return $this->endGroup();
     }
 
     /**

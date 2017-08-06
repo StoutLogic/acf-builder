@@ -33,9 +33,10 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addLink(string $name, array $args = [])
  * @method FieldBuilder addTab(string $label, array $args = [])
  * @method FieldBuilder addMessage(string $label, string $message, array $args = [])
- * @method FieldBuilder addGroup(string $name, array $args = [])
- * @method FieldBuilder addRepeater(string $name, array $args = [])
- * @method FieldBuilder addFlexibleContent(string $name, array $args = [])
+ * @method GroupBuilder addGroup(string $name, array $args = [])
+ * @method RepeaterBuilder addRepeater(string $name, array $args = [])
+ * @method FlexibleContentBuilder addFlexibleContent(string $name, array $args = [])
+ * @method FieldBuilder addLayout(string $layout, array $args = [])
  */
 class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
