@@ -1075,7 +1075,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNotFoundException
+     * @expectedException \StoutLogic\AcfBuilder\FieldNotFoundException
      */
     public function testModifyFieldDoesntExist()
     {
@@ -1150,6 +1150,6 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
 
-        $this->assertInstanceOf(GroupBuilder::class, $builder->addGroup('background'));
+        $this->assertInstanceOf('\StoutLogic\AcfBuilder\GroupBuilder', $builder->addGroup('background'));
     }
 }
