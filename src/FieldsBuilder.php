@@ -493,6 +493,17 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * @param string $name
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+    public function addRange($name, array $args = [])
+    {
+        return $this->addField($name, 'range', $args);
+    }
+
+    /**
      * All fields added after will appear under this tab, until another tab
      * is added.
      * @param string $label Tab label

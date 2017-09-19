@@ -567,6 +567,23 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddRange()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addRange('my_range');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'my_range',
+                    'type' => 'range',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testRequired()
     {
         $builder = new FieldsBuilder('fields');
