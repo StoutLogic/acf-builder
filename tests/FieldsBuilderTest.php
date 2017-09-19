@@ -549,6 +549,23 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+    
+    public function testAddLink()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addLink('my_link');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'my_link',
+                    'type' => 'link',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 
     public function testRequired()
     {
