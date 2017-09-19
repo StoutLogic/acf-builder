@@ -8,7 +8,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
-        "squizlabs/php_codesniffer": "^2.6"
+        "squizlabs/php_codesniffer": "^2.6",
+        "phpdocumentor/reflection-docblock": "3.*"
     },
     "license": "GPL-2.0+",
     "authors": [
