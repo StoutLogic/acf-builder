@@ -112,7 +112,8 @@ class FieldManager
     /**
      * Replace a field with a single field or array of fields
      * @param  string $name  name of field to replace
-     * @param  NamedBuilder $field single or array of fields
+     * @param  NamedBuilder|NamedBuilder[] $field single or array of fields
+     * @throws FieldNotFoundException if the field name doesn't exist
      * @return void
      */
     public function replaceField($name, $field)

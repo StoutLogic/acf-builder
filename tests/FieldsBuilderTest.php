@@ -1105,6 +1105,55 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ->modifyField('button_label', ['label' => 'Banner Title']);
     }
 
+    /**
+     * @expectedException \StoutLogic\AcfBuilder\ModifyFieldReturnTypeException
+     */
+    public function testModifyFieldWithClosureNotReturningFieldsBuilder()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', function($builder) {
+                return $builder->addText('sub_title');
+            });
+    }
+
+    public function testModifyFieldWithClosureReturningFieldsBuilder()
+    {
+        $builder = new FieldsBuilder('Banner');
+        $builder
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder
+            ->modifyField('title', function($builder) {
+                $builder->addText('sub_title');
+                return $builder;
+            });
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'sub_title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testRemoveField()
     {
         $builder = new FieldsBuilder('Banner');

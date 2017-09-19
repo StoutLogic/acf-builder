@@ -627,7 +627,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
             $modifyConfig = $modifyBuilder->build();
 
             // Insert field(s)
-            $this->getFieldManager()->replaceField($name, $modifyConfig['fields']);
+            $this->getFieldManager()->replaceField($name, $modifyBuilder->getFields());
         }
 
         return $this;
