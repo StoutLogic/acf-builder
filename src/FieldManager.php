@@ -65,7 +65,7 @@ class FieldManager
 
     /**
      * Insert of field at a specific index
-     * @param  NamedBuilder $fields a single field or an array of fields
+     * @param  NamedBuilder|NamedBuilder[] $fields a single field or an array of fields
      * @param  int $index  insertion point
      * @return void
      */
@@ -112,7 +112,8 @@ class FieldManager
     /**
      * Replace a field with a single field or array of fields
      * @param  string $name  name of field to replace
-     * @param  NamedBuilder $field single or array of fields
+     * @param  NamedBuilder|NamedBuilder[] $field single or array of fields
+     * @throws FieldNotFoundException if the field name doesn't exist
      * @return void
      */
     public function replaceField($name, $field)

@@ -54,9 +54,8 @@ class ChoiceFieldBuilder extends FieldBuilder
         foreach ($choices as $choice) {
             $label = $choice;
             if (is_array($choice)) {
-                $values = each($choice);
-                $choice = $values['key'];
-                $label = $values['value'];
+                $label = array_values($choice)[0];
+                $choice = array_keys($choice)[0];
             }
 
             $this->addChoice($choice, $label);
