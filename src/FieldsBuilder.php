@@ -634,9 +634,6 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
                 throw new ModifyFieldReturnTypeException(gettype($modifyBuilder));
             }
 
-            // Build Modifications
-            $modifyConfig = $modifyBuilder->build();
-
             // Insert field(s)
             $this->getFieldManager()->replaceField($name, $modifyBuilder->getFields());
         }

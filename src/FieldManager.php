@@ -65,7 +65,7 @@ class FieldManager
 
     /**
      * Insert of field at a specific index
-     * @param  NamedBuilder $fields a single field or an array of fields
+     * @param  NamedBuilder|NamedBuilder[] $fields a single field or an array of fields
      * @param  int $index  insertion point
      * @return void
      */
