@@ -131,4 +131,4 @@ gulp
 PHP 5.4 and later are supported.
 
 ## Documentation
-See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documentation.
+See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documentation. The documentation has its [own repository](https://github.com/StoutLogic/acf-builder-wiki) and accepts pull requests for contributions. Any merges to master will get synced with the wiki here under the main project.
