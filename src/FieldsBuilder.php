@@ -517,6 +517,19 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * All fields added after will appear under this accordion, until
+     * another accordion is added.
+     * @param string $label Accordion label
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return AccordionBuilder
+     */
+    public function addAccordion($label, array $args = [])
+    {
+        return $this->initializeField(new AccordionBuilder($label, 'accordion', $args));
+    }
+
+    /**
      * Addes a message field
      * @param string $label
      * @param string $message

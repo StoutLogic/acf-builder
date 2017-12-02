@@ -694,6 +694,42 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddAccordion()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder
+            ->addAccordion('Content')
+                ->addText('name')
+            ->addAccordion('Background Color')->endpoint()
+                ->addColorPicker('background_color');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'key' => 'field_fields_content_accordion',
+                    'name' => 'content_accordion',
+                    'label' => 'Content',
+                    'type' => 'accordion',
+                ],
+                [
+                    'name' => 'name',
+                ],
+                [
+                    'key' => 'field_fields_background_color_accordion',
+                    'name' => 'background_color_accordion',
+                    'label' => 'Background Color',
+                    'type' => 'accordion',
+                    'endpoint' => 1,
+                ],
+                [
+                    'name' => 'background_color',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testAddMessage()
     {
         $builder = new FieldsBuilder('fields');

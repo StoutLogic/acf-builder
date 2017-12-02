@@ -17,7 +17,7 @@ class TabBuilder extends FieldBuilder
         $config = array_merge([
             'label' => $this->generateLabel($name),
         ], $config);
-        $name = $this->generateName($name).'_tab';
+        $name = $this->generateName($name).'_'.$type;
 
         parent::__construct($name, $type, $config);
     }
