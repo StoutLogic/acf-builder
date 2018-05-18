@@ -3,6 +3,7 @@
 namespace StoutLogic\AcfBuilder\Tests;
 
 use StoutLogic\AcfBuilder\ChoiceFieldBuilder;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class ChoiceFieldBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -71,5 +72,26 @@ class ChoiceFieldBuilderTest extends \PHPUnit_Framework_TestCase
                 'yellow' => 'Yellow',
             ]
         ], $subject->build());
+    }
+
+    public function testConfigInChoicesWithLabels()
+    {
+        $subject = new ChoiceFieldBuilder('choice', 'radio', [
+            'label' => 'Are you finished?',
+            'allow_null' => true,
+            'required' => true,
+            'choices' => [
+                'yes' => 'Yes, please send my report for review!',
+                'no' => 'No, save my report for later completion.',
+            ]
+        ]);
+
+        $config = $subject->build();
+        $this->assertArraySubset([
+            'choices' => [
+                'yes' => 'Yes, please send my report for review!',
+                'no' => 'No, save my report for later completion.',
+            ]
+        ], $config);
     }
 }

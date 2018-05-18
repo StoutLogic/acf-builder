@@ -324,8 +324,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
+        $config =  $builder->build();
 
-        $this->assertArraySubset($expectedConfig, $builder->build());
+        $this->assertArraySubset($expectedConfig, $config);
     }
 
     public function testAddRadio()

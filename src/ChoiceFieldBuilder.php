@@ -51,11 +51,15 @@ class ChoiceFieldBuilder extends FieldBuilder
             $choices = func_get_args();
         }
 
-        foreach ($choices as $choice) {
-            $label = $choice;
+        foreach ($choices as $key => $value) {
+            $label = $choice = $value;
+
             if (is_array($choice)) {
                 $label = array_values($choice)[0];
                 $choice = array_keys($choice)[0];
+            } else if (is_string($key)) {
+                $choice = $key;
+                $label = $value;
             }
 
             $this->addChoice($choice, $label);
