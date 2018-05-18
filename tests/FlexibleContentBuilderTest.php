@@ -182,4 +182,24 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testOverrideLayoutLabel()
+    {
+        $builder = new FlexibleContentBuilder('content_areas', 'flexible_content');
+
+        $builder->addLayout('images_multiple', [
+            'label' => 'Custom Label',
+        ]);
+        
+        $expectedConfig =  [
+            'layouts' => [
+                [
+                    'name' => 'images_multiple',
+                    'label' => 'Custom Label',
+                ],
+            ]
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
 }

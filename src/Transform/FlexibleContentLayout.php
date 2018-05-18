@@ -19,7 +19,9 @@ class FlexibleContentLayout extends Transform
         $config['sub_fields'] = $config['fields'];
         unset($config['fields']);
 
-        $config['label'] = $config['title'];
+        if (!array_key_exists('label', $config)) {
+            $config['label'] = $config['title'];
+        }
         unset($config['title']);
 
         return $config;
