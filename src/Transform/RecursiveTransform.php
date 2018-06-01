@@ -31,16 +31,16 @@ abstract class RecursiveTransform extends Transform
      */
     public function transform($config)
     {
-        array_walk($config, function (&$value, $key) use (&$config) {
+        foreach ($config as $key => $value ) {
             if ($this->shouldTransformValue($key, $config)) {
                 $config = $this->transformConfig($config);
-                $value = $this->transformValue($value);
+                $config[$key] = $this->transformValue($value);
             } else {
                 if ($this->shouldRecurse($value, $key)) {
-                    $value = $this->transform($value);
+                    $config[$key] = $this->transform($value);
                 }
             }
-        });
+        }
 
         return $config;
     }
