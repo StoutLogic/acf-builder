@@ -30,4 +30,18 @@ class ConditionalField extends RecursiveTransform
     {
         return $this->getBuilder()->getField($value)->getKey();
     }
+
+    public function transformConfig($config)
+    {
+        if ($this->getBuilder()->getField($config['field'])->hasCustomKey()) {
+            $config['_has_custom_key'] = true;
+        }
+
+        return $config;
+    }
+
+    public function shouldTransformValue($key, $config)
+    {
+        return parent::shouldTransformValue($key, $config) && !(array_key_exists('_has_custom_key', $config) && $config['_has_custom_key'] === true);
+    }
 }

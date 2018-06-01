@@ -44,4 +44,27 @@ class NamespaceFieldKey extends RecursiveTransform
         }
         return strtolower($namespace.$value);
     }
+
+    public function shouldTransformValue($key, $config)
+    {
+        return parent::shouldTransformValue($key, $config) && !$this->hasCustomKey($key, $config) && !$this->hasCustomCollapsedKey($key, $config);
+    }
+
+    /**
+     * @param $config
+     * @return bool
+     */
+    private function hasCustomKey($key, $config)
+    {
+        return ($key !== 'collapsed' && array_key_exists('_has_custom_key', $config) && $config['_has_custom_key'] === true);
+    }
+
+    /**
+     * @param $config
+     * @return bool
+     */
+    private function hasCustomCollapsedKey($key, $config)
+    {
+        return ($key === 'collapsed' && array_key_exists('_has_custom_collapsed_key', $config) && $config['_has_custom_collapsed_key'] === true);
+    }
 }

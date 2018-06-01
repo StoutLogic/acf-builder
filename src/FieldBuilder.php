@@ -137,6 +137,22 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
         return $this->setConfig('key', $key);
     }
 
+    public function setCustomKey($key)
+    {
+        return $this
+            ->setConfig('key', $key)
+            ->setConfig('_has_custom_key', true);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCustomKey()
+    {
+        return array_key_exists('_has_custom_key', $this->config) && $this->config['_has_custom_key'];
+    }
+
+
     /**
      * Will set field required.
      * @return $this

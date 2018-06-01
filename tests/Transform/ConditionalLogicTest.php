@@ -29,6 +29,9 @@ class ConditionalLogicTest extends \PHPUnit_Framework_TestCase
         $field
             ->getKey()
             ->willReturn('field_name');
+        $field
+            ->hasCustomKey()
+            ->willReturn(false);
 
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $builder

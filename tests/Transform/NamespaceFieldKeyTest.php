@@ -33,4 +33,28 @@ class NamespaceFieldKeyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('field_fields_builder_name_value', $transform->transformValue('field_value'));
         $this->assertSame('field_fields_builder_name_value', $transform->transformValue('group_value'));
     }
+
+    public function testShouldTransformValue()
+    {
+        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
+        $builder
+            ->getName()
+            ->willReturn('Fields Builder Name');
+
+        $transform = new Transform\NamespaceFieldKey($builder->reveal());
+
+        $this->assertTrue($transform->shouldTransformValue('key', [
+            'key' => 'field_name',
+        ]));
+
+        $this->assertFalse($transform->shouldTransformValue('key', [
+            'key' => '1234859849584545',
+            '_has_custom_key' => true,
+        ]));
+
+        $this->assertTrue($transform->shouldTransformValue('key', [
+            'key' => 'field_name',
+            '_has_custom_key' => false,
+        ]));
+    }
 }

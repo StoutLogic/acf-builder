@@ -168,4 +168,29 @@ class FieldBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
             ], $subject->build());
     }
+
+    public function testSetCustomKey()
+    {
+        $subject = new FieldBuilder('my_field', 'text');
+        $subject->setCustomKey('129384192384912384');
+
+        $this->assertArraySubset([
+            'key' => '129384192384912384',
+            '_has_custom_key' => true,
+            'name' => 'my_field',
+            'label' => 'My Field',
+            'type' => 'text',
+        ], $subject->build());
+
+        $this->assertArrayHasKey('_has_custom_key', $subject->build());
+        $this->assertTrue($subject->hasCustomKey());
+    }
+
+
+    public function testNotCustomKey()
+    {
+        $subject = new FieldBuilder('my_field', 'text');
+        $this->assertArrayNotHasKey('_has_custom_key', $subject->build());
+        $this->assertFalse($subject->hasCustomKey());
+    }
 }

@@ -38,9 +38,15 @@ class RepeaterBuilder extends GroupBuilder
     {
         $config = parent::build();
         if (array_key_exists('collapsed', $config)) {
-            $fieldKey = $this->fieldsBuilder->getField($config['collapsed'])->getKey();
-            $fieldKey = preg_replace('/^field_/', '', $fieldKey);
-            $config['collapsed'] = $this->getName() . '_' . $fieldKey;
+            $collapseField = $this->fieldsBuilder->getField($config['collapsed']);
+            $fieldKey = $collapseField->getKey();
+            if ($collapseField->hasCustomKey()) {
+                $config['collapsed'] = $fieldKey;
+                $config['_has_custom_collapsed_key'] = true;
+            } else {
+                $fieldKey = preg_replace('/^field_/', '', $fieldKey);
+                $config['collapsed'] = $this->getName() . '_' . $fieldKey;
+            }
         }
         return $config;
     }
