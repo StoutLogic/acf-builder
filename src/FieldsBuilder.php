@@ -377,6 +377,17 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @throws FieldNameCollisionException if name already exists.
      * @return FieldBuilder
      */
+    public function addButtonGroup($name, array $args = [])
+    {
+        return $this->addChoiceField($name, 'button_group', $args);
+    }
+
+    /**
+     * @param string $name
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
     public function addPostObject($name, array $args = [])
     {
         return $this->addField($name, 'post_object', $args);

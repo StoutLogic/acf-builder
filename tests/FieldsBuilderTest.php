@@ -379,6 +379,31 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddButtonGroup()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addButtonGroup('colors')
+                    ->addChoice('red')
+                    ->addChoice('blue')
+                    ->addChoice('green');
+
+        $expectedConfig =  [
+            'fields' => [
+                [
+                    'name' => 'colors',
+                    'type' => 'button_group',
+                    'choices' => [
+                        'red' => 'red',
+                        'blue' => 'blue',
+                        'green' => 'green',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testAddPostObject()
     {
         $builder = new FieldsBuilder('fields');
@@ -550,7 +575,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
-    
+
     public function testAddLink()
     {
         $builder = new FieldsBuilder('fields');
