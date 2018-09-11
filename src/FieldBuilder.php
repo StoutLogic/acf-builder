@@ -250,12 +250,12 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
         $wrapper = $this->getWrapper();
         // define smart class/id value specified in a $name parameter.
         if (is_null($value) && 0 === strpos($name, '.')) {
-            $name = 'class';
             $value = str_replace('.', ' ', trim($name, '.'));
+            $name = 'class';
         }
         if (is_null($value) && 0 === strpos($name, '#')) {
-            $name = 'id';
             $value = trim($name, '#');
+            $name = 'id';
         }
         // set attribute.
         $wrapper[$name] = $value;
