@@ -197,6 +197,73 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Set Wrapper container tag attributes
+     *
+     * @param array $config
+     *
+     * @return FieldBuilder
+     */
+    public function setWrapper($config)
+    {
+        return $this->setConfig('wrapper', $config);
+    }
+
+    /**
+     * Get Wrapper container tag attributes
+     *
+     * @return array|mixed
+     */
+    public function getWrapper()
+    {
+        if (isset($this->config['wrapper'])) {
+            return $this->config['wrapper'];
+        }
+
+        return [];
+    }
+
+    /**
+     * Set width of a Wrapper container
+     *
+     * @param string $width Width of a container in % or px.
+     *
+     * @return FieldBuilder
+     */
+    public function setWidth($width)
+    {
+        $wrapper = $this->getWrapper();
+        $wrapper['width'] = $width;
+
+        return $this->setWrapper($wrapper);
+    }
+
+    /**
+     * Set specified Attr of a Wrapper container
+     *
+     * @param string $name Attribute name, ex. 'class'.
+     * @param string|null $value Attribute value, ex. 'my-class'.
+     *
+     * @return FieldBuilder
+     */
+    public function setAttr($name, $value = null)
+    {
+        $wrapper = $this->getWrapper();
+        // define smart class/id value specified in a $name parameter.
+        if (is_null($value) && 0 === strpos($name, '.')) {
+            $name = 'class';
+            $value = str_replace('.', ' ', trim($name, '.'));
+        }
+        if (is_null($value) && 0 === strpos($name, '#')) {
+            $name = 'id';
+            $value = trim($name, '#');
+        }
+        // set attribute.
+        $wrapper[$name] = $value;
+
+        return $this->setWrapper($wrapper);
+    }
+
+    /**
      * Build the field configuration array
      * @return array Field configuration array
      */
