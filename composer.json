@@ -1,10 +1,9 @@
 {
     "name": "stoutlogic/acf-builder",
     "description": "An Advanced Custom Field Configuration Builder",
-    "version": "1.6.1",
     "require": {
         "php": ">=5.4.0",
-        "doctrine/inflector": "~1.1.0",
+        "doctrine/inflector": "~1.1",
         "doctrine/instantiator": "~1.0.0"
     },
     "require-dev": {
