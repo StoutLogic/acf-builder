@@ -248,19 +248,46 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     public function setAttr($name, $value = null)
     {
         $wrapper = $this->getWrapper();
-        // define smart class/id value specified in a $name parameter.
-        if (is_null($value) && 0 === strpos($name, '.')) {
-            $value = str_replace('.', ' ', trim($name, '.'));
-            $name = 'class';
-        }
-        if (is_null($value) && 0 === strpos($name, '#')) {
-            $value = trim($name, '#');
-            $name = 'id';
-        }
+        
         // set attribute.
         $wrapper[$name] = $value;
 
         return $this->setWrapper($wrapper);
+    }
+
+    /**
+     * Set Class and/or ID attribute of a Wrapper container
+     * use CSS-like selector string to specify css or id
+     * example: #my-id.foo-class.bar-class
+     *
+     * @param string $css_selector
+     *
+     * @return FieldBuilder
+     */
+    public function setSelector($css_selector)
+    {
+        // if # is the first sign - we start with ID.
+        if (0 === strpos($css_selector, '#')) {
+            $css_selector .= '.'; // prevent empty second part.
+            list($id, $class) = explode('.', $css_selector, 2);
+        } else {
+            $css_selector .= '#'; // prevent empty second part.
+            list($class, $id) = explode('#', $css_selector, 2);
+        }
+
+        $id = trim($id, '#');
+        $class = trim($class, '.');
+
+        if (! empty($id)) {
+            $this->setAttr('id', $id);
+        }
+
+        if (! empty($class)) {
+            $class = str_replace('.', ' ', $class);
+            $this->setAttr('class', $class);
+        }
+
+        return $this;
     }
 
     /**
