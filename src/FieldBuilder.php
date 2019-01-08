@@ -213,6 +213,100 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Set Wrapper container tag attributes
+     *
+     * @param array $config
+     *
+     * @return FieldBuilder
+     */
+    public function setWrapper($config)
+    {
+        return $this->setConfig('wrapper', $config);
+    }
+
+    /**
+     * Get Wrapper container tag attributes
+     *
+     * @return array|mixed
+     */
+    public function getWrapper()
+    {
+        if (isset($this->config['wrapper'])) {
+            return $this->config['wrapper'];
+        }
+
+        return [];
+    }
+
+    /**
+     * Set width of a Wrapper container
+     *
+     * @param string $width Width of a container in % or px.
+     *
+     * @return FieldBuilder
+     */
+    public function setWidth($width)
+    {
+        $wrapper = $this->getWrapper();
+        $wrapper['width'] = $width;
+
+        return $this->setWrapper($wrapper);
+    }
+
+    /**
+     * Set specified Attr of a Wrapper container
+     *
+     * @param string $name Attribute name, ex. 'class'.
+     * @param string|null $value Attribute value, ex. 'my-class'.
+     *
+     * @return FieldBuilder
+     */
+    public function setAttr($name, $value = null)
+    {
+        $wrapper = $this->getWrapper();
+        
+        // set attribute.
+        $wrapper[$name] = $value;
+
+        return $this->setWrapper($wrapper);
+    }
+
+    /**
+     * Set Class and/or ID attribute of a Wrapper container
+     * use CSS-like selector string to specify css or id
+     * example: #my-id.foo-class.bar-class
+     *
+     * @param string $css_selector
+     *
+     * @return FieldBuilder
+     */
+    public function setSelector($css_selector)
+    {
+        // if # is the first sign - we start with ID.
+        if (0 === strpos($css_selector, '#')) {
+            $css_selector .= '.'; // prevent empty second part.
+            list($id, $class) = explode('.', $css_selector, 2);
+        } else {
+            $css_selector .= '#'; // prevent empty second part.
+            list($class, $id) = explode('#', $css_selector, 2);
+        }
+
+        $id = trim($id, '#');
+        $class = trim($class, '.');
+
+        if (! empty($id)) {
+            $this->setAttr('id', $id);
+        }
+
+        if (! empty($class)) {
+            $class = str_replace('.', ' ', $class);
+            $this->setAttr('class', $class);
+        }
+
+        return $this;
+    }
+
+    /**
      * Build the field configuration array
      * @return array Field configuration array
      */
