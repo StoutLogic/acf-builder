@@ -47,7 +47,7 @@ class FlexibleContentBuilder extends FieldBuilder
      */
     private function buildLayouts()
     {
-        return array_map(function($layout) {
+        return array_map(function ($layout) {
             $layout = ($layout instanceof Builder) ? $layout->build() : $layout;
             return $this->transformLayout($layout);
         }, $this->getLayouts());
@@ -90,6 +90,25 @@ class FlexibleContentBuilder extends FieldBuilder
         $this->pushLayout($layout);
 
         return $layout;
+    }
+
+    /**
+     * Add multiple layouts either via an array or from another builder
+     * @param FieldsBuilder|array $layouts
+     * @return $this
+     */
+    public function addLayouts($layouts)
+    {
+        foreach ($layouts as $layout) {
+            if ($layout instanceof FieldsBuilder) {
+                $layout = clone $layout;
+            } else {
+                $layout = new FieldsBuilder($layout);
+            }
+            $layout = $this->initializeLayout($layout);
+            $this->pushLayout($layout);
+        }
+        return $this;
     }
 
     /**
@@ -145,6 +164,6 @@ class FlexibleContentBuilder extends FieldBuilder
      */
     private function getDefaultButtonLabel()
     {
-        return 'Add '.Inflector::singularize($this->getLabel());
+        return 'Add ' . Inflector::singularize($this->getLabel());
     }
 }
