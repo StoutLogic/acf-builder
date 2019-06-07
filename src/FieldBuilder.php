@@ -72,7 +72,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @return array
      */
-    private function getConfig()
+    protected function getConfig()
     {
         return $this->config;
     }
