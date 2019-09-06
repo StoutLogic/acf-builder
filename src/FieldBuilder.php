@@ -32,6 +32,7 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addGoogleMap(string $name, array $args = [])
  * @method FieldBuilder addLink(string $name, array $args = [])
  * @method FieldBuilder addTab(string $label, array $args = [])
+ * @method FieldBuilder addRange(string $label, array $args = [])
  * @method FieldBuilder addMessage(string $label, string $message, array $args = [])
  * @method GroupBuilder addGroup(string $name, array $args = [])
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
