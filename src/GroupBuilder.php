@@ -19,10 +19,10 @@ class GroupBuilder extends FieldBuilder
      * @param string $type Field name
      * @param array $config Field configuration
      */
-    public function __construct($name, $type = 'group', $config = [])
+    public function __construct($name, FieldsBuilder $builder, $type = 'group', $config = [])
     {
         parent::__construct($name, $type, $config);
-        $this->fieldsBuilder = new FieldsBuilder($name);
+        $this->fieldsBuilder = $builder;
         $this->fieldsBuilder->setParentContext($this);
     }
 

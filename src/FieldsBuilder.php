@@ -567,7 +567,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addGroup($name, array $args = [])
     {
-        return $this->initializeField(new GroupBuilder($name, 'group', $args));
+        return $this->initializeField(new GroupBuilder($name, new self($name), 'group', $args));
     }
 
     /**
@@ -580,7 +580,7 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function addRepeater($name, array $args = [])
     {
-        return $this->initializeField(new RepeaterBuilder($name, 'repeater', $args));
+        return $this->initializeField(new RepeaterBuilder($name, new self($name), 'repeater', $args));
     }
 
     /**
