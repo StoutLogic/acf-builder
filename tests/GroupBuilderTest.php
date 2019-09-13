@@ -9,7 +9,7 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testGroupBuilderCanAddFields()
     {
-        $builder = new GroupBuilder('background');
+        $builder = new GroupBuilder('background', new FieldsBuilder('background'));
 
         $builder->addColorPicker('color');
 
@@ -35,7 +35,7 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
             ->addNumber('width')
             ->addNumber('height');
 
-        $builder = new GroupBuilder('background');
+        $builder = new GroupBuilder('background', new FieldsBuilder('background'));
 
         $builder
             ->addColorPicker('color')

@@ -9,7 +9,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuildRepeater()
     {
-        $builder = new RepeaterBuilder('slides');
+        $builder = new RepeaterBuilder('slides', new FieldsBuilder('slides'));
         $builder->addText('title')
                 ->addWysiwyg('content');
 
@@ -36,7 +36,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 
-        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder = new RepeaterBuilder('slides', new FieldsBuilder('slides'));
         $repeaterBuilder->setParentContext($fieldsBuilder);
 
         $fieldsBuilder->expects($this->once())->method('addText');
@@ -53,7 +53,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 
-        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder = new RepeaterBuilder('slides', new FieldsBuilder('slides'));
         $repeaterBuilder->setParentContext($fieldsBuilder);
 
         $fieldsBuilder->expects($this->once())->method('setLocation');
@@ -70,7 +70,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
             ->addText('title')
             ->addWysiwyg('content');
 
-        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder = new RepeaterBuilder('slides', new FieldsBuilder('slides'));
         $repeaterBuilder
             ->addFields($banner)
             ->addImage('thumbnail');
@@ -92,7 +92,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertArraySubset($expectedConfig, $repeaterBuilder->build());
 
-        $repeaterBuilder = new RepeaterBuilder('slides');
+        $repeaterBuilder = new RepeaterBuilder('slides', new FieldsBuilder('slides'));
         $repeaterBuilder
             ->addFields([
                 $banner->getField('title'),
@@ -104,7 +104,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testOverrideButton()
     {
-        $builder = new RepeaterBuilder('slides', 'repeater', ['button_label' => 'Add New Slide']);
+        $builder = new RepeaterBuilder('slides', new FieldsBuilder('slides'), 'repeater', ['button_label' => 'Add New Slide']);
         $builder->addText('title')
                 ->addWysiwyg('content');
 
@@ -128,7 +128,7 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testCollapseSetting()
     {
-        $builder = new RepeaterBuilder('slides', 'repeater', ['collapsed' => 'title']);
+        $builder = new RepeaterBuilder('slides', new FieldsBuilder('slides'), 'repeater', ['collapsed' => 'title']);
         $builder->addText('title')
             ->addWysiwyg('content');
 
