@@ -202,4 +202,67 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testAddLayouts()
+    {
+        $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+            ->setConstructorArgs(['parent'])
+            ->getMock();
+
+        $banner->expects($this->once())->method('build')->willReturn([
+            'key' => 'group_banner',
+            'name' => 'banner',
+            'title' => 'Banner',
+            'display' => 'block',
+            'fields' => [
+                [
+                    'key' => 'field_banner_title',
+                    'name' => 'title',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'content',
+                    'type' => 'wysiwyg',
+                ]
+            ]
+        ]);
+
+        $builder = new FlexibleContentBuilder('content_areas');
+        $builder->addLayouts([$banner, 'header']);
+
+        $expectedConfig =  [
+            'key' => 'field_content_areas',
+            'name' => 'content_areas',
+            'label' => 'Content Areas',
+            'type' => 'flexible_content',
+            'button_label' => 'Add Content Area',
+            'layouts' => [
+                [
+                    'key' => 'field_content_areas_banner',
+                    'name' => 'banner',
+                    'label' => 'Banner',
+                    'display' => 'block',
+                    'sub_fields' => [
+                        [
+                            'key' => 'field_content_areas_banner_title',
+                            'name' => 'title',
+                            'type' => 'text',
+                        ],
+                        [
+                            'name' => 'content',
+                            'type' => 'wysiwyg',
+                        ]
+                    ]
+                ],
+                [
+                    'key' => 'field_content_areas_header',
+                    'name' => 'header',
+                    'label' => 'Header',
+                ]
+            ]
+        ];
+
+        $config = $builder->build();
+        $this->assertArraySubset($expectedConfig, $config);
+    }
 }
