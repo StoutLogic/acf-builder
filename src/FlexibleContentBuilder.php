@@ -100,13 +100,7 @@ class FlexibleContentBuilder extends FieldBuilder
     public function addLayouts($layouts)
     {
         foreach ($layouts as $layout) {
-            if ($layout instanceof FieldsBuilder) {
-                $layout = clone $layout;
-            } else {
-                $layout = new FieldsBuilder($layout);
-            }
-            $layout = $this->initializeLayout($layout);
-            $this->pushLayout($layout);
+            $this->addLayout($layout);
         }
         return $this;
     }
