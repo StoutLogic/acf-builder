@@ -32,11 +32,15 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addGoogleMap(string $name, array $args = [])
  * @method FieldBuilder addLink(string $name, array $args = [])
  * @method FieldBuilder addTab(string $label, array $args = [])
+ * @method FieldBuilder addRange(string $name, array $args = [])
  * @method FieldBuilder addMessage(string $label, string $message, array $args = [])
  * @method GroupBuilder addGroup(string $name, array $args = [])
+ * @method GroupBuilder endGroup()
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
+ * @method Builder endRepeater()
  * @method FlexibleContentBuilder addFlexibleContent(string $name, array $args = [])
  * @method FieldsBuilder addLayout(string|FieldsBuilder $layout, array $args = [])
+ * @method LocationBuilder setLocation(string $param, string $operator, string $value)*
  */
 class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
