@@ -21,9 +21,9 @@ class RepeaterBuilder extends GroupBuilder
      * @param string $type Field name
      * @param array $config Field configuration
      */
-    public function __construct($name, FieldsBuilder $builder, $type = 'repeater', $config = [])
+    public function __construct($name, $type = 'repeater', $config = [], FieldsBuilder $builder = null)
     {
-        parent::__construct($name, $builder, $type, $config);
+        parent::__construct($name, $type, $config, $builder);
 
         if (!array_key_exists('button_label', $config)) {
             $this->setConfig('button_label', $this->getDefaultButtonLabel());
