@@ -63,4 +63,11 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testGroupBuilderWithInjectedFieldsBuilder()
+    {
+        $fieldsBuilder = new FieldsBuilder('fields_builder');
+        $builder = new GroupBuilder('group', 'group', [], $fieldsBuilder);
+        $this->assertSame($fieldsBuilder->getParentContext(), $builder);
+    }
 }

@@ -149,4 +149,11 @@ class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testRepeaterBuilderWithInjectedFieldsBuilder()
+    {
+        $fieldsBuilder = new FieldsBuilder('fields_builder');
+        $builder = new RepeaterBuilder('repeater', 'repeater', [], $fieldsBuilder);
+        $this->assertSame($fieldsBuilder->getParentContext(), $builder);
+    }
 }
