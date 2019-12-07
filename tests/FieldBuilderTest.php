@@ -118,6 +118,19 @@ class FieldBuilderTest extends \PHPUnit_Framework_TestCase
         ], $subject->build());
     }
 
+    public function testSetLabel()
+    {
+        $subject = new FieldBuilder('my_field', 'text', ['prepend' => '$']);
+        $this->assertSame($subject, $subject->setLabel('My Label'));
+        $this->assertArraySubset([
+            'key' => 'field_my_field',
+            'name' => 'my_field',
+            'label' => 'My Label',
+            'type' => 'text',
+            'prepend' => '$',
+        ], $subject->build());
+    }
+
     public function testSetInstructions()
     {
         $subject = new FieldBuilder('my_field', 'text', ['prepend' => '$']);
@@ -187,7 +200,7 @@ class FieldBuilderTest extends \PHPUnit_Framework_TestCase
             ],
         ], $subject->build());
     }
-    
+
     public function testSetAttr()
     {
         $subject = new FieldBuilder('my_field', 'text');
