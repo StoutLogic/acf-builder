@@ -160,6 +160,16 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Will set field's label.
+     * @param string $label
+     * @return $this
+     */
+    public function setLabel($label)
+    {
+        return $this->setConfig('label', $label);
+    }
+
+    /**
      * Will set field's instructions.
      * @param string $instructions
      * @return $this
@@ -252,7 +262,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     public function setAttr($name, $value = null)
     {
         $wrapper = $this->getWrapper();
-        
+
         // set attribute.
         $wrapper[$name] = $value;
 
