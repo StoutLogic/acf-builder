@@ -11,7 +11,7 @@ class ModifyFieldReturnTypeException extends \UnexpectedValueException
     /**
      * @param string $returnedType
      * @param int $code
-     * @param \Exception|null
+     * @param \Exception|null $previous
      */
     public function __construct($returnedType, $code = 0, $previous = null)
     {
