@@ -28,6 +28,15 @@ class NamespaceFieldKey extends RecursiveTransform
         return parent::getBuilder();
     }
 
+    public function transform($config)
+    {
+        $config = parent::transform($config);
+
+        $config = $this->secondTransformPass($config, $config);
+
+        return $config;
+    }
+
     /**
      * @param  string $value Key
      * @return string Namedspaced key
@@ -47,6 +56,10 @@ class NamespaceFieldKey extends RecursiveTransform
 
     public function shouldTransformValue($key, $config)
     {
+        if ($key === 'field' && array_key_exists('_field_does_not_exist', $config)) {
+            return false;
+        }
+
         return parent::shouldTransformValue($key, $config) && !$this->hasCustomKey($key, $config) && !$this->hasCustomCollapsedKey($key, $config);
     }
 
@@ -66,5 +79,26 @@ class NamespaceFieldKey extends RecursiveTransform
     private function hasCustomCollapsedKey($key, $config)
     {
         return ($key === 'collapsed' && array_key_exists('_has_custom_collapsed_key', $config) && $config['_has_custom_collapsed_key'] === true);
+    }
+
+    private function secondTransformPass(array $config, array $parentConfig)
+    {
+        foreach ($config as $key => &$value) {
+            if (array_key_exists('_field_does_not_exist', $config)) {
+                foreach($parentConfig as $parentField) {
+                    if (is_array($parentField) &&
+                        array_key_exists('name', $parentField) &&
+                        $parentField['name'] === $config['_field_does_not_exist']) {
+                        $config['field'] = $parentField['key'];
+                    }
+                }
+            }
+
+            if ($this->shouldRecurse($value, $key)) {
+                $value = $this->secondTransformPass($value, $parentConfig);
+            }
+        }
+
+        return $config;
     }
 }

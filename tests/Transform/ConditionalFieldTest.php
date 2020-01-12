@@ -33,6 +33,10 @@ class ConditionalFieldTest extends \PHPUnit_Framework_TestCase
             ->getField('value')
             ->willReturn($field->reveal());
 
+        $builder
+            ->fieldExists('value')
+            ->willReturn(true);
+
         $transform = new Transform\ConditionalField($builder->reveal());
         $this->assertSame('field_key', $transform->transformValue('value'));
     }

@@ -33,10 +33,15 @@ class ConditionalLogicTest extends \PHPUnit_Framework_TestCase
             ->hasCustomKey()
             ->willReturn(false);
 
+
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
         $builder
             ->getField('name')
             ->willReturn($field->reveal());
+
+        $builder
+            ->fieldExists('name')
+            ->willReturn(true);
 
         $transform = new Transform\ConditionalLogic($builder->reveal());
         $this->assertSame([[[
@@ -108,6 +113,126 @@ class ConditionalLogicTest extends \PHPUnit_Framework_TestCase
 
         $config = $builder->build();
         $this->assertArraySubset($expectedConfig, $config);
+    }
 
+
+    public function testAllowConditionBasedOnParentFieldWithCustomKey()
+    {
+        $builder = new \StoutLogic\AcfBuilder\FlexibleContentBuilder('name');
+        $builder
+            ->addLayout('hero')
+            ->addSelect('hero_type')
+            ->addChoices('fullscreen', 'standard')
+            ->setCustomKey('my_custom_key')
+            ->addImage( 'hero_image' )
+            ->addWysiwyg( 'hero_text' )
+            ->addRepeater('cta')
+                ->addSelect('link_type')
+                ->addChoices('internal', 'external', 'text')
+                ->addTrueFalse('cta_animated')
+                ->conditional('my_custom_key', '==', '1');
+
+
+        $expectedConfig = [
+            'layouts' => [
+                [
+                    'name' => 'hero',
+                    'sub_fields' => [
+                        [
+                            'name' => 'hero_type',
+                            'key' => 'my_custom_key',
+                        ],
+                        [
+                            'name' => 'hero_image'
+                        ],
+                        [
+                            'name' => 'hero_text'
+                        ],
+                        [
+                            'name' => 'cta',
+                            'sub_fields' => [
+                                [
+                                    'name' => 'link_type'
+                                ],
+                                [
+                                    'key' => 'field_name_hero_cta_cta_animated',
+                                    'conditional_logic' => [
+                                        [
+                                            [
+                                                'field' => 'my_custom_key',
+                                            ]
+                                        ]
+                                    ]
+
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ];
+
+        $config = $builder->build();
+        $this->assertArraySubset($expectedConfig, $config);
+
+    }
+
+    public function testAllowConditionBasedOnParentField()
+    {
+        $builder = new \StoutLogic\AcfBuilder\FlexibleContentBuilder('name');
+        $builder
+            ->addLayout('hero')
+            ->addSelect('hero_type')
+            ->addChoices('fullscreen', 'standard')
+            ->addImage( 'hero_image' )
+            ->addWysiwyg( 'hero_text' )
+            ->addRepeater('cta')
+            ->addSelect('link_type')
+            ->addChoices('internal', 'external', 'text')
+            ->addTrueFalse('cta_animated')
+            ->conditional('hero_type', '==', '1');
+
+
+        $expectedConfig = [
+            'layouts' => [
+                [
+                    'name' => 'hero',
+                    'sub_fields' => [
+                        [
+                            'name' => 'hero_type',
+                            'key' => 'field_name_hero_hero_type'
+                        ],
+                        [
+                            'name' => 'hero_image'
+                        ],
+                        [
+                            'name' => 'hero_text'
+                        ],
+                        [
+                            'name' => 'cta',
+                            'sub_fields' => [
+                                [
+                                    'name' => 'link_type'
+                                ],
+                                [
+                                    'key' => 'field_name_hero_cta_cta_animated',
+                                    'conditional_logic' => [
+                                        [
+                                            [
+                                                'field' => 'field_name_hero_hero_type',
+                                            ]
+                                        ]
+                                    ]
+
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ];
+
+        $config = $builder->build();
+        $this->assertArraySubset($expectedConfig, $config);
     }
 }
