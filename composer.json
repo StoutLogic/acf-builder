@@ -27,5 +27,10 @@
         "psr-4": {
             "StoutLogic\\AcfBuilder\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": [
+            "./vendor/bin/phpunit"
+        ]
     }
 }
