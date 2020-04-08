@@ -6,17 +6,18 @@ use StoutLogic\AcfBuilder\Builder;
 
 /**
  * A Transform that is applied to configuration array of a Builder
+ * @template B of Builder
  */
 abstract class Transform
 {
     /**
      * Used to call funtions on the builder.
-     * @var \StoutLogic\AcfBuilder\Builder
+     * @var B
      */
     private $builder;
 
     /**
-     * @param Builder $builder
+     * @param B $builder
      */
     public function __construct(Builder $builder)
     {
@@ -24,7 +25,7 @@ abstract class Transform
     }
 
     /**
-     * @return Builder
+     * @return B
      */
     public function getBuilder()
     {

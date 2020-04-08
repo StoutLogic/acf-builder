@@ -1,0 +1,14 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+#    level: max
+    level: 4
+    inferPrivatePropertyTypeFromConstructor: true
+    autoload_files:
+        - tests/phpstan/acf-stubs-5.8.0.php
+    paths:
+        - src/
+    ignoreErrors:
+        # Should be possible using Generics: https://medium.com/@ondrejmirtes/generics-in-php-using-phpdocs-14e7301953
+        - '#^Method StoutLogic\\AcfBuilder\\Transform\\\w+::getBuilder\(\) should return StoutLogic\\AcfBuilder\\\w+Builder but returns StoutLogic\\AcfBuilder\\Builder\.$#'

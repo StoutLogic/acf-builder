@@ -47,7 +47,7 @@ abstract class RecursiveTransform extends Transform
     /**
      * Based upon the value or key, determine if the transform function
      * should recurse.
-     * @param $value
+     * @param mixed $value
      * @param string $key
      * @return bool
      */

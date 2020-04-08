@@ -196,8 +196,9 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Initialize the FieldBuilder, add to FieldManager
-     * @param  FieldBuilder $field
-     * @return FieldBuilder
+     * @template FB of FieldBuilder
+     * @param  FB $field
+     * @return FB
      */
     protected function initializeField($field)
     {
