@@ -3,8 +3,7 @@
     "description": "An Advanced Custom Field Configuration Builder",
     "require": {
         "php": ">=5.4.0",
-        "doctrine/inflector": "^1.1",
-        "doctrine/instantiator": "^1.0"
+        "doctrine/inflector": "^1.1|^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
@@ -27,5 +26,10 @@
         "psr-4": {
             "StoutLogic\\AcfBuilder\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": [
+            "./vendor/bin/phpunit"
+        ]
     }
 }

@@ -40,7 +40,7 @@ namespace StoutLogic\AcfBuilder;
  * @method Builder endRepeater()
  * @method FlexibleContentBuilder addFlexibleContent(string $name, array $args = [])
  * @method FieldsBuilder addLayout(string|FieldsBuilder $layout, array $args = [])
- * @method LocationBuilder setLocation(string $param, string $operator, string $value)*
+ * @method LocationBuilder setLocation(string $param, string $operator, string $value)
  */
 class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
@@ -76,7 +76,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @return array
      */
-    private function getConfig()
+    public function getConfig()
     {
         return $this->config;
     }
