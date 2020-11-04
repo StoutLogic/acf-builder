@@ -94,4 +94,25 @@ class ChoiceFieldBuilderTest extends \PHPUnit_Framework_TestCase
             ]
         ], $config);
     }
+
+    public function testConfigInChoicesWithNumericKeys()
+    {
+        $subject = new ChoiceFieldBuilder('choice', 'radio', [
+            'label' => 'Are you finished?',
+            'allow_null' => true,
+            'required' => true,
+            'choices' => [
+                '1' => 'Yes',
+                '2' => 'No',
+            ]
+        ]);
+
+        $config = $subject->build();
+        $this->assertArraySubset([
+            'choices' => [
+                '1' => 'Yes',
+                '2' => 'No',
+            ]
+        ], $config);
+    }
 }
