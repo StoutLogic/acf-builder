@@ -1,0 +1,31 @@
+name: CI
+
+on:
+    pull_request: null
+    push:
+        branches:
+            - master
+            - develop
+
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: ['5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+
+        name: PHP ${{ matrix.php }} tests
+        steps:
+            # basically git clone
+            -   uses: actions/checkout@v2
+
+            # use PHP of specific version
+            -   uses: shivammathur/setup-php@v1
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: none # disable xdebug, pcov
+
+            # if we 2 steps like this, we can better see if composer failed or tests
+            -   run: composer install --no-progress
+
+            -   run: vendor/bin/phpunit
