@@ -1,4 +1,4 @@
-name: CI
+name: TESTS
 
 on:
     pull_request: null
