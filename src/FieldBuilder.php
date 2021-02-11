@@ -37,7 +37,7 @@ namespace StoutLogic\AcfBuilder;
  * @method GroupBuilder addGroup(string $name, array $args = [])
  * @method GroupBuilder endGroup()
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
- * @method Builder endRepeater()
+ * @method RepeaterBuilder endRepeater()
  * @method FlexibleContentBuilder addFlexibleContent(string $name, array $args = [])
  * @method FieldsBuilder addLayout(string|FieldsBuilder $layout, array $args = [])
  * @method LocationBuilder setLocation(string $param, string $operator, string $value)
