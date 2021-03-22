@@ -727,4 +727,9 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
         return strtolower(str_replace(' ', '_', $name));
     }
 
+    public function __clone()
+    {
+        $this->fieldManager = clone $this->fieldManager;
+    }
+
 }
