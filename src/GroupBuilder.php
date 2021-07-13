@@ -95,4 +95,34 @@ class GroupBuilder extends FieldBuilder
     {
         return call_user_func_array([$this->fieldsBuilder, $method], $args);
     }
+    
+    /**
+     * Remove a field by name
+     * @param  string $name Field to remove
+     * @return $this
+     */
+    public function removeField($name)
+    {
+        $this->fieldsBuilder->removeField($name);
+        
+        return $this;
+    }
+
+    /**
+     * Modify an already defined field
+     * @param  string $name   Name of the field
+     * @param  array|\Closure  $modify Array of field configs or a closure that accepts
+     * a FieldsBuilder and returns a FieldsBuilder.
+     * @throws ModifyFieldReturnTypeException if $modify is a closure and doesn't
+     * return a FieldsBuilder.
+     * @throws FieldNotFoundException if the field name doesn't exist.
+     * @return $this
+     */
+    public function modifyField($name, $modify)
+    {
+       
+        $this->fieldsBuilder->modifyField($name, $modify);
+
+        return $this;
+    }
 }
