@@ -5,6 +5,7 @@ namespace StoutLogic\AcfBuilder;
 /**
  * Builds configurations for an ACF Field
  * @method FieldBuilder addField(string $name, string $type, array $args = [])
+ * @method FieldBuilder addFields(FieldsBuilder|array $fields)
  * @method FieldBuilder addChoiceField(string $name, string $type, array $args = [])
  * @method FieldBuilder addText(string $name, array $args = [])
  * @method FieldBuilder addTextarea(string $name, array $args = [])
@@ -34,6 +35,7 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addTab(string $label, array $args = [])
  * @method FieldBuilder addRange(string $name, array $args = [])
  * @method FieldBuilder addMessage(string $label, string $message, array $args = [])
+ * @method FieldBuilder addRelationship(string $name, array $args = [])
  * @method GroupBuilder addGroup(string $name, array $args = [])
  * @method GroupBuilder endGroup()
  * @method RepeaterBuilder addRepeater(string $name, array $args = [])
