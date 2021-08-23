@@ -89,6 +89,51 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
         ], $subject->build());
     }
 
+    public function testDeepModifyGroupWithArray() {
+        $subject = new FieldsBuilder('test');
+
+        $partial = new FieldsBuilder('test-partial');
+
+        $partial
+            ->addRepeater('items')
+                ->addText('title')
+            ->endRepeater();
+
+        $subject->addFields($partial);
+
+        $subject->modifyField('items.title', [
+            'wrapper' => [
+                'width' => '77%'
+            ]
+        ]);
+
+        $this->assertEquals([
+            'key' => 'group_test',
+            'title' => 'Test',
+            'fields' => [
+                [
+                    'type' => 'repeater',
+                    'name' => 'items',
+                    'label' => 'Items',
+                    'key' => 'field_test_items',
+                    'button_label' => 'Add Item',
+                    'sub_fields' => [
+                        [
+                            'type' => 'text',
+                            'label' => 'Title',
+                            'name' => 'title',
+                            'key' => 'field_test_items_title',
+                            'wrapper' => [
+                                'width' => '77%'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'location' => null
+        ], $subject->build());
+    }
+
     public function testRemovingGroup()
     {
         $subject = new GroupBuilder('test1');
