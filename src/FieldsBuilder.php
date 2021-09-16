@@ -640,7 +640,26 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     public function modifyField($name, $modify)
     {
         if (is_array($modify)) {
-            $this->getFieldManager()->modifyField($name, $modify);
+            if (strpos($name, '.') === false) {
+                $this->getFieldManager()->modifyField($name, $modify);
+                return $this;
+            }
+            $explodedName = explode('.', $name);
+            $field = $this->getField($explodedName[0]);
+            unset($explodedName[0]);
+            $nextField = $field;
+            $i = 0;
+            $length = count($explodedName);
+            foreach ($explodedName as $key => $name) {
+                $length = count($explodedName);
+                if ($i === $length - 1) {
+                    $nextField->modifyField($name, $modify);
+                } else {
+                    $nextField = $field->getField($name);
+                    unset($explodedName[$key]);
+                }
+                $i++;
+            }
         } elseif ($modify instanceof \Closure) {
             $field = $this->getField($name);
 
