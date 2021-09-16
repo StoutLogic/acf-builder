@@ -124,4 +124,13 @@ class GroupBuilder extends FieldBuilder
 
         return $this;
     }
+
+    public function getField($name)
+    {
+        return $this->fieldsBuilder->getField($name);
+    }
+
+    public function fieldExists($name) {
+        return $this->fieldsBuilder->fieldExists($name);
+    }
 }

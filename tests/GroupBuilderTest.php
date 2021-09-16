@@ -96,12 +96,12 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
 
         $partial
             ->addRepeater('items')
-                ->addText('title')
+                ->addText('headline')
             ->endRepeater();
 
         $subject->addFields($partial);
 
-        $subject->modifyField('items.title', [
+        $subject->modifyField('items->headline', [
             'wrapper' => [
                 'width' => '77%'
             ]
@@ -120,9 +120,9 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
                     'sub_fields' => [
                         [
                             'type' => 'text',
-                            'label' => 'Title',
-                            'name' => 'title',
-                            'key' => 'field_test_items_title',
+                            'label' => 'Headline',
+                            'name' => 'headline',
+                            'key' => 'field_test_items_headline',
                             'wrapper' => [
                                 'width' => '77%'
                             ]
@@ -131,6 +131,166 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
             'location' => null
+        ], $subject->build());
+    }
+
+
+
+    public function testDeepModifyThreeLevelsGroupWithArray() {
+        $subject = new FieldsBuilder('test');
+
+        $subject
+            ->addGroup('slides')
+                ->addRepeater('slide')->setWidth("25%")
+                    ->addText('headline')->setWidth('100%')
+                    ->addTextarea('content');
+
+        $subject->modifyField('slides->slide->headline', [
+            'wrapper' => [
+                'width' => '50%'
+            ]
+        ]);
+
+        $this->assertArraySubset([
+            'key' => 'group_test',
+            'title' => 'Test',
+            'fields' => [
+                [
+                    'name' => 'slides',
+                    'type' => 'group',
+                    'sub_fields' => [
+                        [
+                            'type' => 'repeater',
+                            'name' => 'slide',
+                            'wrapper' => [
+                                'width' => '25%'
+                            ],
+                            'sub_fields' => [
+                                [
+                                    'type' => 'text',
+                                    'name' => 'headline',
+                                    'wrapper' => [
+                                        'width' => '50%'
+                                    ]
+                                ],
+                                [
+                                    'type' => 'textarea',
+                                    'name' => 'content',
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ], $subject->build());
+    }
+
+    public function testDeepModifyGroupWithClosure() {
+        $subject = new FieldsBuilder('test');
+
+        $subject
+            ->addGroup('slides')
+            ->addRepeater('slide')->setWidth("25%")
+            ->addText('headline')->setWidth('100%')
+            ->addTextarea('content');
+
+        $subject->modifyField('slides->slide', function(FieldsBuilder $builder) {
+            $builder
+                ->getField('slide')
+                    ->setWidth("50%");
+
+            $builder->addLink('cta');
+
+            return $builder;
+        });
+
+        $this->assertArraySubset([
+            'key' => 'group_test',
+            'title' => 'Test',
+            'fields' => [
+                [
+                    'name' => 'slides',
+                    'type' => 'group',
+                    'sub_fields' => [
+                        [
+                            'type' => 'repeater',
+                            'name' => 'slide',
+                            'wrapper' => [
+                                'width' => '50%'
+                            ],
+                            'sub_fields' => [
+                                [
+                                    'type' => 'text',
+                                    'name' => 'headline',
+                                    'wrapper' => [
+                                        'width' => '100%'
+                                    ]
+                                ],
+                                [
+                                    'type' => 'textarea',
+                                    'name' => 'content',
+                                ],
+                            ]
+                        ],
+                        [
+                            'type' => 'link',
+                            'name' => 'cta',
+                        ],
+                    ]
+                ]
+            ]
+        ], $subject->build());
+    }
+
+    public function testDeepModifyThreeLevelsGroupWithClosure() {
+        $subject = new FieldsBuilder('test');
+
+        $subject
+            ->addGroup('slides')
+                ->addRepeater('slide')->setWidth("25%")
+                    ->addText('headline')->setWidth('100%')
+                    ->addTextarea('content');
+
+        $subject->modifyField('slides->slide->headline', function(FieldsBuilder $builder) {
+            $builder->addLink('cta');
+            return $builder;
+        });
+
+        $this->assertArraySubset([
+            'key' => 'group_test',
+            'title' => 'Test',
+            'fields' => [
+                [
+                    'name' => 'slides',
+                    'type' => 'group',
+                    'sub_fields' => [
+                        [
+                            'type' => 'repeater',
+                            'name' => 'slide',
+                            'wrapper' => [
+                                'width' => '25%'
+                            ],
+                            'sub_fields' => [
+                                [
+                                    'type' => 'text',
+                                    'name' => 'headline',
+                                    'wrapper' => [
+                                        'width' => '100%'
+                                    ]
+                                ],
+                                [
+                                    'type' => 'link',
+                                    'name' => 'cta',
+                                ],
+                                [
+                                    'type' => 'textarea',
+                                    'name' => 'content',
+                                ],
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ], $subject->build());
     }
 

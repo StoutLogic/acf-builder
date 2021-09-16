@@ -196,6 +196,7 @@ class FieldManager
     public function getFieldIndex($name)
     {
         foreach ($this->getFields() as $index => $field) {
+//            echo $field->getName().' === '.$name;
             if ($field->getName() === $name) {
                 return $index;
             }
