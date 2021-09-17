@@ -2,6 +2,7 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\FlexibleContentBuilder;
 
 class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
@@ -264,5 +265,218 @@ class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
 
         $config = $builder->build();
         $this->assertArraySubset($expectedConfig, $config);
+    }
+
+    public function testRemoveFieldFromLayout()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FlexibleContentBuilder('content_areas');
+        $builder
+            ->addLayouts([$banner, 'header', 'footer']);
+
+        $expectedConfig =  [
+            'key' => 'field_content_areas',
+            'name' => 'content_areas',
+            'label' => 'Content Areas',
+            'type' => 'flexible_content',
+            'button_label' => 'Add Content Area',
+            'layouts' => [
+                [
+                    'key' => 'field_content_areas_banner',
+                    'name' => 'banner',
+                    'label' => 'Banner',
+                    'display' => 'block',
+                    'sub_fields' => [
+                        [
+                            'key' => 'field_content_areas_banner_title',
+                            'name' => 'title',
+                            'type' => 'text',
+                        ],
+                        [
+                            'name' => 'content',
+                            'type' => 'wysiwyg',
+                        ]
+                    ]
+                ],
+                [
+                    'key' => 'field_content_areas_header',
+                    'name' => 'header',
+                    'label' => 'Header',
+                ]
+            ]
+        ];
+
+
+        $config = $builder->build();
+        $this->assertCount(2, $config['layouts'][0]['sub_fields']);
+
+        $builder->getLayout('banner')->removeField('title');
+        $config = $builder->build();
+        $this->assertCount(1, $config['layouts'][0]['sub_fields']);
+    }
+
+    public function testRemoveFieldFromLayoutWithDeepNesting()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FieldsBuilder('test');
+        $builder
+            ->addFlexibleContent('sections')
+                ->addLayouts([$banner, 'header', 'footer']);
+
+
+        $config = $builder->build();
+        $this->assertCount(2, $config['fields'][0]['layouts'][0]['sub_fields']);
+
+        $builder->removeField('sections->banner->title');
+        $config = $builder->build();
+        $this->assertCount(1, $config['fields'][0]['layouts'][0]['sub_fields']);
+    }
+
+    public function testModifyingFieldFromLayoutWithDeepNesting()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FieldsBuilder('test');
+        $builder
+            ->addFlexibleContent('sections')
+            ->addLayouts([$banner, 'header', 'footer']);
+
+
+        $config = $builder->build();
+        $this->assertSame('Title', $config['fields'][0]['layouts'][0]['sub_fields'][0]['label']);
+
+        $builder->modifyField('sections->banner->title', ['label' => 'Headline']);
+
+        $config = $builder->build();
+        $this->assertSame('Headline', $config['fields'][0]['layouts'][0]['sub_fields'][0]['label']);
+    }
+
+    public function testModifyingLayoutWithDeepNesting()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FieldsBuilder('test');
+        $builder
+            ->addFlexibleContent('sections')
+            ->addLayouts([$banner, 'header', 'footer']);
+
+
+        $config = $builder->build();
+        $this->assertSame('Sections', $config['fields'][0]['label']);
+
+        $builder->modifyField('sections', ['label' => 'Blocks']);
+        $builder->modifyField('sections->banner', [
+            'name' => 'hero',
+            'key' => 'hero'
+        ]);
+
+        $config = $builder->build();
+
+        $this->assertSame('Blocks', $config['fields'][0]['label']);
+        $this->assertSame('hero', $config['fields'][0]['layouts'][0]['name']);
+    }
+
+    public function testRemoveLayout()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FlexibleContentBuilder('content_areas');
+        $builder
+            ->addLayouts([$banner, 'header', 'footer']);
+
+        $expectedConfig =  [
+            'key' => 'field_content_areas',
+            'name' => 'content_areas',
+            'label' => 'Content Areas',
+            'type' => 'flexible_content',
+            'button_label' => 'Add Content Area',
+            'layouts' => [
+                [
+                    'key' => 'field_content_areas_banner',
+                    'name' => 'banner',
+                    'label' => 'Banner',
+                    'display' => 'block',
+                    'sub_fields' => [
+                        [
+                            'key' => 'field_content_areas_banner_title',
+                            'name' => 'title',
+                            'type' => 'text',
+                        ],
+                        [
+                            'name' => 'content',
+                            'type' => 'wysiwyg',
+                        ]
+                    ]
+                ],
+                [
+                    'key' => 'field_content_areas_header',
+                    'name' => 'header',
+                    'label' => 'Header',
+                ]
+            ]
+        ];
+
+
+        $config = $builder->build();
+        $this->assertCount(3, $config['layouts']);
+
+        $builder->removeLayout('footer');
+
+        $config = $builder->build();
+        $this->assertCount(2, $config['layouts']);
+    }
+
+    public function testRemoveLayoutWithDeepNesting()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FieldsBuilder('test');
+        $builder
+            ->addFlexibleContent('sections')
+                ->addLayouts([$banner, 'header', 'footer']);
+
+
+        $config = $builder->build();
+        $this->assertCount(3, $config['fields'][0]['layouts']);
+
+        $builder->removeField('sections->banner');
+
+        $config = $builder->build();
+        $this->assertCount(2, $config['fields'][0]['layouts']);
+    }
+
+    public function testLayoutExists()
+    {
+        $banner = new FieldsBuilder('banner');
+        $banner
+            ->addText('title')
+            ->addWysiwyg('content');
+
+        $builder = new FlexibleContentBuilder('content_areas');
+        $builder
+            ->addLayouts([$banner, 'header', 'footer']);
+
+        $this->assertTrue($builder->layoutExists('header'));
+        $this->assertFalse($builder->layoutExists('carousel'));
     }
 }

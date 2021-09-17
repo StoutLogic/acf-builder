@@ -153,11 +153,106 @@ class FlexibleContentBuilder extends FieldBuilder
     }
 
     /**
-     * Gerenates the default button label.
+     * @return FieldsBuilder
+     * @throws LayoutNotFoundException
+     */
+    public function getLayout($name)
+    {
+        $layouts = array_filter($this->getLayouts(), static function(FieldsBuilder $layout) use ($name) {
+            return $layout->getName() === $name;
+        });
+
+        if (count($layouts) === 0) {
+            throw new LayoutNotFoundException("Layout `{$name}` not found.");
+        }
+
+        return array_shift($layouts);
+    }
+
+    /**
+     * Generates the default button label.
      * @return string
      */
     private function getDefaultButtonLabel()
     {
         return 'Add ' . $this->singularize($this->getLabel());
     }
+
+    public function removeLayout($name)
+    {
+        if (!$this->layoutExists($name)) {
+            throw new LayoutNotFoundException("Layout `{$name}` not found.");
+        }
+
+        $this->layouts = array_values(array_filter($this->getLayouts(), static function(FieldsBuilder $layout) use ($name) {
+            return $layout->getName() !== $name;
+        }));
+
+        return $this;
+    }
+
+    public function layoutExists($name)
+    {
+        $layouts = array_filter($this->getLayouts(), static function(FieldsBuilder $layout) use ($name) {
+            return $layout->getName() === $name;
+        });
+
+        return count($layouts) !== 0;
+    }
+
+    /**
+     * @param string $name
+     * @param array $modify
+     * @return $this
+     * @throws FieldNotFoundException
+     * @throws LayoutNotFoundException
+     * @throws \Exception
+     */
+    public function modifyField($name, $modify)
+    {
+        if ($this->hasDeeplyNestedField($name)) {
+            $fieldNames = explode(FieldsBuilder::DEEP_NESTING_DELIMITER, $name, 2);
+            $this->getLayout($fieldNames[0])->modifyField($fieldNames[1], $modify);
+            return $this;
+        }
+
+        if ($this->layoutExists($name)) {
+            // Modify layout's FieldsBuilder, update Group Config
+            if (is_array($modify)) {
+                $this->getLayout($name)->updateGroupConfig($modify);
+            } elseif ($modify instanceof \Closure) {
+                throw new \Exception('FieldsBuilder can\'t be modified with a closure.');
+            }
+        }
+        else if (is_array($modify)) {
+            $this->updateConfig($modify);
+        } elseif ($modify instanceof \Closure) {
+            throw new \Exception('FlexibleContentBuilder can\'t be modified with a closure.');
+        }
+
+        return $this;
+    }
+
+    public function removeField($name)
+    {
+        if ($this->hasDeeplyNestedField($name)) {
+            $fieldNames = explode(FieldsBuilder::DEEP_NESTING_DELIMITER, $name, 2);
+            $this->getLayout($fieldNames[0])->removeField($fieldNames[1]);
+            return $this;
+        }
+
+        $this->removeLayout($name);
+        return $this;
+    }
+
+    /**
+     * @param string $name Deeply nested field name
+     * @return bool
+     */
+    private function hasDeeplyNestedField($name)
+    {
+        return strpos($name, FieldsBuilder::DEEP_NESTING_DELIMITER) > 0;
+    }
+
+
 }
