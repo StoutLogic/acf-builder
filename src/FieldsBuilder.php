@@ -31,6 +31,8 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     protected $name;
 
+    CONST DEEP_NESTING_DELIMITER = '->';
+
     /**
      * @param string $name Field Group name
      * @param array $groupConfig Field Group configuration
@@ -639,15 +641,9 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function modifyField($name, $modify)
     {
-        if (strpos($name, '->')) {
-            $fieldNames = explode('->', $name);
-            $fieldName = array_shift($fieldNames);
-            $field = $this->getField($fieldName);
-
-            // Traverse down tree until last child field
-            while(($fieldName = array_shift($fieldNames)) && count($fieldNames) > 0) {
-                $field = $field->getField($fieldName);
-            }
+        if ($this->hasDeeplyNestedField($name)) {
+            $field = $this->getDeeplyNestedField($name);
+            $fieldName = $this->getDeeplyNestedFieldName($name);
 
             $field->modifyField($fieldName, $modify);
             return $this;
@@ -687,9 +683,54 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function removeField($name)
     {
+        if ($this->hasDeeplyNestedField($name)) {
+            $field = $this->getDeeplyNestedField($name);
+            $fieldName = $this->getDeeplyNestedFieldName($name);
+
+            $field->removeField($fieldName);
+            return $this;
+        }
+
         $this->getFieldManager()->removeField($name);
 
         return $this;
+    }
+
+    /**
+     * @param string $name Deeply nested field name
+     * @return bool
+     */
+    private function hasDeeplyNestedField($name)
+    {
+        return strpos($name, static::DEEP_NESTING_DELIMITER) !== false;
+    }
+
+    /**
+     * @param string $name Deeply nested field name
+     * @return FieldBuilder
+     */
+    private function getDeeplyNestedField($name)
+    {
+        $fieldNames = explode(static::DEEP_NESTING_DELIMITER, $name);
+        $fieldName = array_shift($fieldNames);
+        $field = $this->getField($fieldName);
+
+        // Traverse down tree until last child field
+        while(($fieldName = array_shift($fieldNames)) && count($fieldNames) > 0) {
+            $field = $field->getField($fieldName);
+        }
+
+        return $field;
+    }
+
+    /**
+     * @param string $name Deeply nested field name
+     * @return string
+     */
+    private function getDeeplyNestedFieldName($name)
+    {
+        $fieldNames = explode(static::DEEP_NESTING_DELIMITER, $name);
+        return array_pop($fieldNames);
     }
 
     /**

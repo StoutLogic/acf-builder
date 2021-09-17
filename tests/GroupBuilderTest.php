@@ -135,6 +135,44 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testModifyGroupWithArrayWithoutDeepLinking() {
+        $subject = new FieldsBuilder('test');
+        $subject
+            ->addRepeater('items')
+                ->addText('headline');
+
+        $subject->getField('items')->modifyField('headline', [
+            'wrapper' => [
+                'width' => '77%'
+            ]
+        ]);
+
+        $this->assertEquals([
+            'key' => 'group_test',
+            'title' => 'Test',
+            'fields' => [
+                [
+                    'type' => 'repeater',
+                    'name' => 'items',
+                    'label' => 'Items',
+                    'key' => 'field_test_items',
+                    'button_label' => 'Add Item',
+                    'sub_fields' => [
+                        [
+                            'type' => 'text',
+                            'label' => 'Headline',
+                            'name' => 'headline',
+                            'key' => 'field_test_items_headline',
+                            'wrapper' => [
+                                'width' => '77%'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'location' => null
+        ], $subject->build());
+    }
 
     public function testDeepModifyThreeLevelsGroupWithArray() {
         $subject = new FieldsBuilder('test');
@@ -304,9 +342,9 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
 
         $subject->removeField('text2');
 
-        $buildedSubject = $subject->build();
+        $builtSubject = $subject->build();
 
-        $this->assertEquals(2, sizeof($buildedSubject['sub_fields']));
+        $this->assertCount(2, $builtSubject['sub_fields']);
         $this->assertEquals([
             [
                 'type' => 'text',
@@ -320,7 +358,26 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
                 'label' => 'Text3',
                 'key' => 'field_test1_text3'
             ],
-        ], $buildedSubject['sub_fields']);
+        ], $builtSubject['sub_fields']);
+    }
+
+    public function testDeeplyNestedRemoveField() {
+        $subject = new FieldsBuilder('test');
+
+        $subject
+            ->addGroup('slides')
+            ->addRepeater('slide')->setWidth("25%")
+                ->addText('headline')->setWidth('100%')
+                ->addTextarea('content')
+                ->addLink('cta');
+
+        $preConfig = $subject->build();
+        $this->assertCount(3, $preConfig['fields'][0]['sub_fields'][0]['sub_fields']);
+
+        $subject->removeField('slides->slide->content');
+
+        $postConfig = $subject->build();
+        $this->assertCount(2, $postConfig['fields'][0]['sub_fields'][0]['sub_fields']);
     }
 
     /**
