@@ -3,7 +3,6 @@
 namespace StoutLogic\AcfBuilder\Tests;
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\GroupBuilder;
 
 class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -1231,6 +1230,58 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testModifyFieldWorkingWithAddFields()
+    {
+        $settingsTab = new FieldsBuilder('settings_tab');
+
+        $settingsTab
+            ->addTab('settings')
+            ->addAccordion('settings_buttons')
+            ->addTrueFalse('show_button')
+            ->addAccordion('settings_buttons_endpoint')->endpoint();
+
+        $banner = new FieldsBuilder('banner');
+
+        $banner
+            ->addGroup('group')
+            ->addFields($settingsTab);
+
+        $banner
+            ->modifyField('group->settings_tab->settings_buttons_accordion', function ($builder) {
+                $builder->addText('sub_title');
+                return $builder;
+            });
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name'       => 'group',
+                    'type'       => 'group',
+                    'sub_fields' => [
+                        [
+                            'name' => 'settings_tab',
+                            'type' => 'tab',
+                        ],
+                        [
+                            'name' => 'settings_buttons_accordion',
+                            'type' => 'accordion',
+                        ],
+                        [
+                            'name' => 'sub_title',
+                            'type' => 'text',
+                        ],
+                        [
+                            'name' => 'show_button',
+                            'type' => 'true_false',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $banner->build());
     }
 
     public function testRemoveField()
