@@ -13,15 +13,15 @@ class NamespaceFieldKey extends RecursiveTransform
     protected $keys = ['key', 'field', 'collapsed'];
 
     /**
-     * @param \StoutLogic\AcfBuilder\NamedBuilder $builder
+     * @param \StoutLogic\AcfBuilder\Builder $builder
      */
-    public function __construct(\StoutLogic\AcfBuilder\NamedBuilder $builder)
+    public function __construct(\StoutLogic\AcfBuilder\Builder $builder)
     {
         parent::__construct($builder);
     }
 
     /**
-     * @return \StoutLogic\AcfBuilder\NamedBuilder
+     * @return \StoutLogic\AcfBuilder\Builder
      */
     public function getBuilder()
     {

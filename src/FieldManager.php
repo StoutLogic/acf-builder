@@ -22,7 +22,7 @@ class FieldManager
     }
 
     /**
-     * @return NamedBuilder[] field configs
+     * @return FieldBuilder[] field configs
      */
     public function getFields()
     {
@@ -40,7 +40,7 @@ class FieldManager
 
     /**
      * Add field to end of array
-     * @param  NamedBuilder $field Field array config or Builder
+     * @param  FieldBuilder $field Field array config or Builder
      * @return void
      */
     public function pushField($field)
@@ -51,7 +51,7 @@ class FieldManager
     /**
      * Remove last field from end of array
      * @throws \OutOfRangeException if array is empty
-     * @return NamedBuilder Field array config or Builder
+     * @return FieldBuilder Field array config or Builder
      */
     public function popField()
     {
@@ -65,18 +65,18 @@ class FieldManager
 
     /**
      * Insert of field at a specific index
-     * @param  NamedBuilder|NamedBuilder[] $fields a single field or an array of fields
+     * @param  FieldBuilder|FieldBuilder[] $fields a single field or an array of fields
      * @param  int $index  insertion point
      * @return void
      */
     public function insertFields($fields, $index)
     {
-        if (!$fields instanceof NamedBuilder && !is_array($fields)) {
+        if (!$fields instanceof FieldBuilder && !is_array($fields)) {
             return;
         }
 
         // If a singular field config, put into an array of fields
-        if ($fields instanceof NamedBuilder) {
+        if ($fields instanceof FieldBuilder) {
             $fields = [$fields];
         }
 
@@ -112,7 +112,7 @@ class FieldManager
     /**
      * Replace a field with a single field or array of fields
      * @param  string $name  name of field to replace
-     * @param  NamedBuilder|NamedBuilder[] $field single or array of fields
+     * @param  FieldBuilder|FieldBuilder[] $field single or array of fields
      * @throws FieldNotFoundException if the field name doesn't exist
      * @return void
      */
@@ -163,7 +163,7 @@ class FieldManager
 
     /**
      * Validate a field
-     * @param  NamedBuilder $field
+     * @param  FieldBuilder $field
      * @return bool
      */
     private function validateField($field)
@@ -173,7 +173,7 @@ class FieldManager
 
     /**
      * Validates that a field's name doesn't already exist
-     * @param  NamedBuilder $field
+     * @param  FieldBuilder $field
      * @throws FieldNameCollisionException when the name already exists
      * @return bool
      */
