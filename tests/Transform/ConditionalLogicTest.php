@@ -2,13 +2,16 @@
 
 namespace StoutLogic\AcfBuilder\Tests\Transform;
 
-use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\FieldBuilder;
-use StoutLogic\AcfBuilder\ConditionalBuilder;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\Transform;
+use Prophecy\PhpUnit\ProphecyTrait;
 
-class ConditionalLogicTest extends \PHPUnit_Framework_TestCase
+class ConditionalLogicTest extends TestCase
 {
+    use ArraySubsetAsserts;
+    use ProphecyTrait;
+
     public function testIsIterative()
     {
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');

@@ -2,11 +2,16 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
+use StoutLogic\AcfBuilder\FieldNotFoundException;
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\GroupBuilder;
+use StoutLogic\AcfBuilder\ModifyFieldReturnTypeException;
 
-class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
+class FieldsBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     public function testClassExists()
     {
         $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldsBuilder'));
@@ -23,7 +28,7 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new FieldsBuilder('fields');
 
-        $this->assertInternalType('array', $builder->build());
+        $this->assertIsArray($builder->build());
     }
 
     public function testCreateGroup()
@@ -1170,11 +1175,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-    /**
-     * @expectedException \StoutLogic\AcfBuilder\FieldNotFoundException
-     */
     public function testModifyFieldDoesntExist()
     {
+        $this->expectException(FieldNotFoundException::class);
         $builder = new FieldsBuilder('Banner');
         $builder
             ->addText('title')
@@ -1184,11 +1187,9 @@ class FieldsBuilderTest extends \PHPUnit_Framework_TestCase
             ->modifyField('button_label', ['label' => 'Banner Title']);
     }
 
-    /**
-     * @expectedException \StoutLogic\AcfBuilder\ModifyFieldReturnTypeException
-     */
     public function testModifyFieldWithClosureNotReturningFieldsBuilder()
     {
+        $this->expectException(ModifyFieldReturnTypeException::class);
         $builder = new FieldsBuilder('Banner');
         $builder
             ->addText('title')

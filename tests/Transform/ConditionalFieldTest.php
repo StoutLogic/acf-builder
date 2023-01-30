@@ -2,11 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests\Transform;
 
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\Transform;
+use Prophecy\PhpUnit\ProphecyTrait;
 
-class ConditionalFieldTest extends \PHPUnit_Framework_TestCase
+class ConditionalFieldTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testIsRecursive()
     {
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');

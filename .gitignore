@@ -4,3 +4,4 @@ node_modules
 .stignore
 .stversions
 .stfolder
+.phpunit.result.cache

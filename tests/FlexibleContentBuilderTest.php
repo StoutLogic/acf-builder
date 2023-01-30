@@ -2,11 +2,15 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\FlexibleContentBuilder;
 
-class FlexibleContentBuilderTest extends \PHPUnit_Framework_TestCase
+class FlexibleContentBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     public function testBuildFlexibleContent()
     {
         $builder = new FlexibleContentBuilder('content_areas');

@@ -2,10 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldBuilder;
 
-class FieldBuilderTest extends \PHPUnit_Framework_TestCase
+class FieldBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+    
     public function testClassExists()
     {
         $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldBuilder'));

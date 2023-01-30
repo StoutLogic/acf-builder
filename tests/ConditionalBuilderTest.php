@@ -2,10 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\ConditionalBuilder;
 
-class ConditionalBuilderTest extends \PHPUnit_Framework_TestCase
+class ConditionalBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+    
     public function testContionalLogic()
     {
         $builder = new ConditionalBuilder('color', '==', 'other');

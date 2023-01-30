@@ -2,11 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\ChoiceFieldBuilder;
-use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class ChoiceFieldBuilderTest extends \PHPUnit_Framework_TestCase
+class ChoiceFieldBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+    
     public function testClassExists()
     {
         $this->assertTrue(class_exists('StoutLogic\AcfBuilder\ChoiceFieldBuilder'));

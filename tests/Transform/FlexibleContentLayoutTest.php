@@ -2,13 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests\Transform;
 
-use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\ConditionalBuilder;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\Transform;
-use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
-class FlexibleContentLayoutTest extends \PHPUnit_Framework_TestCase
+class FlexibleContentLayoutTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testTransformValue()
     {
         $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
