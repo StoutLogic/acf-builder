@@ -128,8 +128,8 @@ gulp
 ```
 
 ## Requirements
-PHP 5.4 through 7.4 supported. 
-Untested on 8.0
+PHP 5.4 through 7.2 supported but automated tests cannot be run anymore so it might stop working at some point.
+>= 7.4, 8 Tested
 
 ## Documentation
 See the [wiki](https://github.com/StoutLogic/acf-builder/wiki) for more thorough documentation. The documentation has its [own repository](https://github.com/StoutLogic/acf-builder-wiki) and accepts pull requests for contributions. Any merges to master will get synced with the wiki here under the main project.
