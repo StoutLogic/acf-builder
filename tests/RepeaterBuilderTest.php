@@ -2,11 +2,15 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\RepeaterBuilder;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class RepeaterBuilderTest extends \PHPUnit_Framework_TestCase
+class RepeaterBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     public function testBuildRepeater()
     {
         $builder = new RepeaterBuilder('slides');

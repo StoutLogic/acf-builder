@@ -2,10 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\AccordionBuilder;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
-class AccordionBuilderTest extends \PHPUnit_Framework_TestCase
+class AccordionBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+    
     public function testClassExists()
     {
         $this->assertTrue(class_exists('StoutLogic\AcfBuilder\AccordionBuilder'));

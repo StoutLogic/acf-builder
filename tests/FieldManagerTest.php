@@ -2,13 +2,16 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldManager;
 use StoutLogic\AcfBuilder\FieldBuilder;
+use StoutLogic\AcfBuilder\FieldNotFoundException;
+use StoutLogic\AcfBuilder\FieldNameCollisionException;
 
-class FieldManagerTest extends \PHPUnit_Framework_TestCase
+class FieldManagerTest extends TestCase
 {
     private $testFields;
-    public function setup()
+    protected function setup(): void
     {
         $this->testFields['test1'] = new FieldBuilder('test1', 'text');
         $this->testFields['test2'] = new FieldBuilder('test2', 'text');
@@ -83,11 +86,10 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
         ], $subject->getFields());
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNotFoundException
-     */
     public function testRemovingFieldNotFound()
     {
+        $this->expectException(FieldNotFoundException::class);
+        
         $subject = new FieldManager([
             $this->testFields['test1'],
             $this->testFields['test2'],
@@ -124,11 +126,9 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    /**
-     * @expectedException OutOfRangeException
-     */
     public function testPopFieldOnEmptyManter()
     {
+        $this->expectException(\OutOfRangeException::class);
         $subject = new FieldManager();
 
         $subject->popField();
@@ -210,11 +210,10 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
         ], $subject->getField('test1')->build());
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNameCollisionException
-     */
     public function testValidateFieldName()
     {
+        $this->expectException(FieldNameCollisionException::class);
+        
         $subject = new FieldManager([
             $this->testFields['test1'],
             $this->testFields['test2'],

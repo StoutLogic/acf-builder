@@ -2,11 +2,15 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\GroupBuilder;
+use StoutLogic\AcfBuilder\FieldNotFoundException;
 
-class GroupBuilderTest extends \PHPUnit_Framework_TestCase
+class GroupBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
 
     public function testGroupBuilderCanAddFields()
     {
@@ -380,11 +384,10 @@ class GroupBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $postConfig['fields'][0]['sub_fields'][0]['sub_fields']);
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNotFoundException
-     */
     public function testRemovingGroupNotFound()
     {
+        $this->expectException(FieldNotFoundException::class);
+
         $subject = new GroupBuilder('test1');
 
         $subject->addText('text');

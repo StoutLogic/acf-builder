@@ -2,21 +2,20 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
-use StoutLogic\AcfBuilder\FieldsBuilder;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldNameCollisionException;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class FieldNameCollisionExceptionTest extends \PHPUnit_Framework_TestCase
+class FieldNameCollisionExceptionTest extends TestCase
 {
     public function testClassExists()
     {
         $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldNameCollisionException'));
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNameCollisionException
-     */
     public function testExceptionThrownDuringFieldNameCollision()
     {
+        $this->expectException(FieldNameCollisionException::class);
         $builder = new FieldsBuilder('Banner');
         $builder
             ->addText('title')
@@ -24,11 +23,9 @@ class FieldNameCollisionExceptionTest extends \PHPUnit_Framework_TestCase
             ->addTextarea('content');
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNameCollisionException
-     */
     public function testExceptionThrownDuringFieldNameCollisionUsingRepeaters()
     {
+        $this->expectException(FieldNameCollisionException::class);
         $builder = new FieldsBuilder('Banner');
         $builder
             ->addText('title')
@@ -40,11 +37,9 @@ class FieldNameCollisionExceptionTest extends \PHPUnit_Framework_TestCase
                 ->addChoices(1, 2, 3, 4);
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNameCollisionException
-     */
     public function testExceptionThrownDuringFieldNameCollisionUsingFlexibleContent()
     {
+        $this->expectException(FieldNameCollisionException::class);
         $builder = new FieldsBuilder('Banner');
         $builder
             ->addText('title')
@@ -58,11 +53,9 @@ class FieldNameCollisionExceptionTest extends \PHPUnit_Framework_TestCase
             ->addWysiwyg('content');
     }
 
-    /**
-     * @expectedException StoutLogic\AcfBuilder\FieldNameCollisionException
-     */
     public function testExceptionThrownDuringFieldNameCollisionUsingAddFields()
     {
+        $this->expectException(FieldNameCollisionException::class);
         $builder = new FieldsBuilder('Banner');
         $builder
             ->addText('title')

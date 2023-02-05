@@ -2,11 +2,13 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-class FieldsBuilderCustomFieldKeysTest extends \PHPUnit_Framework_TestCase
+class FieldsBuilderCustomFieldKeysTest extends TestCase
 {
-
+    use ArraySubsetAsserts;
 
     public function testCustomKeys()
     {

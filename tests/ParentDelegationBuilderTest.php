@@ -2,9 +2,10 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\Builder;
 
-class ParentDelegationBuilderTest extends \PHPUnit_Framework_TestCase
+class ParentDelegationBuilderTest extends TestCase
 {
     public function testReturningParent()
     {
@@ -25,7 +26,7 @@ class ParentDelegationBuilderTest extends \PHPUnit_Framework_TestCase
         $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
         $child->setParentContext($parent);
 
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $child->nonExistantParentMethod();
     }
 }

@@ -1,0 +1,12 @@
+filter:
+  excluded_paths:
+    - "tests/*"
+checks:
+  php: true
+  javascript: true
+coding_style:
+  php: {}
+build:
+  environment:
+    php:
+      version: 7.4

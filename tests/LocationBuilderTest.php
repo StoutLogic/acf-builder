@@ -2,10 +2,14 @@
 
 namespace StoutLogic\AcfBuilder\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\LocationBuilder;
 
-class LocationBuilderTest extends \PHPUnit_Framework_TestCase
+class LocationBuilderTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     public function testLocation()
     {
         $builder = new LocationBuilder('post_type', '==', 'post');
