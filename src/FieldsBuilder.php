@@ -5,7 +5,7 @@ namespace StoutLogic\AcfBuilder;
 /**
  * Builds configurations for ACF Field Groups
  */
-class FieldsBuilder extends ParentDelegationBuilder
+class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
     /**
      * Field Group Configuration
@@ -31,7 +31,7 @@ class FieldsBuilder extends ParentDelegationBuilder
      */
     protected $name;
 
-    CONST DEEP_NESTING_DELIMITER = '->';
+    const DEEP_NESTING_DELIMITER = '->';
 
     /**
      * @param string $name Field Group name
@@ -99,7 +99,7 @@ class FieldsBuilder extends ParentDelegationBuilder
     private function namespaceGroupKey($key)
     {
         if (strpos($key, 'group_') !== 0) {
-            $key = 'group_'.$key;
+            $key = 'group_' . $key;
         }
         return $key;
     }
@@ -124,7 +124,7 @@ class FieldsBuilder extends ParentDelegationBuilder
      */
     private function buildFields()
     {
-        $fields = array_map(function($field) {
+        $fields = array_map(function ($field) {
             return ($field instanceof Builder) ? $field->build() : $field;
         }, $this->getFields());
 
@@ -558,7 +558,7 @@ class FieldsBuilder extends ParentDelegationBuilder
      */
     public function addMessage($label, $message, array $args = [])
     {
-        $name = $this->generateName($label).'_message';
+        $name = $this->generateName($label) . '_message';
         $args = array_merge([
             'label' => $label,
             'message' => $message,
@@ -762,5 +762,4 @@ class FieldsBuilder extends ParentDelegationBuilder
     {
         $this->fieldManager = clone $this->fieldManager;
     }
-
 }

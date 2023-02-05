@@ -47,7 +47,7 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldsBuilder addLayout(string|FieldsBuilder $layout, array $args = [])
  * @method LocationBuilder setLocation(string $param, string $operator, string $value)
  */
-class FieldBuilder extends ParentDelegationBuilder
+class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
     /**
      * Field Type
@@ -140,7 +140,7 @@ class FieldBuilder extends ParentDelegationBuilder
     public function setKey($key)
     {
         if (!preg_match('/^field_/', $key)) {
-            $key = 'field_'.$key;
+            $key = 'field_' . $key;
         }
 
         return $this->setConfig('key', $key);
@@ -313,11 +313,11 @@ class FieldBuilder extends ParentDelegationBuilder
         $id = trim($id, '#');
         $class = trim($class, '.');
 
-        if (! empty($id)) {
+        if (!empty($id)) {
             $this->setAttr('id', $id);
         }
 
-        if (! empty($class)) {
+        if (!empty($class)) {
             $class = str_replace('.', ' ', $class);
             $this->setAttr('class', $class);
         }

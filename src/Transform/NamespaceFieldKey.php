@@ -13,15 +13,15 @@ class NamespaceFieldKey extends RecursiveTransform
     protected $keys = ['key', 'field', 'collapsed'];
 
     /**
-     * @param \StoutLogic\AcfBuilder\Builder $builder
+     * @param \StoutLogic\AcfBuilder\NamedBuilder $builder
      */
-    public function __construct(\StoutLogic\AcfBuilder\Builder $builder)
+    public function __construct(\StoutLogic\AcfBuilder\NamedBuilder $builder)
     {
         parent::__construct($builder);
     }
 
     /**
-     * @return \StoutLogic\AcfBuilder\Builder
+     * @return \StoutLogic\AcfBuilder\NamedBuilder
      */
     public function getBuilder()
     {
@@ -49,9 +49,9 @@ class NamespaceFieldKey extends RecursiveTransform
         if ($groupName) {
             // remove field_ or group_ if already at the begining of the key
             $value = preg_replace('/^field_|^group_/', '', $value);
-            $namespace .= str_replace(' ', '_', $groupName).'_';
+            $namespace .= str_replace(' ', '_', $groupName) . '_';
         }
-        return strtolower($namespace.$value);
+        return strtolower($namespace . $value);
     }
 
     public function shouldTransformValue($key, $config)
@@ -85,10 +85,12 @@ class NamespaceFieldKey extends RecursiveTransform
     {
         foreach ($config as $key => &$value) {
             if (array_key_exists('_field_does_not_exist', $config)) {
-                foreach($parentConfig as $parentField) {
-                    if (is_array($parentField) &&
+                foreach ($parentConfig as $parentField) {
+                    if (
+                        is_array($parentField) &&
                         array_key_exists('name', $parentField) &&
-                        $parentField['name'] === $config['_field_does_not_exist']) {
+                        $parentField['name'] === $config['_field_does_not_exist']
+                    ) {
                         $config['field'] = $parentField['key'];
                     }
                 }
