@@ -140,7 +140,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     public function setKey($key)
     {
         if (!preg_match('/^field_/', $key)) {
-            $key = 'field_'.$key;
+            $key = 'field_' . $key;
         }
 
         return $this->setConfig('key', $key);
@@ -313,11 +313,11 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
         $id = trim($id, '#');
         $class = trim($class, '.');
 
-        if (! empty($id)) {
+        if (!empty($id)) {
             $this->setAttr('id', $id);
         }
 
-        if (! empty($class)) {
+        if (!empty($class)) {
             $class = str_replace('.', ' ', $class);
             $this->setAttr('class', $class);
         }
