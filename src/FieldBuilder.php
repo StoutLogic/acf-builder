@@ -85,6 +85,16 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     {
         return $this->config;
     }
+    
+    /**
+     * Return the field type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
     /**
      * Set a config key -> value pair

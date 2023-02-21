@@ -21,6 +21,25 @@ class FieldBuilderTest extends TestCase
         $this->assertSame('my_field', $subject->getName());
     }
 
+    public function testGetConfig()
+    {
+        $subject = new FieldBuilder('my_field', 'text', [
+            'foo' => 'bar'
+        ]);
+        $this->assertSame([
+            'name' => 'my_field',
+            'label' => 'My Field',
+            'key' => 'field_my_field',
+            'foo' => 'bar'
+        ], $subject->getConfig());
+    }
+
+    public function testGetType()
+    {
+        $subject = new FieldBuilder('my_field', 'text');
+        $this->assertSame('text', $subject->getType());
+    }
+
     public function testBuild()
     {
         $subject = new FieldBuilder('my_field', 'text', ['prepend' => '$']);
