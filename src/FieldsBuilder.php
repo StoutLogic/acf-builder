@@ -622,6 +622,15 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Return int of fields
+     * @return int field count
+     */
+    public function getCount()
+    {
+        return $this->getFieldManager()->getCount();
+    }
+
+    /**
      * @param string $name [description]
      * @return FieldBuilder
      */
