@@ -1,31 +1,31 @@
 name: TESTS
 
 on:
-    pull_request: null
-    push:
-        branches:
-            - master
-            - develop
+  pull_request: null
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
-    tests:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                php: ['7.4', '8.0', '8.1', '8.2']
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
 
-        name: PHP ${{ matrix.php }} tests
-        steps:
-            # basically git clone
-            -   uses: actions/checkout@v2
+    name: PHP ${{ matrix.php }} tests
+    steps:
+      # basically git clone
+      - uses: actions/checkout@v2
 
-            # use PHP of specific version
-            -   uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    coverage: none # disable xdebug, pcov
+      # use PHP of specific version
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none # disable xdebug, pcov
 
-            # if we 2 steps like this, we can better see if composer failed or tests
-            -   run: composer update --no-progress
+      # if we 2 steps like this, we can better see if composer failed or tests
+      - run: composer update --no-progress
 
-            -   run: vendor/bin/phpunit
+      - run: vendor/bin/phpunit
