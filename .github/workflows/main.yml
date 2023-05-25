@@ -1,31 +1,44 @@
 name: TESTS
 
 on:
-    pull_request: null
-    push:
-        branches:
-            - master
-            - develop
+  pull_request: null
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
-    tests:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                php: ['7.4', '8.0', '8.1', '8.2']
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
 
-        name: PHP ${{ matrix.php }} tests
-        steps:
-            # basically git clone
-            -   uses: actions/checkout@v3
+    name: PHP ${{ matrix.php }} tests
+    steps:
+      # basically git clone
+      - uses: actions/checkout@v3
 
-            # use PHP of specific version
-            -   uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    coverage: none # disable xdebug, pcov
+      # use PHP of specific version
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none # disable xdebug, pcov
 
-            # if we 2 steps like this, we can better see if composer failed or tests
-            -   run: composer update --no-progress
+      - name: Validate composer.json and composer.lock
+        run: composer validate
 
-            -   run: vendor/bin/phpunit
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run test suite
+        run: composer run-script test
