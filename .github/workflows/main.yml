@@ -17,7 +17,7 @@ jobs:
         name: PHP ${{ matrix.php }} tests
         steps:
             # basically git clone
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
 
             # use PHP of specific version
             -   uses: shivammathur/setup-php@v2
