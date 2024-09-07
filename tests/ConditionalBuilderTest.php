@@ -9,7 +9,7 @@ use StoutLogic\AcfBuilder\ConditionalBuilder;
 class ConditionalBuilderTest extends TestCase
 {
     use ArraySubsetAsserts;
-    
+
     public function testContionalLogic()
     {
         $builder = new ConditionalBuilder('color', '==', 'other');
@@ -25,6 +25,22 @@ class ConditionalBuilderTest extends TestCase
         ];
 
         $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testContionalLogicOperatorOnly()
+    {
+        $builder = new ConditionalBuilder('color', '!=empty');
+
+        $expectedConfig = [
+            [
+                [
+                    'field' => 'color',
+                    'operator'  =>  '!=empty',
+                ],
+            ]
+        ];
+
+        $this->assertSame($expectedConfig, $builder->build());
     }
 
     public function testAnd()

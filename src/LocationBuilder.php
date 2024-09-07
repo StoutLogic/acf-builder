@@ -14,8 +14,12 @@ class LocationBuilder extends ConditionalBuilder
      * @param  string $value
      * @return array
      */
-    protected function createCondition($name, $operator, $value)
+    protected function createCondition($name, $operator, $value = '')
     {
+        if ($value === '') {
+            throw new \InvalidArgumentException('Value is required for location conditions');
+        }
+
         return [
             'param' => $name,
             'operator' => $operator,
