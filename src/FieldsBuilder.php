@@ -548,6 +548,48 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
         return $this->initializeField(new AccordionBuilder($label, 'accordion', $args));
     }
 
+	/**
+     * @param string $name Icon picker field name
+     * @param array $args field configuration
+     * @throws FieldNameCollisionException if name already exists.
+     * @return FieldBuilder
+     */
+    public function addIconPicker($name, array $args = [])
+    {
+        return $this->addField($name, 'icon_picker', $args);
+    }
+
+	/**
+	 * Add a column field. All fields added after will be added to this column until `addColumnEnd` is called.
+	 * @param string $name Column name
+	 * @param string $columns Column width, accepts '1/12' - '12/12'
+	 * @throws FieldNameCollisionException if name already exists.
+	 * @return FieldBuilder
+	 * @see FieldsBuilder::addColumnEnd()
+	 * @see https://www.acf-extended.com/features/fields/columns/ for more details.
+	 */
+	public function addColumn(string $name, string $columns = '6/12') 
+	{
+		return $this->addField($name, 'acfe_column', [
+			'columns' => $columns,
+		]);
+	}
+
+	/**
+	 * End a column field.
+	 * @param string $name Column name
+	 * @throws FieldNameCollisionException if name already exists.
+	 * @return FieldBuilder
+	 * @see FieldsBuilder::addColumn()
+	 * @see https://www.acf-extended.com/features/fields/columns/ for more details.
+	 */
+	public function addColumnEnd(string $name = 'col_end') 
+	{
+		return $this->addField($name, 'acfe_column', [
+			'endpoint' => '1',
+		]);
+	}
+
     /**
      * Addes a message field
      * @param string $label
