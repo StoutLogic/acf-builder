@@ -38,6 +38,8 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addRelationship(string $name, array $args = [])
  * @method FieldBuilder addAccordion(string $name, array $args = [])
  * @method FieldBuilder addIconPicker(string $name, array $args = [])
+ * @method FieldBuilder addColumn(string $name)
+ * @method FieldBuilder addColumnEnd()
  * @method TabBuilder endpoint()
  * @method TabBuilder removeEndpoint()
  * @method GroupBuilder addGroup(string $name, array $args = [])
