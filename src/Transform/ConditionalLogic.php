@@ -10,6 +10,9 @@ use StoutLogic\AcfBuilder\ConditionalBuilder;
  */
 class ConditionalLogic extends IterativeTransform
 {
+    /**
+     * @var array
+     */
     protected $keys = ['conditional_logic'];
 
     /**
@@ -28,6 +31,12 @@ class ConditionalLogic extends IterativeTransform
         return parent::getBuilder();
     }
 
+    /**
+     * Apply the transform to the given config.
+     *
+     * @param array $config
+     * @return array
+     */
     public function transform($config)
     {
         return parent::transform($config);

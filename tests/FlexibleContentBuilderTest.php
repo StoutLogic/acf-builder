@@ -76,7 +76,7 @@ class FlexibleContentBuilderTest extends TestCase
 
     public function testAddingFieldsBuilderAsLayout()
     {
-        $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $banner = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
                         ->setConstructorArgs(['parent'])
                         ->getMock();
 
@@ -134,7 +134,7 @@ class FlexibleContentBuilderTest extends TestCase
 
     public function testEndFlexibleContent()
     {
-        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $fieldsBuilder = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 
@@ -155,7 +155,7 @@ class FlexibleContentBuilderTest extends TestCase
 
     public function testSetLocation()
     {
-        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $fieldsBuilder = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 
@@ -178,7 +178,6 @@ class FlexibleContentBuilderTest extends TestCase
 
         $builder = new FlexibleContentBuilder('content_areas', 'flexible_content', ['button_label' => 'Add Area']);
 
-
         $expectedConfig =  [
             'name' => 'content_areas',
             'type' => 'flexible_content',
@@ -195,7 +194,7 @@ class FlexibleContentBuilderTest extends TestCase
         $builder->addLayout('images_multiple', [
             'label' => 'Custom Label',
         ]);
-        
+
         $expectedConfig =  [
             'layouts' => [
                 [
@@ -210,7 +209,7 @@ class FlexibleContentBuilderTest extends TestCase
 
     public function testAddLayouts()
     {
-        $banner = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $banner = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
             ->setConstructorArgs(['parent'])
             ->getMock();
 
@@ -314,7 +313,6 @@ class FlexibleContentBuilderTest extends TestCase
             ]
         ];
 
-
         $config = $builder->build();
         $this->assertCount(2, $config['layouts'][0]['sub_fields']);
 
@@ -334,7 +332,6 @@ class FlexibleContentBuilderTest extends TestCase
         $builder
             ->addFlexibleContent('sections')
                 ->addLayouts([$banner, 'header', 'footer']);
-
 
         $config = $builder->build();
         $this->assertCount(2, $config['fields'][0]['layouts'][0]['sub_fields']);
@@ -356,7 +353,6 @@ class FlexibleContentBuilderTest extends TestCase
             ->addFlexibleContent('sections')
             ->addLayouts([$banner, 'header', 'footer']);
 
-
         $config = $builder->build();
         $this->assertSame('Title', $config['fields'][0]['layouts'][0]['sub_fields'][0]['label']);
 
@@ -377,7 +373,6 @@ class FlexibleContentBuilderTest extends TestCase
         $builder
             ->addFlexibleContent('sections')
             ->addLayouts([$banner, 'header', 'footer']);
-
 
         $config = $builder->build();
         $this->assertSame('Sections', $config['fields'][0]['label']);
@@ -437,7 +432,6 @@ class FlexibleContentBuilderTest extends TestCase
             ]
         ];
 
-
         $config = $builder->build();
         $this->assertCount(3, $config['layouts']);
 
@@ -458,7 +452,6 @@ class FlexibleContentBuilderTest extends TestCase
         $builder
             ->addFlexibleContent('sections')
                 ->addLayouts([$banner, 'header', 'footer']);
-
 
         $config = $builder->build();
         $this->assertCount(3, $config['fields'][0]['layouts']);

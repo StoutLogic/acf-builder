@@ -9,7 +9,7 @@ use StoutLogic\AcfBuilder\ConditionalBuilder;
 class ConditionalBuilderTest extends TestCase
 {
     use ArraySubsetAsserts;
-    
+
     public function testContionalLogic()
     {
         $builder = new ConditionalBuilder('color', '==', 'other');

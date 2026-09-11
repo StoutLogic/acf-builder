@@ -36,7 +36,7 @@ class RepeaterBuilderTest extends TestCase
 
     public function testEndRepeater()
     {
-        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $fieldsBuilder = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 
@@ -53,7 +53,7 @@ class RepeaterBuilderTest extends TestCase
 
     public function testSetLocation()
     {
-        $fieldsBuilder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $fieldsBuilder = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
                               ->setConstructorArgs(['parent'])
                               ->getMock();
 

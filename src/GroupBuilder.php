@@ -2,22 +2,31 @@
 
 namespace StoutLogic\AcfBuilder;
 
+use StoutLogic\AcfBuilder\Exceptions\FieldNotFoundException;
+use StoutLogic\AcfBuilder\Exceptions\ModifyFieldReturnTypeException;
+
 /**
  * Group field
  * Can add multiple fields as subfields to the group.
+ *
+ * @api
  */
 class GroupBuilder extends FieldBuilder
 {
     /**
      * Used to contain and add fields
+     *
      * @var FieldsBuilder
      */
     protected $fieldsBuilder;
 
     /**
-     * @param string $name Field name
-     * @param string $type Field name
-     * @param array $config Field configuration
+     * Create a group field builder.
+     *
+     * @param string $name Field name.
+     * @param string $type Field name.
+     * @param array  $config Field configuration.
+     * @api
      */
     public function __construct($name, $type = 'group', $config = [])
     {
@@ -28,8 +37,10 @@ class GroupBuilder extends FieldBuilder
 
     /**
      * Add multiple fields either via an array or from another builder
+     *
      * @param array|FieldsBuilder $fields
      * @return $this
+     * @api
      */
     public function addFields($fields)
     {
@@ -39,7 +50,9 @@ class GroupBuilder extends FieldBuilder
 
     /**
      * Return a group field configuration array
+     *
      * @return array
+     * @api
      */
     public function build()
     {
@@ -51,7 +64,9 @@ class GroupBuilder extends FieldBuilder
 
     /**
      * Returns call chain to parentContext
+     *
      * @return FieldBuilder
+     * @api
      */
     public function endGroup()
     {
@@ -60,7 +75,9 @@ class GroupBuilder extends FieldBuilder
 
     /**
      * Returns call chain to parentContext
+     *
      * @return FieldBuilder
+     * @api
      */
     public function end()
     {
@@ -70,9 +87,11 @@ class GroupBuilder extends FieldBuilder
     /**
      * Intercept missing methods, pass any methods that begin with add to the
      * internal fieldsBuilder
+     *
      * @param  string $method
-     * @param  array $args
+     * @param  array  $args
      * @return mixed
+     * @api
      */
     public function __call($method, $args)
     {
@@ -87,36 +106,41 @@ class GroupBuilder extends FieldBuilder
 
     /**
      * Calls an add field method on the FieldsBuilder
-     * @param string $method [description]
-     * @param array $args
+     *
+     * @param string $method [description].
+     * @param array  $args
      * @return FieldBuilder
      */
     private function callAddFieldMethod($method, $args)
     {
         return call_user_func_array([$this->fieldsBuilder, $method], $args);
     }
-    
+
     /**
      * Remove a field by name
-     * @param  string $name Field to remove
+     *
+     * @param  string $name Field to remove.
      * @return $this
+     * @api
      */
     public function removeField($name)
     {
         $this->fieldsBuilder->removeField($name);
-        
+
         return $this;
     }
 
     /**
      * Modify an already defined field
-     * @param  string $name   Name of the field
-     * @param  array|\Closure  $modify Array of field configs or a closure that accepts
+     *
+     * @param  string         $name   Name of the field.
+     * @param  array|\Closure $modify Array of field configs or a closure that accepts
      * a FieldsBuilder and returns a FieldsBuilder.
-     * @throws ModifyFieldReturnTypeException if $modify is a closure and doesn't
+     * @throws ModifyFieldReturnTypeException If $modify is a closure and doesn't
      * return a FieldsBuilder.
-     * @throws FieldNotFoundException if the field name doesn't exist.
+     * @throws FieldNotFoundException If the field name doesn't exist.
      * @return $this
+     * @api
      */
     public function modifyField($name, $modify)
     {
@@ -125,12 +149,27 @@ class GroupBuilder extends FieldBuilder
         return $this;
     }
 
+    /**
+     * Return a nested field by name.
+     *
+     * @param string $name Field name.
+     * @return FieldBuilder
+     * @api
+     */
     public function getField($name)
     {
         return $this->fieldsBuilder->getField($name);
     }
 
-    public function fieldExists($name) {
+    /**
+     * Determine whether a nested field exists.
+     *
+     * @param string $name Field name.
+     * @return bool
+     * @api
+     */
+    public function fieldExists($name)
+    {
         return $this->fieldsBuilder->fieldExists($name);
     }
 }

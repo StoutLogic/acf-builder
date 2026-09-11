@@ -3,14 +3,14 @@
 namespace StoutLogic\AcfBuilder\Tests;
 
 use PHPUnit\Framework\TestCase;
-use StoutLogic\AcfBuilder\FieldNameCollisionException;
+use StoutLogic\AcfBuilder\Exceptions\FieldNameCollisionException;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class FieldNameCollisionExceptionTest extends TestCase
 {
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldNameCollisionException'));
+        $this->assertTrue(class_exists(\StoutLogic\AcfBuilder\Exceptions\FieldNameCollisionException::class));
     }
 
     public function testExceptionThrownDuringFieldNameCollision()

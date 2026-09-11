@@ -12,3 +12,5 @@
 # Build and development tools
 /gulpfile.js export-ignore
 /package.json export-ignore
+/phpcs.xml.dist export-ignore
+/rector.php export-ignore

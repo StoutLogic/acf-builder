@@ -25,6 +25,9 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none # disable xdebug, pcov
 
+      # teak (docs generation) requires PHP >=8.3 or an incompatible reflection-docblock version, and isn't needed to run tests
+      - run: composer remove --dev timber/teak --no-update
+
       # if we 2 steps like this, we can better see if composer failed or tests
       - run: composer update --no-progress
 

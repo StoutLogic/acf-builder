@@ -9,10 +9,10 @@ use StoutLogic\AcfBuilder\FieldBuilder;
 class FieldBuilderTest extends TestCase
 {
     use ArraySubsetAsserts;
-    
+
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldBuilder'));
+        $this->assertTrue(class_exists(\StoutLogic\AcfBuilder\FieldBuilder::class));
     }
 
     public function testGetName()

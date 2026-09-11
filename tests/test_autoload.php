@@ -1,6 +1,6 @@
 <?php
 
-require(dirname(__FILE__) . '/../autoload.php');
+require __DIR__ . '/../autoload.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
 $builder = new FieldsBuilder('banner');
