@@ -51,21 +51,40 @@ class ChoiceFieldBuilder extends FieldBuilder
             $choices = func_get_args();
         }
 
+        $isIndexedArray = array_keys($choices) === range(0, count($choices) - 1);
+
         foreach ($choices as $key => $value) {
-            $label = $choice = $value;
-
-            if (is_array($choice)) {
-                $label = array_values($choice)[0];
-                $choice = array_keys($choice)[0];
-            } else if (is_string($key)) {
-                $choice = $key;
-                $label = $value;
-            }
-
-            $this->addChoice($choice, $label);
+            $parsed = $this->parseChoiceItem($key, $value, $isIndexedArray);
+            $this->addChoice($parsed[0], $parsed[1]);
         }
 
         return $this;
+    }
+
+    /**
+     * Parse a choice item to extract the choice value and label.
+     * 
+     * @param mixed $key The array key
+     * @param mixed $value The array value
+     * @param bool $isIndexedArray Whether the parent array is indexed (0, 1, 2...)
+     * @return array [$choice, $label]
+     */
+    private function parseChoiceItem($key, $value, $isIndexedArray)
+    {
+        // Handle associative array choice: ['choice' => 'label']
+        if (is_array($value)) {
+            $choice = array_keys($value)[0];
+            $label = array_values($value)[0];
+            return [$choice, $label];
+        }
+
+        // Handle a choice without a label, use the value as both choice and label
+        if ($isIndexedArray) {
+            return [$value, $value];
+        }
+
+        // Handle choice array format where the key is explicitly defined
+        return [$key, $value];
     }
 
     /**

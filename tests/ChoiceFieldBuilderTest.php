@@ -9,7 +9,8 @@ use StoutLogic\AcfBuilder\ChoiceFieldBuilder;
 class ChoiceFieldBuilderTest extends TestCase
 {
     use ArraySubsetAsserts;
-    
+
+
     public function testClassExists()
     {
         $this->assertTrue(class_exists('StoutLogic\AcfBuilder\ChoiceFieldBuilder'));
@@ -94,6 +95,28 @@ class ChoiceFieldBuilderTest extends TestCase
             'choices' => [
                 'yes' => 'Yes, please send my report for review!',
                 'no' => 'No, save my report for later completion.',
+            ]
+        ], $config);
+    }
+
+    public function testNumericChoiceKeysWithLabels()
+    {
+        $subject = new ChoiceFieldBuilder('test_with_keys', 'radio', [
+            'choices' => [
+                1 => 'one',
+                2 => 'two',
+                5 => 'five',
+                '2.5' => '2 and a half',
+            ]
+        ]);
+
+        $config = $subject->build();
+        $this->assertArraySubset([
+            'choices' => [
+                1 => 'one',
+                2 => 'two',
+                5 => 'five',
+                '2.5' => '2 and a half',
             ]
         ], $config);
     }
