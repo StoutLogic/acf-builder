@@ -83,7 +83,7 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')
-                ->addField('name_two', 'text');
+            ->addField('name_two', 'text');
 
         $expectedConfig = [
             'fields' => [
@@ -312,8 +312,8 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addSelect('colors', ['choices' => [['yellow' => 'Yellow']]])
-                    ->addChoices(['red' => 'Rojo'], 'blue')
-                    ->addChoice('green');
+            ->addChoices(['red' => 'Rojo'], 'blue')
+            ->addChoice('green');
 
         $expectedConfig =  [
             'fields' => [
@@ -338,9 +338,9 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addRadio('colors')
-                    ->addChoice('red')
-                    ->addChoice('blue')
-                    ->addChoice('green');
+            ->addChoice('red')
+            ->addChoice('blue')
+            ->addChoice('green');
 
         $expectedConfig =  [
             'fields' => [
@@ -363,9 +363,9 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addCheckbox('colors')
-                    ->addChoice('red')
-                    ->addChoice('blue')
-                    ->addChoice('green');
+            ->addChoice('red')
+            ->addChoice('blue')
+            ->addChoice('green');
 
         $expectedConfig =  [
             'fields' => [
@@ -388,9 +388,9 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addButtonGroup('colors')
-                    ->addChoice('red')
-                    ->addChoice('blue')
-                    ->addChoice('green');
+            ->addChoice('red')
+            ->addChoice('blue')
+            ->addChoice('green');
 
         $expectedConfig =  [
             'fields' => [
@@ -409,11 +409,45 @@ class FieldsBuilderTest extends TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testAddIconPicker()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addIconPicker('icon');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'icon',
+                    'type' => 'icon_picker',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
+    public function testAddSeparator()
+    {
+        $builder = new FieldsBuilder('fields');
+        $builder->addSeparator('section_break');
+
+        $expectedConfig = [
+            'fields' => [
+                [
+                    'name' => 'section_break',
+                    'type' => 'separator',
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($expectedConfig, $builder->build());
+    }
+
     public function testAddPostObject()
     {
         $builder = new FieldsBuilder('fields');
         $builder->addPostObject('related_page')
-                    ->setConfig('post_type', 'page');
+            ->setConfig('post_type', 'page');
 
         $expectedConfig =  [
             'fields' => [
@@ -619,10 +653,10 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')->setRequired()
-                ->addField('name_two', 'text')->setRequired()
-                ->addField('name_three', 'text')
-                ->addField('name_four', 'text')->setUnrequired()
-                ->addField('name_five', 'text', ['required' => 1]);
+            ->addField('name_two', 'text')->setRequired()
+            ->addField('name_three', 'text')
+            ->addField('name_four', 'text')->setUnrequired()
+            ->addField('name_five', 'text', ['required' => 1]);
 
         $expectedConfig = [
             'fields' => [
@@ -658,7 +692,7 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')
-                    ->setInstructions('Last Name, First Name');
+            ->setInstructions('Last Name, First Name');
 
         $expectedConfig = [
             'fields' => [
@@ -676,7 +710,7 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addField('name', 'text')
-                    ->setDefaultValue('John Smith');
+            ->setDefaultValue('John Smith');
 
         $expectedConfig = [
             'fields' => [
@@ -694,9 +728,9 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addTab('Content')
-                    ->addText('name')
-                ->addTab('Background Color')->endpoint()
-                    ->addColorPicker('background_color');
+            ->addText('name')
+            ->addTab('Background Color')->endpoint()
+            ->addColorPicker('background_color');
 
         $expectedConfig = [
             'fields' => [
@@ -730,9 +764,9 @@ class FieldsBuilderTest extends TestCase
         $builder = new FieldsBuilder('fields');
         $builder
             ->addAccordion('Content')
-                ->addText('name')
+            ->addText('name')
             ->addAccordion('Background Color')->endpoint()
-                ->addColorPicker('background_color');
+            ->addColorPicker('background_color');
 
         $expectedConfig = [
             'fields' => [
@@ -784,18 +818,18 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addRadio('color')
-                    ->addChoices('red', 'blue', 'green', 'other')
-                ->addRadio('number', ['key' => 'num'])
-                    ->addChoices('one', 'two', 'three', 'other')
-                ->addText('other_value')
-                    ->conditional('color', '==', 'other')
-                        ->and('day', '!=', 'tue')
-                        ->or('number', '==', 'other')
-                        ->and('number', '!=', 'two')
-                ->addRadio('day', ['key' => 'day_of_week'])
-                    ->addChoices('mon', 'tue', 'wed', 'thu', 'other')
-                ->addText('other_day')
-                    ->conditional('day', '==', 'other');
+            ->addChoices('red', 'blue', 'green', 'other')
+            ->addRadio('number', ['key' => 'num'])
+            ->addChoices('one', 'two', 'three', 'other')
+            ->addText('other_value')
+            ->conditional('color', '==', 'other')
+            ->and('day', '!=', 'tue')
+            ->or('number', '==', 'other')
+            ->and('number', '!=', 'two')
+            ->addRadio('day', ['key' => 'day_of_week'])
+            ->addChoices('mon', 'tue', 'wed', 'thu', 'other')
+            ->addText('other_day')
+            ->conditional('day', '==', 'other');
 
         $expectedConfig = [
             'fields' => [
@@ -860,9 +894,9 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addText('title')
-                ->addRepeater('slides')
-                    ->addText('title')
-                    ->addWysiwyg('content');
+            ->addRepeater('slides')
+            ->addText('title')
+            ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -891,11 +925,11 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addText('title')
-                ->addRepeater('slides')
-                    ->addText('title')
-                    ->addWysiwyg('content')
-                    ->endRepeater()
-                ->addWysiwyg('content');
+            ->addRepeater('slides')
+            ->addText('title')
+            ->addWysiwyg('content')
+            ->endRepeater()
+            ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -927,14 +961,14 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
         $builder->addText('title')
-                ->addRepeater('slides')
-                    ->addText('title')
-                    ->addRepeater('logos')
-                        ->addImage('logo')
-                        ->endRepeater()
-                    ->addWysiwyg('content')
-                    ->endRepeater()
-                ->addWysiwyg('content');
+            ->addRepeater('slides')
+            ->addText('title')
+            ->addRepeater('logos')
+            ->addImage('logo')
+            ->endRepeater()
+            ->addWysiwyg('content')
+            ->endRepeater()
+            ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -980,7 +1014,7 @@ class FieldsBuilderTest extends TestCase
 
         $builder = new FieldsBuilder('content');
         $builder->addTextarea('summary')
-                ->addFields($banner);
+            ->addFields($banner);
 
         $expectedConfig = [
             'key' => 'group_content',
@@ -1008,11 +1042,11 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('banner');
         $builder->addText('title')
-                ->addWysiwyg('content')
-                ->setLocation('post_type', '==', 'page')
-                    ->or('post_type', '==', 'post')
-                    ->and('post_id', '!=', '10')
-                ->addText('subtitle');
+            ->addWysiwyg('content')
+            ->setLocation('post_type', '==', 'page')
+            ->or('post_type', '==', 'post')
+            ->and('post_id', '!=', '10')
+            ->addText('subtitle');
 
         $builder->getLocation()->or('post_type', '==', 'team_member');
 
@@ -1065,12 +1099,12 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('page_content');
         $builder->addFlexibleContent('sections')
-                    ->addLayout('banner')
-                        ->addText('title')
-                        ->addWysiwyg('content')
-                    ->addLayout('content_columns')
-                        ->addRepeater('columns', ['min' => 1, 'max' => 2])
-                            ->addWysiwyg('content');
+            ->addLayout('banner')
+            ->addText('title')
+            ->addWysiwyg('content')
+            ->addLayout('content_columns')
+            ->addRepeater('columns', ['min' => 1, 'max' => 2])
+            ->addWysiwyg('content');
 
         $expectedConfig = [
             'fields' => [
@@ -1131,8 +1165,8 @@ class FieldsBuilderTest extends TestCase
     public function testReturnExistingParentContextForSetLocation()
     {
         $builder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
-                        ->setConstructorArgs(['parent'])
-                        ->getMock();
+            ->setConstructorArgs(['parent'])
+            ->getMock();
 
         $middleBuilder =  new FieldsBuilder('middle');
         $middleBuilder->setParentContext($builder);
@@ -1196,7 +1230,7 @@ class FieldsBuilderTest extends TestCase
             ->addWysiwyg('content');
 
         $builder
-            ->modifyField('title', function($builder) {
+            ->modifyField('title', function ($builder) {
                 return $builder->addText('sub_title');
             });
     }
@@ -1209,7 +1243,7 @@ class FieldsBuilderTest extends TestCase
             ->addWysiwyg('content');
 
         $builder
-            ->modifyField('title', function($builder) {
+            ->modifyField('title', function ($builder) {
                 $builder->addText('sub_title');
                 return $builder;
             });
@@ -1272,7 +1306,7 @@ class FieldsBuilderTest extends TestCase
         $builder = new FieldsBuilder('fields');
         $builder
             ->addGroup('background')
-                ->addColorPicker('color');
+            ->addColorPicker('color');
 
         $expectedConfig = [
             'fields' => [

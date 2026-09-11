@@ -336,6 +336,74 @@ class FieldsBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Add an icon picker field.
+     *
+     * @param string $name
+     * @param array  $args {
+     *      Field configuration options.
+     *
+     *      @type string $label Field label.
+     *      @type string $instructions Helper text shown below the field.
+     *      @type bool|int $required Whether the field is required.
+     *      @type string|array $default_value Default selected icon value. When using the `array` return format, this is typically an array with `type` and `value` keys.
+     *      @type array $tabs Tabs enabled for icon selection. Supported values are `dashicons`, `media_library`, and `url`.
+     *      @type string $return_format Return format for the saved value. Either `string` or `array`.
+     *      @type array $wrapper Wrapper attributes.
+     * }
+     * @throws FieldNameCollisionException If name already exists.
+     * @return FieldBuilder
+     * @example
+     *
+     * ```php
+     * $fields->addIconPicker('social_icon', [
+     *     'default_value' => [
+     *         'type'  => 'dashicons',
+     *         'value' => 'dashicons-admin-site',
+     *     ],
+     *     'tabs'          => ['dashicons', 'url'],
+     *     'return_format' => 'string',
+     * ]);
+     * ```
+     * @api
+     */
+    public function addIconPicker($name, array $args = [])
+    {
+        return $this->addField($name, 'icon_picker', $args);
+    }
+
+    /**
+     * Add a separator field.
+     *
+     * This field is a layout-only divider in ACF and does not render a value.
+     * It does not expose custom field settings beyond the standard base field
+     * options supported by ACF.
+     *
+     * @param string $name
+     * @param array  $args {
+     *      Field configuration options.
+     *
+     *      @type string $label Optional label shown in the field editor.
+     *      @type string $instructions Optional helper text.
+     *      @type bool|int $required Supported by the base field API, but ignored by the separator field.
+     *      @type array $wrapper Wrapper attributes.
+     * }
+     * @throws FieldNameCollisionException If name already exists.
+     * @return FieldBuilder
+     * @example
+     *
+     * ```php
+     * $fields->addSeparator('content_break', [
+     *     'label' => 'Content Settings',
+     * ]);
+     * ```
+     * @api
+     */
+    public function addSeparator($name, array $args = [])
+    {
+        return $this->addField($name, 'separator', $args);
+    }
+
+    /**
      * @param string $name
      * @param array $args field configuration
      * @throws FieldNameCollisionException if name already exists.

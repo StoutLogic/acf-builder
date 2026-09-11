@@ -18,6 +18,8 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addImage(string $name, array $args = [])
  * @method FieldBuilder addFile(string $name, array $args = [])
  * @method FieldBuilder addGallery(string $name, array $args = [])
+ * @method FieldBuilder addIconPicker(string $name, array $args = [])
+ * @method FieldBuilder addSeparator(string $name, array $args = [])
  * @method FieldBuilder addTrueFalse(string $name, array $args = [])
  * @method FieldBuilder addSelect(string $name, array $args = [])
  * @method FieldBuilder addRadio(string $name, array $args = [])
