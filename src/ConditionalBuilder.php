@@ -3,8 +3,8 @@
 namespace StoutLogic\AcfBuilder;
 
 /**
- * @method ConditionalBuilder and(string $name, string $operator, string $value)
- * @method ConditionalBuilder or(string $name, string $operator, string $value)
+ * @method ConditionalBuilder and(string $name, string $operator, string|null $value)
+ * @method ConditionalBuilder or(string $name, string $operator, string|null $value)
  */
 class ConditionalBuilder extends ParentDelegationBuilder
 {
@@ -18,9 +18,9 @@ class ConditionalBuilder extends ParentDelegationBuilder
      * Creates the first rule. Additional rules can be chained use `or` and `and`
      * @param string $name
      * @param string $operator
-     * @param string $value
+    * @param string|null $value
      */
-    public function __construct($name, $operator, $value)
+    public function __construct($name, $operator, $value = null)
     {
         $this->and($name, $operator, $value);
     }
@@ -38,10 +38,10 @@ class ConditionalBuilder extends ParentDelegationBuilder
      * Creates an AND condition
      * @param  string $name
      * @param  string $operator
-     * @param  string $value
+    * @param  string|null $value
      * @return $this
      */
-    public function andCondition($name, $operator, $value)
+    public function andCondition($name, $operator, $value = null)
     {
         $orCondition = $this->popOrCondition();
         $orCondition[] = $this->createCondition($name, $operator, $value);
@@ -54,10 +54,10 @@ class ConditionalBuilder extends ParentDelegationBuilder
      * Creates an OR condition
      * @param  string $name
      * @param  string $operator
-     * @param  string $value
+    * @param  string|null $value
      * @return $this
      */
-    public function orCondition($name, $operator, $value)
+    public function orCondition($name, $operator, $value = null)
     {
         $condition = $this->createCondition($name, $operator, $value);
         $this->pushOrCondition([$condition]);
@@ -69,16 +69,21 @@ class ConditionalBuilder extends ParentDelegationBuilder
      * Creates a condition
      * @param  string $name
      * @param  string $operator
-     * @param  string $value
+     * @param  string|null $value
      * @return array
      */
-    protected function createCondition($name, $operator, $value)
+    protected function createCondition($name, $operator, $value = null)
     {
-        return [
+        $condition = [
             'field' => $name,
             'operator' => $operator,
-            'value' => $value,
         ];
+
+        if ($value !== null) {
+            $condition['value'] = $value;
+        }
+
+        return $condition;
     }
 
     /**
@@ -110,10 +115,12 @@ class ConditionalBuilder extends ParentDelegationBuilder
     public function __call($methodName, $arguments)
     {
         if ($methodName === 'and') {
-            list($name, $operator, $value) = $arguments;
+            list($name, $operator) = $arguments;
+            $value = isset($arguments[2]) ? $arguments[2] : null;
             return $this->andCondition($name, $operator, $value);
         } elseif ($methodName === 'or') {
-            list($name, $operator, $value) = $arguments;
+            list($name, $operator) = $arguments;
+            $value = isset($arguments[2]) ? $arguments[2] : null;
             return $this->orCondition($name, $operator, $value);
         } else {
             return parent::__call($methodName, $arguments);

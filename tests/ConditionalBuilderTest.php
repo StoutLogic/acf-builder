@@ -27,6 +27,49 @@ class ConditionalBuilderTest extends TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testConditionalLogicOperatorOnly()
+    {
+        $builder = new ConditionalBuilder('color', '!=empty');
+
+        $expectedConfig = [
+            [
+                [
+                    'field' => 'color',
+                    'operator' => '!=empty',
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfig, $builder->build());
+    }
+
+    public function testConditionalLogicOperatorOnlyCanBeChained()
+    {
+        $builder = new ConditionalBuilder('color', '!=empty');
+        $builder->and('number', '==empty')->or('size', '!=empty');
+
+        $expectedConfig = [
+            [
+                [
+                    'field' => 'color',
+                    'operator' => '!=empty',
+                ],
+                [
+                    'field' => 'number',
+                    'operator' => '==empty',
+                ],
+            ],
+            [
+                [
+                    'field' => 'size',
+                    'operator' => '!=empty',
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfig, $builder->build());
+    }
+
     public function testAnd()
     {
         $builder = new ConditionalBuilder('color', '==', 'other');

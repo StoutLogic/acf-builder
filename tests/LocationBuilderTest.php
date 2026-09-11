@@ -27,6 +27,14 @@ class LocationBuilderTest extends TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
+    public function testLocationRequiresAValue()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Value is required for location conditions');
+
+        new LocationBuilder('post_type', '==');
+    }
+
     public function testAnd()
     {
         $builder = new LocationBuilder('post_type', '==', 'post');
