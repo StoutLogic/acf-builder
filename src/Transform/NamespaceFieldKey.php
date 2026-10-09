@@ -10,6 +10,9 @@ namespace StoutLogic\AcfBuilder\Transform;
  */
 class NamespaceFieldKey extends RecursiveTransform
 {
+    /**
+     * @var array
+     */
     protected $keys = ['key', 'field', 'collapsed'];
 
     /**
@@ -28,6 +31,13 @@ class NamespaceFieldKey extends RecursiveTransform
         return parent::getBuilder();
     }
 
+    /**
+     * Apply the transform to the given config, then run a second pass to
+     * resolve field references to fields that hadn't yet been transformed.
+     *
+     * @param array $config
+     * @return array
+     */
     public function transform($config)
     {
         $config = parent::transform($config);
@@ -38,7 +48,7 @@ class NamespaceFieldKey extends RecursiveTransform
     }
 
     /**
-     * @param  string $value Key
+     * @param  string $value Key.
      * @return string Namedspaced key
      */
     public function transformValue($value)
@@ -47,13 +57,20 @@ class NamespaceFieldKey extends RecursiveTransform
         $groupName = $this->getBuilder()->getName();
 
         if ($groupName) {
-            // remove field_ or group_ if already at the beginning of the key
+            // Remove field_ or group_ if already at the beginning of the key.
             $value = preg_replace('/^field_|^group_/', '', $value);
             $namespace .= str_replace(' ', '_', $groupName) . '_';
         }
         return strtolower($namespace . $value);
     }
 
+    /**
+     * Determine whether the given key/config pair should be transformed.
+     *
+     * @param string $key
+     * @param array  $config
+     * @return bool
+     */
     public function shouldTransformValue($key, $config)
     {
         if ($key === 'field' && array_key_exists('_field_does_not_exist', $config)) {
@@ -64,7 +81,8 @@ class NamespaceFieldKey extends RecursiveTransform
     }
 
     /**
-     * @param $config
+     * @param string $key
+     * @param array  $config
      * @return bool
      */
     private function hasCustomKey($key, $config)
@@ -73,7 +91,8 @@ class NamespaceFieldKey extends RecursiveTransform
     }
 
     /**
-     * @param $config
+     * @param string $key
+     * @param array  $config
      * @return bool
      */
     private function hasCustomCollapsedKey($key, $config)
@@ -81,6 +100,13 @@ class NamespaceFieldKey extends RecursiveTransform
         return ($key === 'collapsed' && array_key_exists('_has_custom_collapsed_key', $config) && $config['_has_custom_collapsed_key'] === true);
     }
 
+    /**
+     * Resolve any `_field_does_not_exist` references against the parent config.
+     *
+     * @param array $config
+     * @param array $parentConfig
+     * @return array
+     */
     private function secondTransformPass(array $config, array $parentConfig)
     {
         foreach ($config as $key => &$value) {

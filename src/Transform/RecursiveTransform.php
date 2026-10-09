@@ -10,6 +10,7 @@ abstract class RecursiveTransform extends Transform
 {
     /**
      * Define a list of array keys `transformValue` should apply to.
+     *
      * @var array
      */
     protected $keys = [];
@@ -26,6 +27,7 @@ abstract class RecursiveTransform extends Transform
      * Apply the `transformValue` function to all values in multidementional
      * associative array where the key matches one of the keys defined
      * on the RecursiveTransform.
+     *
      * @param  array $config
      * @return array transformed config
      */
@@ -48,7 +50,7 @@ abstract class RecursiveTransform extends Transform
 
     /**
      * @param string $key
-     * @param array $config
+     * @param array  $config
      * @return bool
      */
     public function shouldTransformValue($key, $config)
@@ -59,7 +61,8 @@ abstract class RecursiveTransform extends Transform
     /**
      * Based upon the value or key, determine if the transform function
      * should recurse.
-     * @param $value
+     *
+     * @param mixed  $value
      * @param string $key
      * @return bool
      */
@@ -70,7 +73,8 @@ abstract class RecursiveTransform extends Transform
 
     /**
      * Implement this in all discrete classes
-     * @param  mixed $value input
+     *
+     * @param  mixed $value input.
      * @return mixed output value
      */
     abstract public function transformValue($value);

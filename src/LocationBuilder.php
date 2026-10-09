@@ -9,6 +9,7 @@ class LocationBuilder extends ConditionalBuilder
 {
     /**
      * Create a location condition
+     *
      * @param  string $name
      * @param  string $operator
      * @param  string $value

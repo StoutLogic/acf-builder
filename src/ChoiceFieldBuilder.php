@@ -4,6 +4,8 @@ namespace StoutLogic\AcfBuilder;
 
 /**
  * Builds configurations for an ACF Field
+ *
+ * @api
  */
 class ChoiceFieldBuilder extends FieldBuilder
 {
@@ -13,9 +15,13 @@ class ChoiceFieldBuilder extends FieldBuilder
     private $choices = [];
 
     /**
+     * Create a choice field builder.
+     *
      * @param string $name Field Name, conventionally 'snake_case'.
      * @param string $type Field Type.
-     * @param array $config Additional Field Configuration.
+     * @param array  $config Additional Field Configuration.
+     * @return void
+     * @api
      */
     public function __construct($name, $type, $config = [])
     {
@@ -29,9 +35,18 @@ class ChoiceFieldBuilder extends FieldBuilder
     /**
      * Add a choice with optional label. If label not supplied, choice value
      * will be used.
-     * @param string $choice choice value
-     * @param string $label  label that appears
+     *
+     * @param string $choice choice value.
+     * @param string $label  label that appears.
      * @return $this
+     * @example
+     *
+     * ```php
+     * $fields
+     *  ->addRadio('background_color')
+     *  ->addChoice('red', 'Red');
+     * ```
+     * @api
      */
     public function addChoice($choice, $label = null)
     {
@@ -42,8 +57,17 @@ class ChoiceFieldBuilder extends FieldBuilder
 
     /**
      * Add multiple choices. Also accepts multiple arguments, one for each choice.
-     * @param array $choices Can be an array of key values ['choice' => 'label']
+     *
+     * @param array $choices Can be an array of key values ['choice' => 'label'].
      * @return $this
+     * @example
+     *
+     * ```php
+     * $fields
+     *  ->addRadio('background_color')
+     *  ->addChoices('black', 'white');
+     * ```
+     * @api
      */
     public function addChoices($choices)
     {
@@ -57,7 +81,7 @@ class ChoiceFieldBuilder extends FieldBuilder
             if (is_array($choice)) {
                 $label = array_values($choice)[0];
                 $choice = array_keys($choice)[0];
-            } else if (is_string($key)) {
+            } elseif (is_string($key)) {
                 $choice = $key;
                 $label = $value;
             }
@@ -71,8 +95,10 @@ class ChoiceFieldBuilder extends FieldBuilder
     /**
      * Discards existing choices and adds multiple choices.
      * Also accepts multiple arguments, one for each choice.
-     * @param array $choices Can be an array of key values ['choice' => 'label']
+     *
+     * @param array $choices Can be an array of key values ['choice' => 'label'].
      * @return $this
+     * @api
      */
     public function setChoices($choices)
     {
@@ -94,7 +120,9 @@ class ChoiceFieldBuilder extends FieldBuilder
 
     /**
      * Build the field configuration array
+     *
      * @return array Field configuration array
+     * @api
      */
     public function build()
     {

@@ -12,21 +12,21 @@ class NamespaceFieldKeyTest extends TestCase
 
     public function testIsRecursive()
     {
-        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
+        $builder = $this->prophesize(\StoutLogic\AcfBuilder\FieldsBuilder::class);
         $transform = new Transform\NamespaceFieldKey($builder->reveal());
-        $this->assertInstanceOf('\StoutLogic\AcfBuilder\Transform\RecursiveTransform', $transform);
+        $this->assertInstanceOf(\StoutLogic\AcfBuilder\Transform\RecursiveTransform::class, $transform);
     }
 
     public function testGetKeys()
     {
-        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
+        $builder = $this->prophesize(\StoutLogic\AcfBuilder\FieldsBuilder::class);
         $transform = new Transform\NamespaceFieldKey($builder->reveal());
         $this->assertSame(['key', 'field', 'collapsed'], $transform->getKeys());
     }
 
     public function testTransformValue()
     {
-        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
+        $builder = $this->prophesize(\StoutLogic\AcfBuilder\FieldsBuilder::class);
         $builder
             ->getName()
             ->willReturn('Fields Builder Name');
@@ -40,7 +40,7 @@ class NamespaceFieldKeyTest extends TestCase
 
     public function testShouldTransformValue()
     {
-        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
+        $builder = $this->prophesize(\StoutLogic\AcfBuilder\FieldsBuilder::class);
         $builder
             ->getName()
             ->willReturn('Fields Builder Name');

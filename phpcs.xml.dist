@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ruleset name="AcfBuilder">
+    <description>Coding standard for stoutlogic/acf-builder. Based on WordPress-Core, relaxed for use as a
+        general-purpose PSR-4 Composer library rather than a WordPress plugin/theme.</description>
+
+    <file>src</file>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <rule ref="WordPress-Core">
+        <!-- This is a PSR-4 library, not a WordPress plugin; file/variable/function naming rules don't apply. -->
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <exclude name="WordPress.PHP.YodaConditions"/>
+
+        <!-- Keep the existing PSR-2 style: spaces for indentation and short array syntax. -->
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+        <exclude name="Generic.Arrays.DisallowLongArraySyntax"/>
+
+        <!-- Don't enforce WordPress's specific array/function-call padding and alignment conventions. -->
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing"/>
+        <exclude name="WordPress.Arrays.ArrayIndentation"/>
+        <exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions"/>
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+        <exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+        <exclude name="Generic.Functions.FunctionCallArgumentSpacing"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature"/>
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing"/>
+        <exclude name="NormalizedArrays.Arrays.CommaAfterLast"/>
+        <exclude name="NormalizedArrays.Arrays.ArrayBraceSpacing"/>
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+        <exclude name="Generic.WhiteSpace.ArbitraryParenthesesSpacing"/>
+        <exclude name="Universal.WhiteSpace.PrecisionAlignment"/>
+
+        <!-- Brace/whitespace preferences that don't match this codebase's existing PSR-2 style. -->
+        <exclude name="Generic.Classes.OpeningBraceSameLine"/>
+        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+
+        <!-- Existing intentional idioms (assignment-in-condition, short ternary, chained assignment). -->
+        <exclude name="Generic.CodeAnalysis.AssignmentInCondition"/>
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments"/>
+        <exclude name="Universal.Operators.DisallowShortTernary"/>
+    </rule>
+
+    <rule ref="WordPress-Docs">
+        <!-- Requiring a full doc block (with summary, every @param described, etc.) on every
+             method/file/class is too strict for this codebase's existing lightweight docblocks.
+             Keep only the formatting sniffs (spacing) that don't demand rewriting comments. -->
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+    </rule>
+
+    <!-- Enforce spaces over tabs for indentation. -->
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+</ruleset>

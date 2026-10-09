@@ -6,7 +6,7 @@ use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use PHPUnit\Framework\TestCase;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use StoutLogic\AcfBuilder\GroupBuilder;
-use StoutLogic\AcfBuilder\FieldNotFoundException;
+use StoutLogic\AcfBuilder\Exceptions\FieldNotFoundException;
 
 class GroupBuilderTest extends TestCase
 {
@@ -69,27 +69,27 @@ class GroupBuilderTest extends TestCase
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
 
-     public function testModifyGroup()
+    public function testModifyGroup()
     {
         $subject = new GroupBuilder('test1');
 
         $subject->addText('text');
 
         $subject->modifyField('text', ['label' => 'new label']);
-        
+
         $this->assertEquals([
-            'key' => 'field_test1',
-            'name' => 'test1',
-            'label' => 'Test1',
-            'type' => 'group',
-            'sub_fields' => [
-                [
-                    'key' => 'field_test1_text',
-                    'type' => 'text',
-                    'name' => 'text',
-                    'label' => 'new label'
-                ]
-            ]
+           'key' => 'field_test1',
+           'name' => 'test1',
+           'label' => 'Test1',
+           'type' => 'group',
+           'sub_fields' => [
+               [
+                   'key' => 'field_test1_text',
+                   'type' => 'text',
+                   'name' => 'text',
+                   'label' => 'new label'
+               ]
+           ]
         ], $subject->build());
     }
 
@@ -183,7 +183,7 @@ class GroupBuilderTest extends TestCase
 
         $subject
             ->addGroup('slides')
-                ->addRepeater('slide')->setWidth("25%")
+                ->addRepeater('slide')->setWidth('25%')
                     ->addText('headline')->setWidth('100%')
                     ->addTextarea('content');
 
@@ -232,14 +232,14 @@ class GroupBuilderTest extends TestCase
 
         $subject
             ->addGroup('slides')
-            ->addRepeater('slide')->setWidth("25%")
+            ->addRepeater('slide')->setWidth('25%')
             ->addText('headline')->setWidth('100%')
             ->addTextarea('content');
 
         $subject->modifyField('slides->slide', function(FieldsBuilder $builder) {
             $builder
                 ->getField('slide')
-                    ->setWidth("50%");
+                    ->setWidth('50%');
 
             $builder->addLink('cta');
 
@@ -289,7 +289,7 @@ class GroupBuilderTest extends TestCase
 
         $subject
             ->addGroup('slides')
-                ->addRepeater('slide')->setWidth("25%")
+                ->addRepeater('slide')->setWidth('25%')
                     ->addText('headline')->setWidth('100%')
                     ->addTextarea('content');
 
@@ -370,7 +370,7 @@ class GroupBuilderTest extends TestCase
 
         $subject
             ->addGroup('slides')
-            ->addRepeater('slide')->setWidth("25%")
+            ->addRepeater('slide')->setWidth('25%')
                 ->addText('headline')->setWidth('100%')
                 ->addTextarea('content')
                 ->addLink('cta');
@@ -396,6 +396,4 @@ class GroupBuilderTest extends TestCase
 
         $subject->removeField('text4');
     }
-
-
 }

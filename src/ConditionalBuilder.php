@@ -5,20 +5,25 @@ namespace StoutLogic\AcfBuilder;
 /**
  * @method ConditionalBuilder and(string $name, string $operator, string $value)
  * @method ConditionalBuilder or(string $name, string $operator, string $value)
+ * @api
  */
 class ConditionalBuilder extends ParentDelegationBuilder
 {
     /**
      * Conditional Rules
+     *
      * @var array[array]
      */
     private $config = [[]];
 
     /**
      * Creates the first rule. Additional rules can be chained use `or` and `and`
+     *
+     * @return void
      * @param string $name
      * @param string $operator
      * @param string $value
+     * @api
      */
     public function __construct($name, $operator, $value)
     {
@@ -27,7 +32,9 @@ class ConditionalBuilder extends ParentDelegationBuilder
 
     /**
      * Build the config
+     *
      * @return array
+     * @api
      */
     public function build()
     {
@@ -36,10 +43,12 @@ class ConditionalBuilder extends ParentDelegationBuilder
 
     /**
      * Creates an AND condition
+     *
      * @param  string $name
      * @param  string $operator
      * @param  string $value
      * @return $this
+     * @api
      */
     public function andCondition($name, $operator, $value)
     {
@@ -52,10 +61,12 @@ class ConditionalBuilder extends ParentDelegationBuilder
 
     /**
      * Creates an OR condition
+     *
      * @param  string $name
      * @param  string $operator
      * @param  string $value
      * @return $this
+     * @api
      */
     public function orCondition($name, $operator, $value)
     {
@@ -67,6 +78,7 @@ class ConditionalBuilder extends ParentDelegationBuilder
 
     /**
      * Creates a condition
+     *
      * @param  string $name
      * @param  string $operator
      * @param  string $value
@@ -83,6 +95,7 @@ class ConditionalBuilder extends ParentDelegationBuilder
 
     /**
      * Removes and returns the last top level OR condition
+     *
      * @return array
      */
     protected function popOrCondition()
@@ -92,6 +105,7 @@ class ConditionalBuilder extends ParentDelegationBuilder
 
     /**
      * Adds a top level OR condition
+     *
      * @param  array $condition
      * @return void
      */
@@ -103,17 +117,19 @@ class ConditionalBuilder extends ParentDelegationBuilder
     /**
      * Allow the use of reserved words and / or for methods. If `and` or `or`
      * are not matched, call the method on the parentContext
+     *
      * @param string $methodName
-     * @param array $arguments
+     * @param array  $arguments
      * @return mixed
+     * @api
      */
     public function __call($methodName, $arguments)
     {
         if ($methodName === 'and') {
-            list($name, $operator, $value) = $arguments;
+            [$name, $operator, $value] = $arguments;
             return $this->andCondition($name, $operator, $value);
         } elseif ($methodName === 'or') {
-            list($name, $operator, $value) = $arguments;
+            [$name, $operator, $value] = $arguments;
             return $this->orCondition($name, $operator, $value);
         } else {
             return parent::__call($methodName, $arguments);

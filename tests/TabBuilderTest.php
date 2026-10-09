@@ -12,7 +12,7 @@ class TabBuilderTest extends TestCase
 
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('StoutLogic\AcfBuilder\TabBuilder'));
+        $this->assertTrue(class_exists(\StoutLogic\AcfBuilder\TabBuilder::class));
     }
 
     public function testCreateTabBuilder()

@@ -9,10 +9,10 @@ use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 class AccordionBuilderTest extends TestCase
 {
     use ArraySubsetAsserts;
-    
+
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('StoutLogic\AcfBuilder\AccordionBuilder'));
+        $this->assertTrue(class_exists(\StoutLogic\AcfBuilder\AccordionBuilder::class));
     }
 
     public function testCreateTabBuilder()

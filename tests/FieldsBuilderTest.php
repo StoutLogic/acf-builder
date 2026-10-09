@@ -4,9 +4,9 @@ namespace StoutLogic\AcfBuilder\Tests;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use PHPUnit\Framework\TestCase;
-use StoutLogic\AcfBuilder\FieldNotFoundException;
+use StoutLogic\AcfBuilder\Exceptions\FieldNotFoundException;
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use StoutLogic\AcfBuilder\ModifyFieldReturnTypeException;
+use StoutLogic\AcfBuilder\Exceptions\ModifyFieldReturnTypeException;
 
 class FieldsBuilderTest extends TestCase
 {
@@ -14,7 +14,7 @@ class FieldsBuilderTest extends TestCase
 
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('StoutLogic\AcfBuilder\FieldsBuilder'));
+        $this->assertTrue(class_exists(\StoutLogic\AcfBuilder\FieldsBuilder::class));
     }
 
     public function testInstantiation()
@@ -1130,7 +1130,7 @@ class FieldsBuilderTest extends TestCase
 
     public function testReturnExistingParentContextForSetLocation()
     {
-        $builder = $this->getMockBuilder('StoutLogic\AcfBuilder\FieldsBuilder')
+        $builder = $this->getMockBuilder(\StoutLogic\AcfBuilder\FieldsBuilder::class)
                         ->setConstructorArgs(['parent'])
                         ->getMock();
 
@@ -1196,9 +1196,7 @@ class FieldsBuilderTest extends TestCase
             ->addWysiwyg('content');
 
         $builder
-            ->modifyField('title', function($builder) {
-                return $builder->addText('sub_title');
-            });
+            ->modifyField('title', fn($builder) => $builder->addText('sub_title'));
     }
 
     public function testModifyFieldWithClosureReturningFieldsBuilder()
@@ -1296,6 +1294,6 @@ class FieldsBuilderTest extends TestCase
     {
         $builder = new FieldsBuilder('fields');
 
-        $this->assertInstanceOf('\StoutLogic\AcfBuilder\GroupBuilder', $builder->addGroup('background'));
+        $this->assertInstanceOf(\StoutLogic\AcfBuilder\GroupBuilder::class, $builder->addGroup('background'));
     }
 }

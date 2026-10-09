@@ -12,7 +12,7 @@ class FlexibleContentLayoutTest extends TestCase
 
     public function testTransformValue()
     {
-        $builder = $this->prophesize('\StoutLogic\AcfBuilder\FieldsBuilder');
+        $builder = $this->prophesize(\StoutLogic\AcfBuilder\FieldsBuilder::class);
         $builder
             ->getName()
             ->willReturn('Fields Builder Name');

@@ -4,6 +4,7 @@ namespace StoutLogic\AcfBuilder;
 
 /**
  * Builds configurations for an ACF Field
+ *
  * @method FieldBuilder addField(string $name, string $type, array $args = [])
  * @method FieldBuilder addFields(FieldsBuilder|array $fields)
  * @method FieldBuilder addChoiceField(string $name, string $type, array $args = [])
@@ -22,6 +23,7 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldBuilder addSelect(string $name, array $args = [])
  * @method FieldBuilder addRadio(string $name, array $args = [])
  * @method FieldBuilder addCheckbox(string $name, array $args = [])
+ * @method FieldBuilder addButtonGroup(string $name, array $args = [])
  * @method FieldBuilder addPostObject(string $name, array $args = [])
  * @method FieldBuilder addPageLink(string $name, array $args = [])
  * @method FieldBuilder addTaxonomy(string $name, array $args = [])
@@ -47,17 +49,13 @@ namespace StoutLogic\AcfBuilder;
  * @method FieldsBuilder addLayout(string|FieldsBuilder $layout, array $args = [])
  * @method LocationBuilder setLocation(string $param, string $operator, string $value)
  * @mixin \StoutLogic\AcfBuilder\FieldsBuilder
+ * @api
  */
 class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 {
     /**
-     * Field Type
-     * @var string
-     */
-    private $type;
-
-    /**
      * Additional Field Configuration
+     *
      * @var array
      */
     private $config;
@@ -65,22 +63,29 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * @param string $name Field Name, conventionally 'snake_case'.
      * @param string $type Field Type.
-     * @param array $config Additional Field Configuration.
+     * @param array  $config Additional Field Configuration.
      */
-    public function __construct($name, $type, $config = [])
-    {
+    public function __construct(
+        $name,
+        /**
+         * Field Type
+         */
+        private $type,
+        $config = []
+    ) {
         $this->config = [
             'name' => $name,
             'label' => $this->generateLabel($name),
         ];
-
-        $this->type = $type;
         $this->setKey($name);
         $this->updateConfig($config);
     }
 
     /**
+     * Return the field configuration values.
+     *
      * @return array
+     * @api
      */
     public function getConfig()
     {
@@ -99,9 +104,18 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Set a config key -> value pair
+     *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      * @return $this
+     * @example
+     *
+     * Set a field placeholder.
+     *
+     * ```php
+     * $field->setConfig('placeholder', 'Enter a title');
+     * ```
+     * @api
      */
     public function setConfig($key, $value)
     {
@@ -110,8 +124,17 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Update multiple config values using and array of key -> value pairs.
+     *
      * @param  array $config
      * @return $this
+     * @example
+     *
+     * Update several field settings.
+     *
+     * ```php
+     * $field->updateConfig(['required' => 1, 'placeholder' => 'Title']);
+     * ```
+     * @api
      */
     public function updateConfig($config)
     {
@@ -120,7 +143,10 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Return the field name.
+     *
      * @return string
+     * @api
      */
     public function getName()
     {
@@ -128,7 +154,10 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Return the field key.
+     *
      * @return string
+     * @api
      */
     public function getKey()
     {
@@ -136,7 +165,10 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Return the field label.
+     *
      * @return string
+     * @api
      */
     public function getLabel()
     {
@@ -145,8 +177,10 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Will prepend `field_` if missing.
+     *
      * @param string $key
      * @return $this
+     * @api
      */
     public function setKey($key)
     {
@@ -157,6 +191,13 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
         return $this->setConfig('key', $key);
     }
 
+    /**
+     * Set a custom field key without applying the automatic namespace.
+     *
+     * @param string $key Custom field key.
+     * @return $this
+     * @api
+     */
     public function setCustomKey($key)
     {
         return $this
@@ -165,7 +206,10 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     }
 
     /**
+     * Determine whether this field has a custom key.
+     *
      * @return bool
+     * @api
      */
     public function hasCustomKey()
     {
@@ -175,7 +219,14 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Will set field required.
+     *
      * @return $this
+     * @example
+     *
+     * ```php
+     * $fields->addText('title')->setRequired();
+     * ```
+     * @api
      */
     public function setRequired()
     {
@@ -184,7 +235,9 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Will set field unrequired.
+     *
      * @return $this
+     * @api
      */
     public function setUnrequired()
     {
@@ -193,8 +246,10 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Will set field's label.
+     *
      * @param string $label
      * @return $this
+     * @api
      */
     public function setLabel($label)
     {
@@ -203,8 +258,15 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Will set field's instructions.
+     *
      * @param string $instructions
      * @return $this
+     * @example
+     *
+     * ```php
+     * $fields->addText('title')->setInstructions('Shown below the field.');
+     * ```
+     * @api
      */
     public function setInstructions($instructions)
     {
@@ -213,8 +275,15 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Will set field's defaultValue.
+     *
      * @param string $defaultValue
      * @return $this
+     * @example
+     *
+     * ```php
+     * $fields->addColorPicker('background_color')->setDefaultValue('#ffffff');
+     * ```
+     * @api
      */
     public function setDefaultValue($defaultValue)
     {
@@ -226,11 +295,20 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
      * field will display or not. You can add `or` or `and` calls after
      * to build complex logic. Any other function call will return you to the
      * parentContext.
+     *
      * @param  string $name Dependent field name
-     *                      (choice type: radio, checkbox, select, trueFalse)
-     * @param  string $operator ==, !=
-     * @param  string $value    1 or choice value
+     *                      (choice type: radio, checkbox, select, trueFalse).
+     * @param  string $operator ==, !=.
+     * @param  string $value    1 or choice value.
      * @return ConditionalBuilder
+     * @example
+     *
+     * ```php
+     * $fields
+     *  ->addText('other_value')
+     *  ->conditional('color', '==', 'other');
+     * ```
+     * @api
      */
     public function conditional($name, $operator, $value)
     {
@@ -248,6 +326,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @param array $config
      *
      * @return FieldBuilder
+     * @api
      */
     public function setWrapper($config)
     {
@@ -258,14 +337,11 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
      * Get Wrapper container tag attributes
      *
      * @return array|mixed
+     * @api
      */
     public function getWrapper()
     {
-        if (isset($this->config['wrapper'])) {
-            return $this->config['wrapper'];
-        }
-
-        return [];
+        return $this->config['wrapper'] ?? [];
     }
 
     /**
@@ -274,6 +350,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @param string $width Width of a container in % or px.
      *
      * @return FieldBuilder
+     * @api
      */
     public function setWidth($width)
     {
@@ -286,10 +363,11 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
     /**
      * Set specified Attr of a Wrapper container
      *
-     * @param string $name Attribute name, ex. 'class'.
+     * @param string      $name Attribute name, ex. 'class'.
      * @param string|null $value Attribute value, ex. 'my-class'.
      *
      * @return FieldBuilder
+     * @api
      */
     public function setAttr($name, $value = null)
     {
@@ -309,16 +387,17 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
      * @param string $css_selector
      *
      * @return FieldBuilder
+     * @api
      */
     public function setSelector($css_selector)
     {
         // if # is the first sign - we start with ID.
-        if (0 === strpos($css_selector, '#')) {
+        if (str_starts_with($css_selector, '#')) {
             $css_selector .= '.'; // prevent empty second part.
-            list($id, $class) = explode('.', $css_selector, 2);
+            [$id, $class] = explode('.', $css_selector, 2);
         } else {
             $css_selector .= '#'; // prevent empty second part.
-            list($class, $id) = explode('#', $css_selector, 2);
+            [$class, $id] = explode('#', $css_selector, 2);
         }
 
         $id = trim($id, '#');
@@ -338,7 +417,14 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Build the field configuration array
+     *
      * @return array Field configuration array
+     * @example
+     *
+     * ```php
+     * $config = $field->build();
+     * ```
+     * @api
      */
     public function build()
     {
@@ -357,21 +443,23 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
 
     /**
      * Create a field label based on the field's name. Generates title case.
+     *
      * @param  string $name
      * @return string label
      */
     protected function generateLabel($name)
     {
-        return ucwords(str_replace("_", " ", $name));
+        return ucwords(str_replace('_', ' ', $name));
     }
 
     /**
      * Generates a snaked cased name.
+     *
      * @param  string $name
      * @return string
      */
     protected function generateName($name)
     {
-        return strtolower(str_replace(" ", "_", $name));
+        return strtolower(str_replace(' ', '_', $name));
     }
 }

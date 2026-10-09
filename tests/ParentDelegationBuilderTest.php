@@ -10,11 +10,11 @@ class ParentDelegationBuilderTest extends TestCase
     public function testReturningParent()
     {
         $parent = $this
-            ->getMockBuilder('StoutLogic\AcfBuilder\ParentDelegationBuilder')
+            ->getMockBuilder(\StoutLogic\AcfBuilder\ParentDelegationBuilder::class)
             ->onlyMethods(['build'])
             ->addMethods(['parentMethod'])
             ->getMockForAbstractClass();
-        $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
+        $child = $this->getMockForAbstractClass(\StoutLogic\AcfBuilder\ParentDelegationBuilder::class);
         $child->setParentContext($parent);
 
         $parent->expects($this->once())->method('parentMethod');
@@ -23,8 +23,8 @@ class ParentDelegationBuilderTest extends TestCase
 
     public function testThrowingException()
     {
-        $parent = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
-        $child = $this->getMockForAbstractClass('StoutLogic\AcfBuilder\ParentDelegationBuilder');
+        $parent = $this->getMockForAbstractClass(\StoutLogic\AcfBuilder\ParentDelegationBuilder::class);
+        $child = $this->getMockForAbstractClass(\StoutLogic\AcfBuilder\ParentDelegationBuilder::class);
         $child->setParentContext($parent);
 
         $this->expectException('\Exception');

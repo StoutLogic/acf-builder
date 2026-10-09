@@ -25,7 +25,6 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none # disable xdebug, pcov
 
-      # if we 2 steps like this, we can better see if composer failed or tests
       - run: composer update --no-progress
 
       - run: vendor/bin/phpunit
