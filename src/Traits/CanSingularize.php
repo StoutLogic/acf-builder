@@ -5,6 +5,12 @@ namespace StoutLogic\AcfBuilder\Traits;
 trait CanSingularize
 {
     /**
+     * Inflector reused for every field, building one is expensive.
+     * @var \Doctrine\Inflector\Inflector|null
+     */
+    private static $inflector;
+
+    /**
      * Return a singularized string.
      * @param  string $value
      * @return string
@@ -12,7 +18,9 @@ trait CanSingularize
     protected function singularize($value)
     {
         if (class_exists('\Doctrine\Inflector\InflectorFactory')) {
-            return \Doctrine\Inflector\InflectorFactory::create()->build()->singularize($value);
+            self::$inflector ??= \Doctrine\Inflector\InflectorFactory::create()->build();
+
+            return self::$inflector->singularize($value);
         }
 
         return \Doctrine\Common\Inflector\Inflector::singularize($value);
