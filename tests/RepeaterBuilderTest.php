@@ -153,4 +153,18 @@ class RepeaterBuilderTest extends TestCase
 
         $this->assertArraySubset($expectedConfig, $builder->build());
     }
+
+    public function testReuseInflectorForDefaultButtonLabels()
+    {
+        $inflector = new \ReflectionProperty(RepeaterBuilder::class, 'inflector');
+
+        $slides = new RepeaterBuilder('slides');
+        $firstInflector = $inflector->getValue();
+        $categories = new RepeaterBuilder('categories');
+
+        $this->assertNotNull($firstInflector);
+        $this->assertSame($firstInflector, $inflector->getValue());
+        $this->assertArraySubset(['button_label' => 'Add Slide'], $slides->build());
+        $this->assertArraySubset(['button_label' => 'Add Category'], $categories->build());
+    }
 }

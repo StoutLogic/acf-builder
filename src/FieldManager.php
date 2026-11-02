@@ -130,13 +130,7 @@ class FieldManager
      */
     public function fieldNameExists($name)
     {
-        try {
-            $this->getFieldIndex($name);
-        } catch (FieldNotFoundException $e) {
-            return false;
-        }
-
-        return true;
+        return $this->findFieldIndex($name) !== null;
     }
 
     /**
@@ -195,12 +189,30 @@ class FieldManager
      */
     public function getFieldIndex($name)
     {
+        $index = $this->findFieldIndex($name);
+
+        if ($index === null) {
+            throw new FieldNotFoundException("Field `{$name}` not found.");
+        }
+
+        return $index;
+    }
+
+    /**
+     * Return the index in the $this->fields array looked up by the field's name,
+     * without throwing. Used on hot paths like name validation, where constructing
+     * an exception (and its backtrace) for every new field is expensive.
+     * @param  string $name Field Name
+     * @return int|null Field Index or null if the field name doesn't exist
+     */
+    private function findFieldIndex($name)
+    {
         foreach ($this->getFields() as $index => $field) {
             if ($field->getName() === $name) {
                 return $index;
             }
         }
 
-        throw new FieldNotFoundException("Field `{$name}` not found.");
+        return null;
     }
 }

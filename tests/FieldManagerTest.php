@@ -183,6 +183,41 @@ class FieldManagerTest extends TestCase
         $this->assertFalse($subject->fieldNameExists('test4'));
     }
 
+    public function testFieldNameExistsOnEmptyManager()
+    {
+        $subject = new FieldManager();
+
+        $this->assertFalse($subject->fieldNameExists('test1'));
+    }
+
+    public function testFieldNameExistsIsStrict()
+    {
+        $subject = new FieldManager([
+            new FieldBuilder('0', 'text'),
+        ]);
+
+        $this->assertTrue($subject->fieldNameExists('0'));
+        $this->assertFalse($subject->fieldNameExists(''));
+    }
+
+    public function testGetFieldIndex()
+    {
+        $subject = new FieldManager([
+            $this->testFields['test1'],
+            $this->testFields['test2'],
+        ]);
+
+        $this->assertSame(0, $subject->getFieldIndex('test1'));
+        $this->assertSame(1, $subject->getFieldIndex('test2'));
+    }
+
+    public function testGetFieldIndexNotFound()
+    {
+        $this->expectException(FieldNotFoundException::class);
+
+        (new FieldManager([$this->testFields['test1']]))->getFieldIndex('test4');
+    }
+
     public function testGetField()
     {
         $subject = new FieldManager([
