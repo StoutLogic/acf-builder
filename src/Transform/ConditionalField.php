@@ -39,10 +39,12 @@ class ConditionalField extends RecursiveTransform
 
     public function transformConfig($config)
     {
-        if ($this->getBuilder()->fieldExists($config['field']) && $this->getBuilder()->getField($config['field'])->hasCustomKey()) {
-            $config['_has_custom_key'] = true;
-        } else if (!$this->getBuilder()->fieldExists($config['field'])) {
+        $builder = $this->getBuilder();
+
+        if (!$builder->fieldExists($config['field'])) {
             $config['_field_does_not_exist'] = $config['field'];
+        } elseif ($builder->getField($config['field'])->hasCustomKey()) {
+            $config['_has_custom_key'] = true;
         }
 
         return $config;

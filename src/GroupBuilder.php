@@ -76,7 +76,7 @@ class GroupBuilder extends FieldBuilder
      */
     public function __call($method, $args)
     {
-        if (preg_match('/^add.+/', $method) && method_exists($this->fieldsBuilder, $method)) {
+        if (strlen($method) > 3 && str_starts_with($method, 'add') && method_exists($this->fieldsBuilder, $method)) {
             $field = $this->callAddFieldMethod($method, $args);
             $field->setParentContext($this);
             return $field;

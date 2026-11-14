@@ -83,19 +83,19 @@ class NamespaceFieldKey extends RecursiveTransform
 
     private function secondTransformPass(array $config, array $parentConfig)
     {
-        foreach ($config as $key => &$value) {
-            if (array_key_exists('_field_does_not_exist', $config)) {
-                foreach ($parentConfig as $parentField) {
-                    if (
-                        is_array($parentField) &&
-                        array_key_exists('name', $parentField) &&
-                        $parentField['name'] === $config['_field_does_not_exist']
-                    ) {
-                        $config['field'] = $parentField['key'];
-                    }
+        if (array_key_exists('_field_does_not_exist', $config)) {
+            foreach ($parentConfig as $parentField) {
+                if (
+                    is_array($parentField) &&
+                    array_key_exists('name', $parentField) &&
+                    $parentField['name'] === $config['_field_does_not_exist']
+                ) {
+                    $config['field'] = $parentField['key'];
                 }
             }
+        }
 
+        foreach ($config as $key => &$value) {
             if ($this->shouldRecurse($value, $key)) {
                 $value = $this->secondTransformPass($value, $parentConfig);
             }
