@@ -83,7 +83,13 @@ class FieldManager
 
         foreach ($fields as $i => $field) {
             if ($this->validateField($field)) {
-                array_splice($this->fields, $index + $i, 0, [$field]);
+                $position = $index + $i;
+                if ($position === count($this->fields)) {
+                    // array_splice copies the whole array, appending doesn't
+                    $this->fields[] = $field;
+                } else {
+                    array_splice($this->fields, $position, 0, [$field]);
+                }
             }
         }
     }

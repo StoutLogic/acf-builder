@@ -58,6 +58,22 @@ class FieldManagerTest extends TestCase
         ], $subject->getFields());
     }
 
+    public function testInsertingMultipleFieldsAtTheEnd()
+    {
+        $subject = new FieldManager([$this->testFields['test1']]);
+
+        $subject->insertFields([
+            $this->testFields['test2'],
+            $this->testFields['test3'],
+        ], 1);
+
+        $this->assertSame([
+            $this->testFields['test1'],
+            $this->testFields['test2'],
+            $this->testFields['test3'],
+        ], $subject->getFields());
+    }
+
     public function testGetFieldCount()
     {
         $subject = new FieldManager([
