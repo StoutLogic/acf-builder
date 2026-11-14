@@ -13,6 +13,11 @@ class ConditionalLogic extends IterativeTransform
     protected $keys = ['conditional_logic'];
 
     /**
+     * @var ConditionalField|null
+     */
+    private $conditionalFieldTransform;
+
+    /**
      * @param \StoutLogic\AcfBuilder\FieldsBuilder $builder
      */
     public function __construct(\StoutLogic\AcfBuilder\FieldsBuilder $builder)
@@ -42,7 +47,7 @@ class ConditionalLogic extends IterativeTransform
      */
     public function transformValue($value)
     {
-        $conditionalFieldTransform = new ConditionalField($this->getBuilder());
-        return $conditionalFieldTransform->transform($value);
+        $this->conditionalFieldTransform ??= new ConditionalField($this->getBuilder());
+        return $this->conditionalFieldTransform->transform($value);
     }
 }

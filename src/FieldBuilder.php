@@ -150,7 +150,7 @@ class FieldBuilder extends ParentDelegationBuilder implements NamedBuilder
      */
     public function setKey($key)
     {
-        if (!preg_match('/^field_/', $key)) {
+        if (!str_starts_with($key, 'field_')) {
             $key = 'field_' . $key;
         }
 
